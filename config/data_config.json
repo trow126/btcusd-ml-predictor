@@ -1,0 +1,13 @@
+{
+  "exchange": "bybit",
+  "symbol": "BTCUSDT",
+  "timeframe": "5",
+  "start_date": "2023-01-01T00:00:00",
+  "end_date": null,
+  "output_dir": "data/raw",
+  "output_filename": "btcusd_5m_data.csv",
+  "api_keys": {
+    "bybit": ["YOUR_API_KEY", "YOUR_API_SECRET"]
+  },
+  "use_direct_api": true
+}
