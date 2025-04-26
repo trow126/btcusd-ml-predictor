@@ -400,6 +400,7 @@ class FeatureGenerator:
 
         features = {}
         threshold = self.config["classification_threshold"]
+        significant_threshold = 0.002  # 0.2%を大幅変動の閾値として設定
 
         # 各予測時間軸に対する目標変数を生成
         for period in self.config["target_periods"]:
@@ -407,7 +408,7 @@ class FeatureGenerator:
             target_change = df['close'].pct_change(periods=period).shift(-period)
             features[f'target_price_change_pct_{period}'] = target_change
 
-            # 価格変動カテゴリ（分類用）
+            # 価格変動カテゴリ（3分類）
             features[f'target_price_direction_{period}'] = np.where(
                 target_change > threshold,
                 1,  # 上昇
@@ -415,6 +416,25 @@ class FeatureGenerator:
                     target_change < -threshold,
                     -1,  # 下落
                     0   # 横ばい
+                )
+            )
+
+            # 価格変動カテゴリ（5分類）
+            features[f'target_price_direction_5class_{period}'] = np.where(
+                target_change > significant_threshold,
+                2,  # 大幅上昇
+                np.where(
+                    target_change > threshold,
+                    1,  # 上昇
+                    np.where(
+                        target_change < -significant_threshold,
+                        -2,  # 大幅下落
+                        np.where(
+                            target_change < -threshold,
+                            -1,  # 下落
+                            0   # 横ばい
+                        )
+                    )
                 )
             )
 

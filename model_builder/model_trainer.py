@@ -62,7 +62,7 @@ class ModelTrainer:
             "classification": {           # 分類モデル（価格変動方向予測）設定
                 "model_params": {
                     "objective": "multiclass",
-                    "num_class": 3,       # 上昇/横ばい/下落の3クラス
+                    "num_class": 5,       # 上昇/横ばい/下落の3クラス
                     "metric": "multi_logloss",
                     "boosting_type": "gbdt",
                     "num_leaves": 31,
@@ -349,8 +349,8 @@ class ModelTrainer:
             logger.info(f"{period}期先の価格変動方向予測モデルをトレーニングします")
 
             # ラベルの正規化（-1, 0, 1を0, 1, 2に変換）
-            y_train_norm = y_train[target_name].copy() + 1
-            y_test_norm = y_test[target_name].copy() + 1
+            y_train_norm = y_train[target_name].copy() + 2
+            y_test_norm = y_test[target_name].copy() + 2
 
             # LightGBMデータセットの作成
             lgb_train = lgb.Dataset(
@@ -400,7 +400,7 @@ class ModelTrainer:
             y_pred = np.argmax(y_pred_proba, axis=1)
 
             # 予測値を元のラベル（-1, 0, 1）に戻す
-            y_pred = y_pred - 1
+            y_pred = y_pred - 2
 
             # 評価
             accuracy = accuracy_score(y_test[target_name], y_pred)
