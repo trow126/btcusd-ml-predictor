@@ -349,15 +349,29 @@ class ModelTrainer:
             logger.info(f"{period}期先の価格変動方向予測モデルをトレーニングします")
 
             # ラベルの正規化（-1, 0, 1を0, 1, 2に変換）
-            y_train_norm = y_train[target_name].copy() + 2
-            y_test_norm = y_test[target_name].copy() + 2
+            y_train_norm = y_train[target_name].copy() + 1
+            y_test_norm = y_test[target_name].copy() + 1
+
+            # クラス重み付けの計算
+            class_counts = y_train_norm.value_counts()
+            total_samples = len(y_train_norm)
+            n_classes = len(class_counts)
+
+            # 各クラスの重みを計算（サンプル数の少ないクラスほど大きな重みを持つ）
+            class_weights = {
+                class_idx: total_samples / (n_classes * count)
+                for class_idx, count in class_counts.items()
+            }
+
+            logger.info(f"クラス重み: {class_weights}")
 
             # LightGBMデータセットの作成
             lgb_train = lgb.Dataset(
                 X_train["X"],
                 y_train_norm,
                 feature_name=list(X_train["X"].columns),
-                free_raw_data=False
+                free_raw_data=False,
+                weight=np.array([class_weights[label] for label in y_train_norm])  # サンプル重みの設定
             )
 
             lgb_valid = lgb.Dataset(
@@ -400,7 +414,7 @@ class ModelTrainer:
             y_pred = np.argmax(y_pred_proba, axis=1)
 
             # 予測値を元のラベル（-1, 0, 1）に戻す
-            y_pred = y_pred - 2
+            y_pred = y_pred - 1
 
             # 評価
             accuracy = accuracy_score(y_test[target_name], y_pred)
@@ -422,7 +436,8 @@ class ModelTrainer:
                         X_train["X"].columns,
                         model.feature_importance(importance_type="gain")
                     )
-                }
+                },
+                "class_weights": class_weights
             }
 
             logger.info(f"{period}期先の価格変動方向予測モデル - 正解率: {accuracy:.4f}")
@@ -431,6 +446,7 @@ class ModelTrainer:
             self._save_model(model, f"classification_model_period_{period}")
 
         return classification_results
+
     def _save_model(self, model: Any, name: str) -> bool:
         """
         モデルを保存
