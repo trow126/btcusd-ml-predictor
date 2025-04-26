@@ -15,5 +15,9 @@ dependencies = [
     "pybotters>=1.8.1",
     "requests>=2.32.3",
     "seaborn>=0.13.2",
+    "ta-lib",
     "tqdm>=4.67.1",
 ]
+
+[tool.uv.sources]
+ta-lib = { path = "../MTF_Weighted_Dominance/ta_lib-0.6.3-cp313-cp313-win_amd64.whl" }
