@@ -114,7 +114,7 @@ requires-dist = [
     { name = "pybotters", specifier = ">=1.8.1" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "seaborn", specifier = ">=0.13.2" },
-    { name = "ta-lib", path = "../MTF_Weighted_Dominance/ta_lib-0.6.3-cp313-cp313-win_amd64.whl" },
+    { name = "ta-lib", path = "../ta_lib-0.6.3-cp313-cp313-win_amd64.whl" },
     { name = "tqdm", specifier = ">=4.67.1" },
 ]
 
@@ -1016,7 +1016,7 @@ wheels = [
 [[package]]
 name = "ta-lib"
 version = "0.6.3"
-source = { path = "../MTF_Weighted_Dominance/ta_lib-0.6.3-cp313-cp313-win_amd64.whl" }
+source = { path = "../ta_lib-0.6.3-cp313-cp313-win_amd64.whl" }
 dependencies = [
     { name = "numpy" },
     { name = "setuptools" },

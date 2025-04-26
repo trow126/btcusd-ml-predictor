@@ -8,4 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
-data/processed/btcusd_5m_features.csv
+data/processed/*.csv
+data/raw/*.csv
+data/raw/btcusd_5m_data.csv

@@ -14,14 +14,24 @@ logging.basicConfig(
 logger = logging.getLogger("feature_engineering_optimized")
 
 class OptimizedFeatureGenerator:
-    def __init__(self, config=None):
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
         """
         最適化された特徴量生成クラス
 
         Args:
             config: 設定辞書またはNone（デフォルト設定を使用）
         """
-        self.config = config if config else self._get_default_config()
+        # デフォルト設定をロード
+        self.config = self._get_default_config()
+
+        # 渡された設定でデフォルト設定を上書き（マージ）
+        if config:
+            for key, value in config.items():
+                if isinstance(value, dict) and key in self.config and isinstance(self.config[key], dict):
+                    # 辞書の場合は再帰的にマージ
+                    self.config[key].update(value)
+                else:
+                    self.config[key] = value
 
     def _get_default_config(self) -> Dict[str, Any]:
         """デフォルト設定を返す"""
@@ -141,6 +151,20 @@ class OptimizedFeatureGenerator:
 
         # NaNを含む行の処理（最初の数百行はNaNが含まれる可能性がある）
         result_df = result_df.dropna()
+
+        # NaNを含む行の処理（最初の数百行はNaNが含まれる可能性がある）
+        result_df = result_df.dropna()
+
+        # フィッシャー変換RSI（RSIをより線形に変換）を結合後に計算
+        if 'rsi_14' in result_df.columns:
+            rsi = result_df['rsi_14']
+            # 0.1〜0.9の範囲に変換（極端な値を避ける）
+            rsi_scaled = 0.1 + 0.8 * (rsi / 100)
+            result_df['fisher_transform_rsi'] = 0.5 * np.log((1 + rsi_scaled) / (1 - rsi_scaled))
+            logger.info("フィッシャー変換RSIの特徴量を追加しました")
+        else:
+            logger.warning("rsi_14 が存在しないため、フィッシャー変換RSIは生成されませんでした")
+
 
         # 特徴量の重要度に基づいて選別
         result_df = self._select_important_features(result_df)
@@ -546,12 +570,6 @@ class OptimizedFeatureGenerator:
             returns = df['close'].pct_change(1)
             vol = returns.rolling(window=period).std()
             features[f'vol_adjusted_change_{period}'] = returns / vol
-
-# フィッシャー変換RSI（RSIをより線形に変換）
-        rsi = features['rsi_14']
-        # 0.1〜0.9の範囲に変換（極端な値を避ける）
-        rsi_scaled = 0.1 + 0.8 * (rsi / 100)
-        features['fisher_transform_rsi'] = 0.5 * np.log((1 + rsi_scaled) / (1 - rsi_scaled))
 
         # 価格と移動平均のゴールデンクロス/デッドクロスの距離
         ma_20 = df['close'].rolling(window=20).mean()

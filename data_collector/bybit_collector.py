@@ -22,14 +22,25 @@ logging.basicConfig(
 logger = logging.getLogger("bybit_collector")
 
 class BTCDataCollector:
-    def __init__(self, config=None):
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
         """
         BTCUSDデータ収集クラス
 
         Args:
             config: 設定辞書またはNone（デフォルト設定を使用）
         """
-        self.config = config if config else self._get_default_config()
+        # デフォルト設定をロード
+        self.config = self._get_default_config()
+
+        # 渡された設定でデフォルト設定を上書き（マージ）
+        if config:
+            for key, value in config.items():
+                if isinstance(value, dict) and key in self.config and isinstance(self.config[key], dict):
+                    # 辞書の場合は再帰的にマージ
+                    self.config[key].update(value)
+                else:
+                    self.config[key] = value
+
         self.client = None
 
     def _get_default_config(self):
@@ -206,6 +217,7 @@ class BTCDataCollector:
             DataFrame: 収集したデータ
         """
         logger.info(f"{self.config['symbol']}の{self.config['timeframe']}分足データを{self.config['start_date']}から{self.config['end_date']}まで収集します")
+        logger.info("collect_historical_data: データ収集プロセスを開始します")
 
         start_time = self.config["start_date"].timestamp()
         end_time = self.config["end_date"].timestamp()
@@ -246,6 +258,7 @@ class BTCDataCollector:
                 df = await future
                 if df is not None and not df.empty:
                     results.append(df)
+                    logger.info(f"collect_historical_data: チャンクデータ取得完了 ({len(df)} 行)")
 
         # 取得したデータを結合
         if not results:
@@ -262,6 +275,7 @@ class BTCDataCollector:
         result_df.sort_index(inplace=True)
 
         logger.info(f"データ収集完了。合計 {len(result_df)} 行のデータを取得")
+        logger.info("collect_historical_data: データ収集プロセスを終了します")
 
         return result_df
 
@@ -271,14 +285,16 @@ class BTCDataCollector:
         aiohttpを使用してBybit APIからKラインデータを高速取得
 
         Args:
-            start_time: 開始時間（Unix timestamp）
-            end_time: 終了時間（Unix timestamp）
-            session: 再利用するaiohttp.ClientSession
-            limit: 取得する最大数（最大200）
+            start_time (Optional[int]): 開始時間 (Unix timestamp)
+            end_time (Optional[int]): 終了時間 (Unix timestamp)
+            session (Optional[aiohttp.ClientSession]): 再利用するaiohttp.ClientSession
+            limit (int): 取得する最大数 (最大200)
 
         Returns:
-            DataFrameまたはNone
+            pd.DataFrame or None: 取得したデータまたはエラー時にNone
         """
+        logger.info(f"fetch_bybit_klines_aiohttp: {start_time} から {end_time} までのデータ取得を開始します")
+
         url = "https://api.bybit.com/v5/market/kline"
 
         # パラメータの準備
@@ -317,7 +333,10 @@ class BTCDataCollector:
 
             # データが存在するか確認
             if not result["result"]["list"]:
+                logger.info(f"fetch_bybit_klines_aiohttp: {start_time} から {end_time} までのデータはありませんでした")
                 return None
+
+            logger.info(f"fetch_bybit_klines_aiohttp: {start_time} から {end_time} までのデータを取得しました ({len(result['result']['list'])} 行)")
 
             # DataFrameに変換
             df = pd.DataFrame(
@@ -341,11 +360,13 @@ class BTCDataCollector:
         データをCSVファイルに保存
 
         Args:
-            df: 保存するDataFrame
+            df (pd.DataFrame): 保存するDataFrame
 
         Returns:
             dict: 保存結果のサマリー
         """
+        logger.info(f"save_data: データ保存プロセスを開始します。データサイズ: {df.shape}")
+
         if df.empty:
             logger.warning("保存するデータがありません")
             return {"status": "error", "message": "データがありません"}
@@ -358,6 +379,7 @@ class BTCDataCollector:
         output_path = output_dir / self.config["output_filename"]
         df.to_csv(output_path)
         logger.info(f"データを {output_path} に保存しました。データサイズ: {df.shape}")
+        logger.info("save_data: データ保存プロセスを終了します")
 
         # 結果のサマリーを返す（数値情報）
         summary = {

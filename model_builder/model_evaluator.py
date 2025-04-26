@@ -17,14 +17,25 @@ logging.basicConfig(
 logger = logging.getLogger("model_evaluator")
 
 class ModelEvaluator:
-    def __init__(self, config=None):
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
         """
         モデル評価クラス
 
         Args:
             config: 設定辞書またはNone（デフォルト設定を使用）
         """
-        self.config = config if config else self._get_default_config()
+        # デフォルト設定をロード
+        self.config = self._get_default_config()
+
+        # 渡された設定でデフォルト設定を上書き（マージ）
+        if config:
+            for key, value in config.items():
+                if isinstance(value, dict) and key in self.config and isinstance(self.config[key], dict):
+                    # 辞書の場合は再帰的にマージ
+                    self.config[key].update(value)
+                else:
+                    self.config[key] = value
+
         self.models = {}
 
     def _get_default_config(self) -> Dict[str, Any]:
@@ -47,11 +58,11 @@ class ModelEvaluator:
             DataFrame: 読み込んだデータ
         """
         input_path = Path(self.config["input_dir"]) / self.config["input_filename"]
-        logger.info(f"データを {input_path} から読み込みます")
+        logger.info(f"load_data: データを {input_path} から読み込みます")
 
         try:
             df = pd.read_csv(input_path, index_col="timestamp", parse_dates=True)
-            logger.info(f"{len(df)} 行のデータを読み込みました")
+            logger.info(f"load_data: {len(df)} 行のデータを読み込みました")
             return df
         except Exception as e:
             logger.error(f"データ読み込みエラー: {e}")
@@ -64,10 +75,11 @@ class ModelEvaluator:
         Returns:
             bool: 読み込みが成功したかどうか
         """
+        logger.info("load_models: モデルの読み込みを開始します")
         model_dir = Path(self.config["model_dir"])
 
         if not model_dir.exists():
-            logger.error(f"モデルディレクトリ {model_dir} が存在しません")
+            logger.error(f"load_models: モデルディレクトリ {model_dir} が存在しません")
             return False
 
         # 回帰モデルの読み込み
@@ -96,6 +108,8 @@ class ModelEvaluator:
             else:
                 logger.warning(f"分類モデル {classification_model_path} が見つかりません")
 
+        logger.info(f"load_models: {len(self.models)} 個のモデルを読み込みました")
+        logger.info("load_models: モデルの読み込みを終了します")
         return len(self.models) > 0
 
     def prepare_test_data(self, df: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, pd.Series]]:
@@ -108,8 +122,9 @@ class ModelEvaluator:
         Returns:
             Tuple: (特徴量DataFrame, 目標変数のDict)
         """
+        logger.info("prepare_test_data: テストデータの準備を開始します")
         if df.empty:
-            logger.warning("入力データが空です")
+            logger.warning("prepare_test_data: 入力データが空です")
             return pd.DataFrame(), {}
 
         # 時系列データなので、最後の一定割合をテストデータとする
@@ -128,7 +143,8 @@ class ModelEvaluator:
         feature_cols = [col for col in test_df.columns if not col.startswith("target_")]
         X_test = test_df[feature_cols]
 
-        logger.info(f"テストデータ: {len(X_test)}行, 特徴量: {len(feature_cols)}個")
+        logger.info(f"prepare_test_data: テストデータ: {len(X_test)}行, 特徴量: {len(feature_cols)}個")
+        logger.info("prepare_test_data: テストデータの準備を終了します")
 
         return X_test, y_test
 
@@ -143,8 +159,9 @@ class ModelEvaluator:
         Returns:
             Dict: 評価結果
         """
+        logger.info("evaluate_models: モデルの評価を開始します")
         if X_test.empty or not y_test:
-            logger.warning("テストデータが空です")
+            logger.warning("evaluate_models: テストデータが空です")
             return {}
 
         evaluation_results = {
@@ -152,6 +169,7 @@ class ModelEvaluator:
             "classification": {}
         }
 
+        logger.info("evaluate_models: 回帰モデルの評価を開始します")
         # 回帰モデル（価格変動率予測）の評価
         for period in self.config["target_periods"]:
             model_key = f"regression_{period}"
@@ -175,8 +193,9 @@ class ModelEvaluator:
                     }
                 }
 
-                logger.info(f"回帰モデル（{period}期先）評価 - MAE: {mae:.6f}")
+                logger.info(f"evaluate_models: 回帰モデル（{period}期先）評価 - MAE: {mae:.6f}")
 
+        logger.info("evaluate_models: 分類モデルの評価を開始します")
         # 分類モデル（価格変動方向予測）の評価
         for period in self.config["target_periods"]:
             model_key = f"classification_{period}"
@@ -211,7 +230,8 @@ class ModelEvaluator:
                     }
                 }}
 
-                logger.info(f"分類モデル（{period}期先）評価 - 正解率: {accuracy:.4f}")
+                logger.info(f"evaluate_models: 分類モデル（{period}期先）評価 - 正解率: {accuracy:.4f}")
+        logger.info("evaluate_models: モデルの評価を終了します")
 
         return evaluation_results
 
@@ -225,6 +245,7 @@ class ModelEvaluator:
         Returns:
             Dict: 評価レポート
         """
+        logger.info("generate_evaluation_report: 評価レポートの生成を開始します")
         report = {
             "regression": {},
             "classification": {}
@@ -274,6 +295,7 @@ class ModelEvaluator:
                     "confusion_matrix": result["confusion_matrix"]
                 }
 
+        logger.info("generate_evaluation_report: 評価レポートの生成を終了します")
         return report
 
     def save_evaluation_report(self, report: Dict[str, Any]) -> bool:
@@ -286,6 +308,7 @@ class ModelEvaluator:
         Returns:
             bool: 保存が成功したかどうか
         """
+        logger.info("save_evaluation_report: 評価レポートの保存を開始します")
         # 出力ディレクトリが存在しない場合は作成
         output_dir = Path(self.config["output_dir"])
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -296,7 +319,8 @@ class ModelEvaluator:
             with open(report_path, "w") as f:
                 import json
                 json.dump(report, f, indent=2)
-            logger.info(f"評価レポートを {report_path} に保存しました")
+            logger.info(f"save_evaluation_report: 評価レポートを {report_path} に保存しました")
+            logger.info("save_evaluation_report: 評価レポートの保存を終了します")
             return True
         except Exception as e:
             logger.error(f"レポート保存エラー: {e}")

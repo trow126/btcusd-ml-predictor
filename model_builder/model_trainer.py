@@ -18,14 +18,24 @@ logging.basicConfig(
 logger = logging.getLogger("model_trainer")
 
 class ModelTrainer:
-    def __init__(self, config=None):
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
         """
         モデルトレーニングクラス
 
         Args:
             config: 設定辞書またはNone（デフォルト設定を使用）
         """
-        self.config = config if config else self._get_default_config()
+        # デフォルト設定をロード
+        self.config = self._get_default_config()
+
+        # 渡された設定でデフォルト設定を上書き（マージ）
+        if config:
+            for key, value in config.items():
+                if isinstance(value, dict) and key in self.config and isinstance(self.config[key], dict):
+                    # 辞書の場合は再帰的にマージ
+                    self.config[key].update(value)
+                else:
+                    self.config[key] = value
 
     def _get_default_config(self) -> Dict[str, Any]:
         """デフォルト設定を返す"""
@@ -88,11 +98,11 @@ class ModelTrainer:
             DataFrame: 読み込んだデータ
         """
         input_path = Path(self.config["input_dir"]) / self.config["input_filename"]
-        logger.info(f"データを {input_path} から読み込みます")
+        logger.info(f"load_data: データを {input_path} から読み込みます")
 
         try:
             df = pd.read_csv(input_path, index_col="timestamp", parse_dates=True)
-            logger.info(f"{len(df)} 行のデータを読み込みました")
+            logger.info(f"load_data: {len(df)} 行のデータを読み込みました")
             return df
         except Exception as e:
             logger.error(f"データ読み込みエラー: {e}")
@@ -108,8 +118,9 @@ class ModelTrainer:
         Returns:
             Tuple: (特徴量のDict, 目標変数のDict)
         """
+        logger.info("prepare_features: 特徴量と目標変数の準備を開始します")
         if df.empty:
-            logger.warning("入力データが空です")
+            logger.warning("prepare_features: 入力データが空です")
             return {}, {}
 
         # 使用する特徴量を選択
@@ -131,7 +142,8 @@ class ModelTrainer:
             if target_col in df.columns:
                 y_dict[target_name] = df[target_col]
 
-        logger.info(f"特徴量: {len(feature_cols)}個, 目標変数: {len(y_dict)}個")
+        logger.info(f"prepare_features: 特徴量: {len(feature_cols)}個, 目標変数: {len(y_dict)}個")
+        logger.info("prepare_features: 特徴量と目標変数の準備を終了します")
 
         return {"X": X}, y_dict
 
@@ -202,8 +214,9 @@ class ModelTrainer:
         Returns:
             Tuple: (X_train, X_test, y_train, y_test) の辞書
         """
+        logger.info("train_test_split: トレーニングデータとテストデータへの分割を開始します")
         if X.empty:
-            logger.warning("特徴量データが空です")
+            logger.warning("train_test_split: 特徴量データが空です")
             return {}, {}, {}, {}
 
         # 時系列データなので、最後の一定割合をテストデータとする
@@ -220,7 +233,8 @@ class ModelTrainer:
             y_train[target_name] = target_series.iloc[:train_size].copy()
             y_test[target_name] = target_series.iloc[train_size:].copy()
 
-        logger.info(f"トレーニングデータ: {train_size}行, テストデータ: {test_size}行")
+        logger.info(f"train_test_split: トレーニングデータ: {train_size}行, テストデータ: {test_size}行")
+        logger.info("train_test_split: トレーニングデータとテストデータへの分割を終了します")
 
         return X_train, X_test, y_train, y_test
 
@@ -242,6 +256,7 @@ class ModelTrainer:
         """
         regression_results = {}
 
+        logger.info("train_regression_models: 回帰モデルのトレーニングを開始します")
         # 各予測期間に対してモデルをトレーニング
         for period in self.config["target_periods"]:
             target_name = f"regression_{period}"
@@ -250,7 +265,7 @@ class ModelTrainer:
                 logger.warning(f"目標変数 {target_name} が見つかりません")
                 continue
 
-            logger.info(f"{period}期先の価格変動率予測モデルをトレーニングします")
+            logger.info(f"train_regression_models: {period}期先の価格変動率予測モデルをトレーニングします")
 
             # LightGBMデータセットの作成
             lgb_train = lgb.Dataset(
@@ -313,7 +328,8 @@ class ModelTrainer:
                 }
             }
 
-            logger.info(f"{period}期先の価格変動率予測モデル - MAE: {mae:.6f}")
+            logger.info(f"train_regression_models: {period}期先の価格変動率予測モデル - MAE: {mae:.6f}")
+            logger.info(f"train_regression_models: {period}期先の回帰モデルのトレーニングを終了します")
 
             # モデルの保存
             self._save_model(model, f"regression_model_period_{period}")
@@ -338,6 +354,7 @@ class ModelTrainer:
         """
         classification_results = {}
 
+        logger.info("train_classification_models: 分類モデルのトレーニングを開始します")
         # 各予測期間に対してモデルをトレーニング
         for period in self.config["target_periods"]:
             target_name = f"classification_{period}"
@@ -346,7 +363,7 @@ class ModelTrainer:
                 logger.warning(f"目標変数 {target_name} が見つかりません")
                 continue
 
-            logger.info(f"{period}期先の価格変動方向予測モデルをトレーニングします")
+            logger.info(f"train_classification_models: {period}期先の価格変動方向予測モデルをトレーニングします")
 
             # ラベルの正規化（-1, 0, 1を0, 1, 2に変換）
             y_train_norm = y_train[target_name].copy() + 1
@@ -440,7 +457,8 @@ class ModelTrainer:
                 "class_weights": class_weights
             }
 
-            logger.info(f"{period}期先の価格変動方向予測モデル - 正解率: {accuracy:.4f}")
+            logger.info(f"train_classification_models: {period}期先の価格変動方向予測モデル - 正解率: {accuracy:.4f}")
+            logger.info(f"train_classification_models: {period}期先の分類モデルのトレーニングを終了します")
 
             # モデルの保存
             self._save_model(model, f"classification_model_period_{period}")
@@ -458,6 +476,7 @@ class ModelTrainer:
         Returns:
             bool: 保存が成功したかどうか
         """
+        logger.info(f"_save_model: モデル '{name}' の保存を開始します")
         # 出力ディレクトリが存在しない場合は作成
         output_dir = Path(self.config["output_dir"])
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -466,7 +485,8 @@ class ModelTrainer:
         model_path = output_dir / f"{name}.joblib"
         try:
             joblib.dump(model, model_path)
-            logger.info(f"モデルを {model_path} に保存しました")
+            logger.info(f"_save_model: モデルを {model_path} に保存しました")
+            logger.info(f"_save_model: モデル '{name}' の保存を終了します")
             return True
         except Exception as e:
             logger.error(f"モデル保存エラー: {e}")
@@ -485,6 +505,7 @@ class ModelTrainer:
         Returns:
             Dict: トレーニング結果のレポート
         """
+        logger.info("generate_training_report: トレーニングレポートの生成を開始します")
         report = {
             "regression": {},
             "classification": {}
@@ -528,6 +549,7 @@ class ModelTrainer:
                 "top_features": dict(top_features)
             }
 
+        logger.info("generate_training_report: トレーニングレポートの生成を終了します")
         return report
 
 # 実行部分（外部から呼び出す場合）
