@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
 
 from ..utils.logging_utils import setup_logger
+from ..utils.model_io.model_loader import load_model
 
 class BaseEvaluator:
     def __init__(self, config: Optional[Dict[str, Any]] = None):
@@ -44,10 +45,9 @@ class BaseEvaluator:
         Returns:
             Any: 読み込んだモデル
         """
-        try:
-            model = joblib.load(model_path)
+        model = load_model(model_path)
+        if model is not None:
             self.logger.info(f"モデルを {model_path} から読み込みました")
-            return model
-        except Exception as e:
-            self.logger.error(f"モデル読み込みエラー: {e}")
-            return None
+        else:
+            self.logger.error(f"モデル {model_path} の読み込みに失敗しました")
+        return model

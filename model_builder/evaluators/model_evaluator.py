@@ -5,11 +5,16 @@ import json
 from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
 
+from ..config.default_config import get_default_evaluator_config
+
 from .base_evaluator import BaseEvaluator
 from .regression_evaluator import RegressionEvaluator
 from .classification_evaluator import ClassificationEvaluator
-from ..config.default_config import get_default_evaluator_config
-from ..utils.data_utils import load_data
+from ..utils.data.data_loader import load_data
+from ..utils.data.data_splitter import prepare_test_data
+from ..utils.model_io.model_loader import load_models
+from ..utils.reporting.report_generator import generate_evaluation_report
+from ..utils.reporting.report_serializer import save_evaluation_report
 
 class ModelEvaluator(BaseEvaluator):
     def __init__(self, config: Optional[Dict[str, Any]] = None):
@@ -59,41 +64,15 @@ class ModelEvaluator(BaseEvaluator):
             bool: 読み込みが成功したかどうか
         """
         self.logger.info("load_models: モデルの読み込みを開始します")
-        model_dir = Path(self.config.get("model_dir", "models"))
-
-        if not model_dir.exists():
-            self.logger.error(f"load_models: モデルディレクトリ {model_dir} が存在しません")
-            return False
-
-        # 回帰モデルの読み込み
-        for period in self.config.get("target_periods", [1, 2, 3]):
-            regression_model_path = model_dir / f"regression_model_period_{period}.joblib"
-            if regression_model_path.exists():
-                model = self.load_model(regression_model_path)
-                if model:
-                    self.models[f"regression_{period}"] = model
-                    self.logger.info(f"回帰モデル（{period}期先）を読み込みました")
-                else:
-                    return False
-            else:
-                self.logger.warning(f"回帰モデル {regression_model_path} が見つかりません")
-
-        # 分類モデルの読み込み
-        for period in self.config.get("target_periods", [1, 2, 3]):
-            classification_model_path = model_dir / f"classification_model_period_{period}.joblib"
-            if classification_model_path.exists():
-                model = self.load_model(classification_model_path)
-                if model:
-                    self.models[f"classification_{period}"] = model
-                    self.logger.info(f"分類モデル（{period}期先）を読み込みました")
-                else:
-                    return False
-            else:
-                self.logger.warning(f"分類モデル {classification_model_path} が見つかりません")
-
-        self.logger.info(f"load_models: {len(self.models)} 個のモデルを読み込みました")
+        model_dir = self.config.get("model_dir", "models")
+        target_periods = self.config.get("target_periods", [1, 2, 3])
+        
+        loaded_models = load_models(model_dir, target_periods)
+        self.models.update(loaded_models)
+        
+        self.logger.info(f"load_models: {len(loaded_models)} 個のモデルを読み込みました")
         self.logger.info("load_models: モデルの読み込みを終了します")
-        return len(self.models) > 0
+        return len(loaded_models) > 0
 
     def prepare_test_data(self, df: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, pd.Series]]:
         """
@@ -106,29 +85,12 @@ class ModelEvaluator(BaseEvaluator):
             Tuple: (特徴量DataFrame, 目標変数のDict)
         """
         self.logger.info("prepare_test_data: テストデータの準備を開始します")
-        if df.empty:
-            self.logger.warning("prepare_test_data: 入力データが空です")
-            return pd.DataFrame(), {}
-
-        # 時系列データなので、最後の一定割合をテストデータとする
-        test_size = int(len(df) * self.config.get("test_size", 0.2))
-        test_df = df.iloc[-test_size:].copy()
-
-        # 目標変数（各予測期間に対して）
-        y_test = {}
-        for period in self.config.get("target_periods", [1, 2, 3]):
-            # 回帰目標（価格変動率）
-            y_test[f"regression_{period}"] = test_df[f"target_price_change_pct_{period}"]
-            # 分類目標（価格変動方向）
-            y_test[f"classification_{period}"] = test_df[f"target_price_direction_{period}"]
-
-        # 特徴量（目標変数を除く）
-        feature_cols = [col for col in test_df.columns if not col.startswith("target_")]
-        X_test = test_df[feature_cols]
-
-        self.logger.info(f"prepare_test_data: テストデータ: {len(X_test)}行, 特徴量: {len(feature_cols)}個")
+        test_size = self.config.get("test_size", 0.2)
+        target_periods = self.config.get("target_periods", [1, 2, 3])
+        
+        X_test, y_test = prepare_test_data(df, test_size, target_periods)
+        
         self.logger.info("prepare_test_data: テストデータの準備を終了します")
-
         return X_test, y_test
 
     def evaluate_models(self, X_test: pd.DataFrame, y_test: Dict[str, pd.Series]) -> Dict[str, Any]:
@@ -198,55 +160,7 @@ class ModelEvaluator(BaseEvaluator):
             Dict: 評価レポート
         """
         self.logger.info("generate_evaluation_report: 評価レポートの生成を開始します")
-        report = {
-            "regression": {},
-            "classification": {}
-        }
-
-        # 回帰モデルの評価結果
-        if "regression" in evaluation_results:
-            for period_key, result in evaluation_results["regression"].items():
-                report["regression"][period_key] = {
-                    "mae": result["mae"]
-                }
-
-        # 分類モデルの評価結果
-        if "classification" in evaluation_results:
-            for period_key, result in evaluation_results["classification"].items():
-                # クラスごとの精度
-                class_precision = {}
-                report_dict = result["classification_report"]
-
-                if "-1" in report_dict:
-                    class_precision["下落"] = {
-                        "precision": report_dict["-1"]["precision"],
-                        "recall": report_dict["-1"]["recall"],
-                        "f1-score": report_dict["-1"]["f1-score"],
-                        "support": report_dict["-1"]["support"]
-                    }
-
-                if "0" in report_dict:
-                    class_precision["横ばい"] = {
-                        "precision": report_dict["0"]["precision"],
-                        "recall": report_dict["0"]["recall"],
-                        "f1-score": report_dict["0"]["f1-score"],
-                        "support": report_dict["0"]["support"]
-                    }
-
-                if "1" in report_dict:
-                    class_precision["上昇"] = {
-                        "precision": report_dict["1"]["precision"],
-                        "recall": report_dict["1"]["recall"],
-                        "f1-score": report_dict["1"]["f1-score"],
-                        "support": report_dict["1"]["support"]
-                    }
-
-                report["classification"][period_key] = {
-                    "accuracy": result["accuracy"],
-                    "class_metrics": class_precision,
-                    "confusion_matrix": result["confusion_matrix"]
-                }
-
+        report = generate_evaluation_report(evaluation_results)
         self.logger.info("generate_evaluation_report: 評価レポートの生成を終了します")
         return report
 
@@ -261,21 +175,13 @@ class ModelEvaluator(BaseEvaluator):
             bool: 保存が成功したかどうか
         """
         self.logger.info("save_evaluation_report: 評価レポートの保存を開始します")
-        # 出力ディレクトリが存在しない場合は作成
-        output_dir = Path(self.config.get("output_dir", "evaluation"))
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        # レポートをJSONファイルに保存
-        report_path = output_dir / "model_evaluation_report.json"
-        try:
-            with open(report_path, "w") as f:
-                json.dump(report, f, indent=2)
-            self.logger.info(f"save_evaluation_report: 評価レポートを {report_path} に保存しました")
-            self.logger.info("save_evaluation_report: 評価レポートの保存を終了します")
-            return True
-        except Exception as e:
-            self.logger.error(f"レポート保存エラー: {e}")
-            return False
+        output_dir = self.config.get("output_dir", "evaluation")
+        result = save_evaluation_report(report, output_dir)
+        if result:
+            self.logger.info("save_evaluation_report: 評価レポートの保存が成功しました")
+        else:
+            self.logger.error("save_evaluation_report: 評価レポートの保存に失敗しました")
+        return result
 
 # 実行部分（外部から呼び出す場合）
 def evaluate_models(config=None):

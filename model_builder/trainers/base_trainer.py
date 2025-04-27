@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
 
 from ..utils.logging_utils import setup_logger
+from ..utils.model_io.model_saver import save_model
 
 class BaseTrainer:
     def __init__(self, config: Optional[Dict[str, Any]] = None):
@@ -44,17 +45,10 @@ class BaseTrainer:
             bool: 保存が成功したかどうか
         """
         self.logger.info(f"_save_model: モデル '{name}' の保存を開始します")
-        # 出力ディレクトリが存在しない場合は作成
-        output_dir = Path(self.config.get("output_dir", "models"))
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        # モデルの保存
-        model_path = output_dir / f"{name}.joblib"
-        try:
-            joblib.dump(model, model_path)
-            self.logger.info(f"_save_model: モデルを {model_path} に保存しました")
-            self.logger.info(f"_save_model: モデル '{name}' の保存を終了します")
-            return True
-        except Exception as e:
-            self.logger.error(f"モデル保存エラー: {e}")
-            return False
+        output_dir = self.config.get("output_dir", "models")
+        result = save_model(model, output_dir, name)
+        if result:
+            self.logger.info(f"_save_model: モデル '{name}' の保存が成功しました")
+        else:
+            self.logger.error(f"_save_model: モデル '{name}' の保存に失敗しました")
+        return result

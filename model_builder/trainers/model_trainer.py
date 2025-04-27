@@ -3,11 +3,15 @@ import pandas as pd
 import numpy as np
 from typing import Dict, List, Tuple, Any, Optional, Union
 
+from ..config.default_config import get_default_trainer_config
+
 from .base_trainer import BaseTrainer
 from .regression_trainer import RegressionTrainer
 from .classification_trainer import ClassificationTrainer
-from ..config.default_config import get_default_trainer_config
-from ..utils.data_utils import load_data, prepare_features, train_test_split
+from ..utils.data.data_loader import load_data
+from ..utils.data.feature_selector import prepare_features
+from ..utils.data.data_splitter import train_test_split
+from ..utils.reporting.report_formatter import generate_training_report
 
 class ModelTrainer(BaseTrainer):
     def __init__(self, config: Optional[Dict[str, Any]] = None):
@@ -166,36 +170,7 @@ class ModelTrainer(BaseTrainer):
             Dict: トレーニング結果のレポート
         """
         self.logger.info("generate_training_report: トレーニングレポートの生成を開始します")
-        report = {
-            "regression": {},
-            "classification": {}
-        }
-
-        # 回帰モデルの結果
-        for target_name, result in regression_results.items():
-            period = int(target_name.split("_")[1])
-
-            # 上位の特徴量重要度
-            report["regression"][f"period_{period}"] = {
-                "mae": result["mae"],
-                "top_features": result["feature_importance"]
-            }
-
-        # 分類モデルの結果
-        for target_name, result in classification_results.items():
-            period = int(target_name.split("_")[1])
-
-            report["classification"][f"period_{period}"] = {
-                "accuracy": result["accuracy"],
-                "class_accuracy": {
-                    "-1 (下落)": result["classification_report"]["-1"]["precision"],
-                    "0 (横ばい)": result["classification_report"]["0"]["precision"],
-                    "1 (上昇)": result["classification_report"]["1"]["precision"]
-                },
-                "confusion_matrix": result["confusion_matrix"].tolist(),
-                "top_features": result["feature_importance"]
-            }
-
+        report = generate_training_report(regression_results, classification_results)
         self.logger.info("generate_training_report: トレーニングレポートの生成を終了します")
         return report
 
