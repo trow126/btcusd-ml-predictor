@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 
 from data_collector.bybit_collector import BTCDataCollector
-from data_processor.feature_engineering import OptimizedFeatureGenerator
+from data_processor.optimized_feature_generator import OptimizedFeatureGenerator
 from model_builder.model_trainer import ModelTrainer
 from model_builder.model_evaluator import ModelEvaluator
 from model_builder.utils import load_json_config
