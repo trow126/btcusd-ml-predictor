@@ -1,0 +1,14 @@
+# モデルトレーニングと評価のJupyter Notebook
+
+import sys
+import os
+import pandas as pd
+import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
+
+# model_builderモジュールをインポート
+sys.path.append(os.path.abspath(os.getcwd()))
+from model_builder.trainers import train_models
+from model_builder.evaluators import evaluate_models
+from model_builder.utils.visualization import format_model_report

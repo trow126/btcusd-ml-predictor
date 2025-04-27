@@ -4,9 +4,9 @@ from pathlib import Path
 
 from data_collector.bybit_collector import BTCDataCollector
 from data_processor.optimized_feature_generator import OptimizedFeatureGenerator
-from model_builder.model_trainer import ModelTrainer
-from model_builder.model_evaluator import ModelEvaluator
-from model_builder.utils import load_json_config
+from model_builder.trainers import ModelTrainer
+from model_builder.evaluators import ModelEvaluator
+from model_builder.utils.config_loader import load_json_config
 
 # ロガーの設定
 logging.basicConfig(
