@@ -19,13 +19,49 @@ async def main():
     logger.info("BTCUSD ML Predictor パイプラインを開始します")
 
     # 設定のロード
-    config_path = Path(__file__).parent / "config" / "data_config.json"
-    config = load_json_config(str(config_path))
+    data_config_path = Path(__file__).parent / "config" / "data_config.json"
+    model_config_path = Path(__file__).parent / "config" / "model_config.json"
+    
+    data_config = load_json_config(str(data_config_path))
+    model_config = load_json_config(str(model_config_path))
+    
+    # 設定を統合
+    config = {
+        "data_collector": data_config,
+        "data_processor": model_config.get("data_processor", {}),
+        "model_trainer": model_config.get("model_trainer", {}),
+        "model_evaluator": model_config.get("model_evaluator", {})
+    }
+    
     logger.info("設定ファイルをロードしました")
 
     # 1. データ収集
     logger.info("データ収集を開始します")
-    data_collector = BTCDataCollector(config.get("data_collector"))
+    
+    # 日付変換処理
+    import datetime as dt
+    data_collector_config = config.get("data_collector", {})
+    
+    # start_dateとend_dateが文字列の場合はdatetimeオブジェクトに変換
+    if isinstance(data_collector_config.get("start_date"), str):
+        start_date_str = data_collector_config.get("start_date")
+        try:
+            data_collector_config["start_date"] = dt.datetime.fromisoformat(start_date_str.replace("Z", "+00:00"))
+        except:
+            # エラーが発生した場合はデフォルト値を使用
+            data_collector_config["start_date"] = dt.datetime(2023, 1, 1)
+    
+    if isinstance(data_collector_config.get("end_date"), str) and data_collector_config.get("end_date"):
+        end_date_str = data_collector_config.get("end_date")
+        try:
+            data_collector_config["end_date"] = dt.datetime.fromisoformat(end_date_str.replace("Z", "+00:00"))
+        except:
+            # エラーが発生した場合は現在時刻を使用
+            data_collector_config["end_date"] = dt.datetime.now()
+    elif data_collector_config.get("end_date") is None:
+        data_collector_config["end_date"] = dt.datetime.now()
+    
+    data_collector = BTCDataCollector(data_collector_config)
     historical_data = await data_collector.collect_historical_data()
     if not historical_data.empty:
         data_collector.save_data(historical_data)
@@ -61,7 +97,28 @@ async def main():
                 classification_results = model_trainer.train_classification_models(
                     {"X": X_train["X"]}, {"X": X_test["X"]}, y_train, y_test
                 )
-                report = model_trainer.generate_training_report(regression_results, classification_results)
+                
+                # 二値分類モデル（上昇/下落予測）のトレーニング
+                binary_classification_results = None
+                if config.get("model_trainer", {}).get("use_binary_classification", False):
+                    binary_classification_results = model_trainer.train_binary_classification_models(
+                        {"X": X_train["X"]}, {"X": X_test["X"]}, y_train, y_test
+                    )
+                
+                # 結果を辞書にまとめる
+                all_results = {
+                    "regression": regression_results,
+                    "classification": classification_results
+                }
+                
+                if binary_classification_results:
+                    all_results["binary_classification"] = binary_classification_results
+                    
+                report = model_trainer.generate_training_report(
+                    regression_results,
+                    classification_results,
+                    binary_classification_results
+                )
                 # 訓練レポートの保存はModelTrainer内で行われる想定
                 logger.info("モデル訓練が完了しました")
             else:

@@ -85,8 +85,15 @@ def prepare_features(df: pd.DataFrame, feature_groups: Dict[str, bool], target_p
     for period in target_periods:
         # 回帰目標（価格変動率）
         target_cols[f"regression_{period}"] = f"target_price_change_pct_{period}"
+        
+        # 平滑化した回帰目標（平滑化した価格変動率）
+        target_cols[f"regression_smoothed_{period}"] = f"target_smoothed_change_{period}"
+        
         # 分類目標（価格変動方向）
         target_cols[f"classification_{period}"] = f"target_price_direction_{period}"
+        
+        # 二値分類目標（単純な上昇/下落）
+        target_cols[f"binary_classification_{period}"] = f"target_binary_{period}"
 
     # 特徴量と目標変数のDataFrameを準備
     X = df[feature_cols]

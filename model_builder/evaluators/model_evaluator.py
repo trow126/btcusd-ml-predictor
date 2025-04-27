@@ -10,6 +10,7 @@ from ..config.default_config import get_default_evaluator_config
 from .base_evaluator import BaseEvaluator
 from .regression_evaluator import RegressionEvaluator
 from .classification_evaluator import ClassificationEvaluator
+from .binary_classification_evaluator import BinaryClassificationEvaluator
 from ..utils.data.data_loader import load_data
 from ..utils.data.data_splitter import prepare_test_data
 from ..utils.model_io.model_loader import load_models
@@ -39,6 +40,12 @@ class ModelEvaluator(BaseEvaluator):
             "output_dir": self.config.get("output_dir", "evaluation")
         }
         self.classification_evaluator = ClassificationEvaluator(classification_config)
+        
+        binary_classification_config = {
+            "model_dir": self.config.get("model_dir", "models"),
+            "output_dir": self.config.get("output_dir", "evaluation")
+        }
+        self.binary_classification_evaluator = BinaryClassificationEvaluator(binary_classification_config)
         
     def _get_default_config(self) -> Dict[str, Any]:
         """デフォルト設定を返す"""
@@ -111,12 +118,14 @@ class ModelEvaluator(BaseEvaluator):
 
         evaluation_results = {
             "regression": {},
-            "classification": {}
+            "classification": {},
+            "binary_classification": {}
         }
 
         # 回帰モデル（価格変動率予測）の評価
         self.logger.info("evaluate_models: 回帰モデルの評価を開始します")
         for period in self.config.get("target_periods", [1, 2, 3]):
+            # 通常の回帰モデル評価
             model_key = f"regression_{period}"
             target_key = f"regression_{period}"
 
@@ -129,6 +138,20 @@ class ModelEvaluator(BaseEvaluator):
                 )
                 
                 evaluation_results["regression"][f"period_{period}"] = result
+            
+            # 平滑化データを使用した回帰モデル評価
+            smoothed_model_key = f"regression_smoothed_{period}"
+            smoothed_target_key = f"regression_smoothed_{period}"
+            
+            if smoothed_model_key in self.models and smoothed_target_key in y_test:
+                smoothed_model = self.models[smoothed_model_key]
+                
+                # 専用の評価器を使って評価
+                smoothed_result = self.regression_evaluator.evaluate(
+                    smoothed_model, X_test, y_test[smoothed_target_key], period
+                )
+                
+                evaluation_results["regression"][f"smoothed_period_{period}"] = smoothed_result
 
         # 分類モデル（価格変動方向予測）の評価
         self.logger.info("evaluate_models: 分類モデルの評価を開始します")
@@ -145,6 +168,23 @@ class ModelEvaluator(BaseEvaluator):
                 )
                 
                 evaluation_results["classification"][f"period_{period}"] = result
+
+        # 二値分類モデル（上昇/下落予測）の評価
+        if self.config.get("use_binary_classification", False):
+            self.logger.info("evaluate_models: 二値分類モデルの評価を開始します")
+            for period in self.config.get("target_periods", [1, 2, 3]):
+                model_key = f"binary_classification_{period}"
+                target_key = f"binary_classification_{period}"
+
+                if model_key in self.models and target_key in y_test:
+                    model = self.models[model_key]
+                    
+                    # 専用の評価器を使って評価
+                    result = self.binary_classification_evaluator.evaluate(
+                        model, X_test, y_test[target_key], period
+                    )
+                    
+                    evaluation_results["binary_classification"][f"period_{period}"] = result
 
         self.logger.info("evaluate_models: モデルの評価を終了します")
         return evaluation_results

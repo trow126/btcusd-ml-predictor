@@ -36,8 +36,20 @@ class ClassificationEvaluator(BaseEvaluator):
         """
         self.logger.info(f"evaluate: {period}期先の分類モデルの評価を開始します")
         
+        # モデルで使用されている特徴量の名前を取得
+        model_features = model.feature_name()
+        
+        # テストデータにモデルの特徴量がない場合に対処
+        missing_features = [f for f in model_features if f not in X_test.columns]
+        if missing_features:
+            self.logger.warning(f"モデルの特徴量がテストデータに見つかりません: {missing_features}")
+            return {"error": "feature_mismatch", "accuracy": 0.0}
+        
+        # モデルで使用されている特徴量のみを選択
+        X_test_selected = X_test[model_features]
+        
         # 予測
-        y_pred_proba = model.predict(X_test)
+        y_pred_proba = model.predict(X_test_selected)
         y_pred = np.argmax(y_pred_proba, axis=1) - 1  # 0, 1, 2を-1, 0, 1に変換
         
         # 評価

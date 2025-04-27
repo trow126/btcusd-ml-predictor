@@ -68,9 +68,20 @@ def prepare_test_data(df: pd.DataFrame, test_size: float, target_periods: list) 
     y_test = {}
     for period in target_periods:
         # 回帰目標（価格変動率）
-        y_test[f"regression_{period}"] = test_df[f"target_price_change_pct_{period}"]
+        if f"target_price_change_pct_{period}" in test_df.columns:
+            y_test[f"regression_{period}"] = test_df[f"target_price_change_pct_{period}"]
+            
+        # 平滑化した回帰目標（平滑化した価格変動率）
+        if f"target_smoothed_change_{period}" in test_df.columns:
+            y_test[f"regression_smoothed_{period}"] = test_df[f"target_smoothed_change_{period}"]
+            
         # 分類目標（価格変動方向）
-        y_test[f"classification_{period}"] = test_df[f"target_price_direction_{period}"]
+        if f"target_price_direction_{period}" in test_df.columns:
+            y_test[f"classification_{period}"] = test_df[f"target_price_direction_{period}"]
+            
+        # 二値分類目標（単純な上昇/下落）
+        if f"target_binary_{period}" in test_df.columns:
+            y_test[f"binary_classification_{period}"] = test_df[f"target_binary_{period}"]
 
     # 特徴量（目標変数を除く）
     feature_cols = [col for col in test_df.columns if not col.startswith("target_")]

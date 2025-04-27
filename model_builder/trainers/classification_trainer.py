@@ -55,8 +55,9 @@ class ClassificationTrainer(BaseTrainer):
         n_classes = len(class_counts)
 
         # 各クラスの重みを計算（サンプル数の少ないクラスほど大きな重みを持つ）
+        # より強いクラス重み付けを取入れるため、乗数を2から3に増加
         class_weights = {
-            class_idx: total_samples / (n_classes * count)
+            class_idx: (total_samples / (n_classes * count)) ** 2  # 二乗することで差を強調
             for class_idx, count in class_counts.items()
         }
 

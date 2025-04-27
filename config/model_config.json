@@ -1,0 +1,62 @@
+{
+  "data_processor": {
+    "input_dir": "data/raw",
+    "input_filename": "btcusd_5m_data.csv",
+    "output_dir": "data/processed",
+    "output_filename": "btcusd_5m_features.csv",
+    "classification_threshold": 0.0005,
+    "target_periods": [1, 2, 3],
+    "features": {
+      "price_change": true,
+      "volume_change": true,
+      "moving_averages": true,
+      "rsi": true,
+      "high_low_distance": true,
+      "bollinger_bands": true,
+      "macd": true,
+      "stochastic": true,
+      "advanced_features": true
+    },
+    "vwap_period": 14,
+    "ma_periods": [5, 10, 20, 50, 100],
+    "rsi_periods": [6, 14, 21],
+    "bollinger_period": 20,
+    "bollinger_std": 2.0,
+    "macd_params": {
+      "fast_period": 12,
+      "slow_period": 26,
+      "signal_period": 9
+    },
+    "stochastic_params": {
+      "k_period": 14,
+      "d_period": 3,
+      "slowing": 3
+    },
+    "atr_period": 14
+  },
+  "model_trainer": {
+    "input_dir": "data/processed",
+    "input_filename": "btcusd_5m_features.csv",
+    "output_dir": "models",
+    "feature_groups": {
+      "price": true,
+      "volume": true,
+      "technical": true
+    },
+    "target_periods": [1, 2, 3],
+    "cv_splits": 5,
+    "test_size": 0.2,
+    "use_binary_classification": true
+  },
+  "model_evaluator": {
+    "input_dir": "data/processed",
+    "input_filename": "btcusd_5m_features.csv",
+    "model_dir": "models",
+    "output_dir": "evaluation",
+    "target_periods": [1, 2, 3],
+    "test_size": 0.2,
+    "classification_threshold": 0.0005,
+    "use_dynamic_threshold": true,
+    "use_binary_classification": true
+  }
+}

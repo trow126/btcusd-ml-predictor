@@ -8,6 +8,7 @@ from ..config.default_config import get_default_trainer_config
 from .base_trainer import BaseTrainer
 from .regression_trainer import RegressionTrainer
 from .classification_trainer import ClassificationTrainer
+from .binary_classification_trainer import BinaryClassificationTrainer
 from ..utils.data.data_loader import load_data
 from ..utils.data.feature_selector import prepare_features
 from ..utils.data.data_splitter import train_test_split
@@ -36,6 +37,12 @@ class ModelTrainer(BaseTrainer):
         }
         classification_config.update(self.config.get("classification", {}))
         self.classification_trainer = ClassificationTrainer(classification_config)
+        
+        binary_classification_config = {
+            "output_dir": self.config.get("output_dir", "models")
+        }
+        binary_classification_config.update(self.config.get("binary_classification", {}))
+        self.binary_classification_trainer = BinaryClassificationTrainer(binary_classification_config)
         
     def _get_default_config(self) -> Dict[str, Any]:
         """デフォルト設定を返す"""
@@ -155,9 +162,46 @@ class ModelTrainer(BaseTrainer):
             classification_results[target_name] = result
 
         return classification_results
+        
+    def train_binary_classification_models(
+        self, X_train: Dict[str, pd.DataFrame], X_test: Dict[str, pd.DataFrame],
+        y_train: Dict[str, pd.Series], y_test: Dict[str, pd.Series]
+    ) -> Dict[str, Any]:
+        """
+        二値分類モデル（上昇/下落予測）をトレーニング
+
+        Args:
+            X_train: トレーニング特徴量のDict
+            X_test: テスト特徴量のDict
+            y_train: トレーニング目標変数のDict
+            y_test: テスト目標変数のDict
+
+        Returns:
+            Dict: トレーニング結果
+        """
+        binary_classification_results = {}
+
+        self.logger.info("train_binary_classification_models: 二値分類モデルのトレーニングを開始します")
+        # 各予測期間に対してモデルをトレーニング
+        for period in self.config.get("target_periods", [1, 2, 3]):
+            target_name = f"binary_classification_{period}"
+
+            if target_name not in y_train or target_name not in y_test:
+                self.logger.warning(f"目標変数 {target_name} が見つかりません")
+                continue
+
+            # 専用トレーナーを使ってモデルをトレーニング
+            result = self.binary_classification_trainer.train(
+                X_train, X_test, y_train, y_test, period
+            )
+            
+            binary_classification_results[target_name] = result
+
+        return binary_classification_results
 
     def generate_training_report(
-        self, regression_results: Dict[str, Any], classification_results: Dict[str, Any]
+        self, regression_results: Dict[str, Any], classification_results: Dict[str, Any],
+        binary_classification_results: Dict[str, Any] = None
     ) -> Dict[str, Any]:
         """
         トレーニング結果の要約レポートを生成
@@ -165,12 +209,25 @@ class ModelTrainer(BaseTrainer):
         Args:
             regression_results: 回帰モデルのトレーニング結果
             classification_results: 分類モデルのトレーニング結果
+            binary_classification_results: 二値分類モデルのトレーニング結果
 
         Returns:
             Dict: トレーニング結果のレポート
         """
         self.logger.info("generate_training_report: トレーニングレポートの生成を開始します")
-        report = generate_training_report(regression_results, classification_results)
+        
+        # レポート生成のロジックを更新
+        all_results = {
+            "regression": regression_results,
+            "classification": classification_results
+        }
+        
+        # 二値分類結果がある場合は追加
+        if binary_classification_results:
+            all_results["binary_classification"] = binary_classification_results
+            
+        report = generate_training_report(all_results)
+        
         self.logger.info("generate_training_report: トレーニングレポートの生成を終了します")
         return report
 
@@ -201,8 +258,17 @@ def train_models(config=None):
 
     # 分類モデル（価格変動方向予測）のトレーニング
     classification_results = trainer.train_classification_models(X_train, X_test, y_train, y_test)
+    
+    # 二値分類モデル（上昇/下落予測）のトレーニング（設定で有効化されている場合）
+    binary_classification_results = None
+    if trainer.config.get("use_binary_classification", False):
+        binary_classification_results = trainer.train_binary_classification_models(X_train, X_test, y_train, y_test)
 
     # トレーニング結果のレポート生成
-    report = trainer.generate_training_report(regression_results, classification_results)
+    report = trainer.generate_training_report(
+        regression_results, 
+        classification_results,
+        binary_classification_results
+    )
 
     return report
