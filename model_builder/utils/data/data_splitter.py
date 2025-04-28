@@ -1,5 +1,6 @@
 # model_builder/utils/data/data_splitter.py
 import pandas as pd
+import numpy as np
 import logging
 from typing import Dict, Tuple
 
@@ -66,28 +67,47 @@ def prepare_test_data(df: pd.DataFrame, test_size: float, target_periods: list) 
 
     # 目標変数（各予測期間に対して）
     y_test = {}
-    for period in target_periods:
-        # 回帰目標（価格変動率）
-        if f"target_price_change_pct_{period}" in test_df.columns:
-            y_test[f"regression_{period}"] = test_df[f"target_price_change_pct_{period}"]
-            
-        # 平滑化した回帰目標（平滑化した価格変動率）
-        if f"target_smoothed_change_{period}" in test_df.columns:
-            y_test[f"regression_smoothed_{period}"] = test_df[f"target_smoothed_change_{period}"]
-            
-        # 分類目標（価格変動方向）
-        if f"target_price_direction_{period}" in test_df.columns:
-            y_test[f"classification_{period}"] = test_df[f"target_price_direction_{period}"]
-            
-        # 二値分類目標（単純な上昇/下落）
-        if f"target_binary_{period}" in test_df.columns:
-            y_test[f"binary_classification_{period}"] = test_df[f"target_binary_{period}"]
+    X_dict = {}  # 特殊な特徴量セット用
 
     # 特徴量（目標変数を除く）
     feature_cols = [col for col in test_df.columns if not col.startswith("target_")]
     X_test = test_df[feature_cols]
+    X_dict["X"] = X_test  # 基本の特徴量セット
+
+    for period in target_periods:
+        # 回帰目標（価格変動率）
+        if f"target_price_change_pct_{period}" in test_df.columns:
+            y_test[f"regression_{period}"] = test_df[f"target_price_change_pct_{period}"]
+
+        # 平滑化した回帰目標（平滑化した価格変動率）
+        if f"target_smoothed_change_{period}" in test_df.columns:
+            y_test[f"regression_smoothed_{period}"] = test_df[f"target_smoothed_change_{period}"]
+
+        # 分類目標（価格変動方向）
+        if f"target_price_direction_{period}" in test_df.columns:
+            y_test[f"classification_{period}"] = test_df[f"target_price_direction_{period}"]
+
+        # 二値分類目標（単純な上昇/下落）
+        if f"target_binary_{period}" in test_df.columns:
+            y_test[f"binary_classification_{period}"] = test_df[f"target_binary_{period}"]
+
+        # 3分類目標（閾値ベース）
+        if f"target_threshold_ternary_{period}" in test_df.columns:
+            y_test[f"threshold_ternary_classification_{period}"] = test_df[f"target_threshold_ternary_{period}"]
+
+        # 真の二値分類目標（横ばい除外）
+        if f"target_threshold_binary_{period}" in test_df.columns:
+            valid_mask = ~test_df[f"target_threshold_binary_{period}"].isna()
+            if valid_mask.sum() > 0:
+                # 有効なデータがある場合のみ
+                y_test[f"threshold_binary_classification_{period}"] = test_df[f"target_threshold_binary_{period}"].loc[valid_mask]
+                # 対応する特徴量も同じインデックスに絞る
+                X_key = f"X_threshold_binary_{period}"
+                X_dict[X_key] = X_test.loc[valid_mask]
+                logger.info(f"prepare_test_data: 閾値ベース二値分類用の特徴量セット {X_key} を作成 ({len(X_dict[X_key])} 行)")
 
     logger.info(f"prepare_test_data: テストデータ: {len(X_test)}行, 特徴量: {len(feature_cols)}個")
+    logger.info(f"prepare_test_data: 特徴量セット: {list(X_dict.keys())}")
     logger.info("prepare_test_data: テストデータの準備を終了します")
 
-    return X_test, y_test
+    return X_dict, y_test

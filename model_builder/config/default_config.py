@@ -6,21 +6,25 @@ def get_default_binary_classifier_config() -> Dict[str, Any]:
     return {
         "model_params": {
             "objective": "binary",
-            "metric": "binary_logloss",
+            "metric": ["binary_logloss", "auc", "binary_error"],  # 複数の評価指標を追加
             "boosting_type": "gbdt",
             "num_leaves": 31,
-            "learning_rate": 0.03,
+            "learning_rate": 0.02,  # 学習率を下げて学習を安定化
             "feature_fraction": 0.8,
             "bagging_fraction": 0.7,
             "bagging_freq": 3,
-            "min_child_samples": 20,
-            "max_depth": 8,
-            "scale_pos_weight": 1.2,  # 上昇クラスにより重みをかける
+            "min_child_samples": 25,  # 各リーフの最小サンプル数を増やして過学習を抵制
+            "max_depth": 6,           # 個別の樹木の深さを制限し過学習を抵制
+            "reg_alpha": 0.01,        # L1正則化を追加して過学習を抵制
+            "reg_lambda": 0.05,       # L2正則化を追加して過学習を抵制
+            "min_split_gain": 0.01,    # 分割の最小利得
+            "subsample": 0.9,          # サブサンプリング
+            "scale_pos_weight": 1.0,   # クラスの重み付け (トレーニング時に動的に計算される)
             "verbose": -1
         },
         "fit_params": {
-            "num_boost_round": 1000,
-            "early_stopping_rounds": 50,
+            "num_boost_round": 1500,     # ブースティングラウンド数を増やす
+            "early_stopping_rounds": 100, # 早期停止のラウンド数を増やす
             "verbose_eval": 100
         }
     }

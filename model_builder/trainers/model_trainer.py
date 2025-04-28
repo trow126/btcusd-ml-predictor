@@ -9,6 +9,7 @@ from .base_trainer import BaseTrainer
 from .regression_trainer import RegressionTrainer
 from .classification_trainer import ClassificationTrainer
 from .binary_classification_trainer import BinaryClassificationTrainer
+from .threshold_binary_classification_trainer import ThresholdBinaryClassificationTrainer
 from ..utils.data.data_loader import load_data
 from ..utils.data.feature_selector import prepare_features
 from ..utils.data.data_splitter import train_test_split
@@ -43,6 +44,13 @@ class ModelTrainer(BaseTrainer):
         }
         binary_classification_config.update(self.config.get("binary_classification", {}))
         self.binary_classification_trainer = BinaryClassificationTrainer(binary_classification_config)
+        
+        # 閾値ベースの二値分類トレーナーの初期化
+        threshold_binary_config = {
+            "output_dir": self.config.get("output_dir", "models")
+        }
+        threshold_binary_config.update(self.config.get("threshold_binary_classification", {}))
+        self.threshold_binary_classification_trainer = ThresholdBinaryClassificationTrainer(threshold_binary_config)
         
     def _get_default_config(self) -> Dict[str, Any]:
         """デフォルト設定を返す"""
@@ -198,10 +206,88 @@ class ModelTrainer(BaseTrainer):
             binary_classification_results[target_name] = result
 
         return binary_classification_results
+        
+    def train_threshold_binary_classification_models(
+        self, X_train: Dict[str, pd.DataFrame], X_test: Dict[str, pd.DataFrame],
+        y_train: Dict[str, pd.Series], y_test: Dict[str, pd.Series]
+    ) -> Dict[str, Any]:
+        """
+        閾値ベースの二値分類モデル（有意な上昇/下落予測）をトレーニング
+        横ばいデータを除外して学習する改良版
+
+        Args:
+            X_train: トレーニング特徴量のDict
+            X_test: テスト特徴量のDict
+            y_train: トレーニング目標変数のDict
+            y_test: テスト目標変数のDict
+
+        Returns:
+            Dict: トレーニング結果
+        """
+        threshold_binary_classification_results = {}
+
+        self.logger.info("===== train_threshold_binary_classification_models: 閾値ベースの二値分類モデルのトレーニングを開始します =====")
+        
+        # 利用可能な目標変数を確認
+        for key in y_train.keys():
+            if "threshold" in key:
+                self.logger.info(f"閾値関連の目標変数が見つかりました: {key}")
+        
+        # 各予測期間に対してモデルをトレーニング
+        for period in self.config.get("target_periods", [1, 2, 3]):
+            target_name = f"threshold_binary_classification_{period}"
+            
+            # 目標変数を確認
+            if target_name not in y_train or target_name not in y_test:
+                self.logger.warning(f"目標変数 {target_name} が見つかりません")
+                threshold_binary_classification_results[target_name] = {
+                    "error": "missing_target",
+                    "message": f"目標変数 {target_name} が見つかりません"
+                }
+                continue
+                
+            # クラスバランスを確認（デバッグ情報）
+            valid_samples = y_train[target_name].dropna()
+            class_balance = valid_samples.value_counts()
+            self.logger.info(f"{target_name} のクラスバランス: {class_balance.to_dict()}")
+            
+            # サンプル数が極端に少ない場合は警告
+            if len(valid_samples) < 500:  # 少なくとも500サンプルは欲しい
+                self.logger.warning(f"{target_name} の有効サンプル数が少なすぎます: {len(valid_samples)}")
+                if len(valid_samples) < 100:  # 極端に少ない場合はスキップ
+                    self.logger.error(f"{target_name} のサンプル数が極端に少ないため、モデルトレーニングをスキップします")
+                    threshold_binary_classification_results[target_name] = {
+                        "error": "insufficient_samples",
+                        "message": f"有効サンプル数が極端に少なすぎます: {len(valid_samples)}",
+                        "class_balance": class_balance.to_dict()
+                    }
+                    continue
+
+            try:
+                # 専用トレーナーを使ってモデルをトレーニング
+                self.logger.info(f"閾値ベースの二値分類モデル（{period}期先）のトレーニングを開始します")
+                result = self.threshold_binary_classification_trainer.train(
+                    X_train, X_test, y_train, y_test, period
+                )
+                
+                threshold_binary_classification_results[target_name] = result
+                self.logger.info(f"閾値ベースの二値分類モデル（{period}期先）のトレーニングが完了しました")
+            except Exception as e:
+                self.logger.error(f"{target_name} のトレーニング中にエラーが発生しました: {str(e)}")
+                import traceback
+                self.logger.error(f"トレースバック: {traceback.format_exc()}")
+                threshold_binary_classification_results[target_name] = {
+                    "error": "training_error",
+                    "message": str(e)
+                }
+                
+        self.logger.info("===== train_threshold_binary_classification_models: 閾値ベースの二値分類モデルのトレーニングが完了しました =====")
+        return threshold_binary_classification_results
 
     def generate_training_report(
         self, regression_results: Dict[str, Any], classification_results: Dict[str, Any],
-        binary_classification_results: Dict[str, Any] = None
+        binary_classification_results: Dict[str, Any] = None,
+        threshold_binary_classification_results: Dict[str, Any] = None
     ) -> Dict[str, Any]:
         """
         トレーニング結果の要約レポートを生成
@@ -210,6 +296,7 @@ class ModelTrainer(BaseTrainer):
             regression_results: 回帰モデルのトレーニング結果
             classification_results: 分類モデルのトレーニング結果
             binary_classification_results: 二値分類モデルのトレーニング結果
+            threshold_binary_classification_results: 閾値ベースの二値分類モデルのトレーニング結果
 
         Returns:
             Dict: トレーニング結果のレポート
@@ -225,6 +312,10 @@ class ModelTrainer(BaseTrainer):
         # 二値分類結果がある場合は追加
         if binary_classification_results:
             all_results["binary_classification"] = binary_classification_results
+            
+        # 閾値ベースの二値分類結果がある場合は追加
+        if threshold_binary_classification_results:
+            all_results["threshold_binary_classification"] = threshold_binary_classification_results
             
         report = generate_training_report(all_results)
         
@@ -243,6 +334,7 @@ def train_models(config=None):
         Dict: トレーニング結果のレポート
     """
     trainer = ModelTrainer(config)
+    logger = trainer.logger
 
     # データ読み込み
     df = trainer.load_data()
@@ -264,11 +356,41 @@ def train_models(config=None):
     if trainer.config.get("use_binary_classification", False):
         binary_classification_results = trainer.train_binary_classification_models(X_train, X_test, y_train, y_test)
 
+    # 閾値ベースの二値分類モデルのトレーニング
+    threshold_binary_classification_results = None
+    if trainer.config.get("use_threshold_binary_classification", True):  # デフォルトで有効化
+        logger.info("====== 閾値ベース分類モデルのトレーニングを開始します ======")
+        logger.info(f"ターゲット変数の確認: {list(y_train.keys())}")
+        for period in trainer.config.get("target_periods", [1, 2, 3]):
+            target_key = f"threshold_binary_classification_{period}"
+            logger.info(f"確認: {target_key} が存在するか? {target_key in y_train}")
+            if target_key in y_train:
+                # 値の分布を確認
+                valid_values = y_train[target_key].dropna()
+                logger.info(f"{target_key} の有効値数: {len(valid_values)}")
+                logger.info(f"{target_key} の値のカウント: {valid_values.value_counts().to_dict()}")
+        
+        threshold_binary_classification_results = trainer.train_threshold_binary_classification_models(X_train, X_test, y_train, y_test)
+        
+        # 結果のサマリーを出力
+        success_count = 0
+        error_count = 0
+        for key, result in threshold_binary_classification_results.items():
+            if "error" in result:
+                error_count += 1
+                logger.error(f"{key} でエラー: {result['error']} - {result['message']}")
+            else:
+                success_count += 1
+                logger.info(f"{key} のトレーニング成功: 精度 {result.get('accuracy', 'N/A')}")
+                
+        logger.info(f"閾値ベース分類モデルのトレーニング結果: 成功 {success_count}, 失敗 {error_count}")
+        
     # トレーニング結果のレポート生成
     report = trainer.generate_training_report(
         regression_results, 
         classification_results,
-        binary_classification_results
+        binary_classification_results,
+        threshold_binary_classification_results
     )
 
     return report

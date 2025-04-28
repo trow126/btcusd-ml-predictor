@@ -4,7 +4,7 @@
     "input_filename": "btcusd_5m_data.csv",
     "output_dir": "data/processed",
     "output_filename": "btcusd_5m_features.csv",
-    "classification_threshold": 0.0005,
+    "classification_threshold": 0.0001,
     "target_periods": [1, 2, 3],
     "features": {
       "price_change": true,
@@ -46,7 +46,26 @@
     "target_periods": [1, 2, 3],
     "cv_splits": 5,
     "test_size": 0.2,
-    "use_binary_classification": true
+    "use_binary_classification": true,
+    "use_threshold_binary_classification": true,
+    "threshold_binary_classification": {
+      "model_params": {
+        "objective": "binary",
+        "metric": "binary_logloss",
+        "boosting_type": "gbdt",
+        "num_leaves": 31,
+        "learning_rate": 0.05,
+        "feature_fraction": 0.9,
+        "bagging_fraction": 0.8,
+        "bagging_freq": 5,
+        "verbose": -1
+      },
+      "fit_params": {
+        "num_boost_round": 1000,
+        "early_stopping_rounds": 50,
+        "verbose_eval": 100
+      }
+    }
   },
   "model_evaluator": {
     "input_dir": "data/processed",
@@ -55,8 +74,9 @@
     "output_dir": "evaluation",
     "target_periods": [1, 2, 3],
     "test_size": 0.2,
-    "classification_threshold": 0.0005,
+    "classification_threshold": 0.0001,
     "use_dynamic_threshold": true,
-    "use_binary_classification": true
+    "use_binary_classification": true,
+    "use_threshold_binary_classification": true
   }
 }

@@ -11,7 +11,7 @@ import pybotters
 from typing import Dict, Any, Optional
 import aiohttp
 import asyncio
-from tqdm.notebook import tqdm  # Jupyter用プログレスバー
+from tqdm import tqdm  # スタンドアロン版tqdmに変更
 
 
 # ロガーの設定
@@ -205,10 +205,6 @@ class BTCDataCollector:
             logger.error(f"データ取得エラー: {e}")
             return None
 
-    # bybit_collector.py内の collect_historical_data メソッドを修正
-
-
-
     async def collect_historical_data(self):
         """
         履歴データを収集（並列処理で高速化）
@@ -242,15 +238,27 @@ class BTCDataCollector:
             tasks = []
             semaphore = asyncio.Semaphore(5)  # 同時に実行するリクエスト数を制限
 
-            async def fetch_chunk(start, end):
-                async with semaphore:
-                    if self.config["use_direct_api"]:
-                        return await self.fetch_bybit_klines_aiohttp(start, end, session)
-                    else:
-                        return await self.fetch_bybit_klines_pybotters(start, end)
+            async def fetch_chunk_with_retry(start, end, max_retries=3, retry_delay=2):
+                """リトライ機能付きデータ取得"""
+                retries = 0
+                while retries < max_retries:
+                    try:
+                        async with semaphore:
+                            if self.config["use_direct_api"]:
+                                return await self.fetch_bybit_klines_aiohttp(start, end, session)
+                            else:
+                                return await self.fetch_bybit_klines_pybotters(start, end)
+                    except Exception as e:
+                        retries += 1
+                        logger.warning(f"データ取得エラー (リトライ {retries}/{max_retries}): {e}")
+                        if retries < max_retries:
+                            await asyncio.sleep(retry_delay)
+                        else:
+                            logger.error(f"最大リトライ回数に達しました: {start} - {end}")
+                            return None
 
             for i, (chunk_start, chunk_end) in enumerate(time_chunks):
-                tasks.append(fetch_chunk(chunk_start, chunk_end))
+                tasks.append(fetch_chunk_with_retry(chunk_start, chunk_end))
 
             # tqdmでプログレスバーを表示しながら並列処理
             results = []
@@ -275,6 +283,7 @@ class BTCDataCollector:
         result_df.sort_index(inplace=True)
 
         logger.info(f"データ収集完了。合計 {len(result_df)} 行のデータを取得")
+        logger.info(f"データ期間: {result_df.index.min()} から {result_df.index.max()}")
         logger.info("collect_historical_data: データ収集プロセスを終了します")
 
         return result_df

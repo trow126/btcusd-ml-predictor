@@ -63,7 +63,9 @@ def select_important_features(df: pd.DataFrame) -> pd.DataFrame:
 
         # 目標変数は常に含める
         'target_price_change_pct_1', 'target_price_change_pct_2', 'target_price_change_pct_3',
-        'target_price_direction_1', 'target_price_direction_2', 'target_price_direction_3'
+        'target_price_direction_1', 'target_price_direction_2', 'target_price_direction_3',
+        'target_threshold_binary_1', 'target_threshold_binary_2', 'target_threshold_binary_3',
+        'target_threshold_ternary_1', 'target_threshold_ternary_2', 'target_threshold_ternary_3'
     ]
 
     # 特徴量選択（存在する列のみ）
