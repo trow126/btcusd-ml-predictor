@@ -262,16 +262,24 @@ def train_models(config, features_df, logger):
         training_results["regression"] = regression_results
 
         # 2. 分類モデル（価格変動方向予測）
-        logger.info("分類モデルのトレーニングを開始")
-        classification_results = model_trainer.train_classification_models(X_train, X_test, y_train, y_test)
-        training_results["classification"] = classification_results
+        classification_results = None
+        if config.get("model_trainer", {}).get("use_classification", True):
+            logger.info("分類モデルのトレーニングを開始")
+            classification_results = model_trainer.train_classification_models(X_train, X_test, y_train, y_test)
+            training_results["classification"] = classification_results
+        else:
+            logger.info("分類モデルのトレーニングは設定により無効化されています")
+            training_results["classification"] = {}
 
         # 3. 二値分類モデル（上昇/下落予測） - オプション
         binary_classification_results = None
-        if config.get("model_trainer", {}).get("use_binary_classification", False):
+        if config.get("model_trainer", {}).get("use_binary_classification", True):
             logger.info("二値分類モデルのトレーニングを開始")
             binary_classification_results = model_trainer.train_binary_classification_models(X_train, X_test, y_train, y_test)
             training_results["binary_classification"] = binary_classification_results
+        else:
+            logger.info("二値分類モデルのトレーニングは設定により無効化されています")
+            training_results["binary_classification"] = {}
 
         # 4. 閾値ベースの二値分類モデル（有意な上昇/下落予測）
         threshold_binary_classification_results = None

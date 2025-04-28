@@ -164,37 +164,107 @@ class ModelEvaluator(BaseEvaluator):
                 evaluation_results["regression"][f"smoothed_period_{period}"] = smoothed_result
 
         # 分類モデル（価格変動方向予測）の評価
-        self.logger.info("evaluate_models: 分類モデルの評価を開始します")
-        for period in self.config.get("target_periods", [1, 2, 3]):
-            model_key = f"classification_{period}"
-            target_key = f"classification_{period}"
+        if self.config.get("use_classification", True):
+            self.logger.info("evaluate_models: 分類モデルの評価を開始します")
+            for period in self.config.get("target_periods", [1, 2, 3]):
+                model_key = f"classification_{period}"
+                target_key = f"classification_{period}"
 
-            if model_key in self.models and target_key in y_test:
-                model = self.models[model_key]
-                
-                # 専用の評価器を使って評価
-                result = self.classification_evaluator.evaluate(
-                    model, X_test_dict["X"], y_test[target_key], period
-                )
-                
-                evaluation_results["classification"][f"period_{period}"] = result
+                # モデルは存在するが、適切なターゲット変数が見つからない場合は代替ターゲットを探す
+                fallback_target_key = None
+                if model_key in self.models:
+                    if target_key in y_test:
+                        # 正常パターン
+                        model = self.models[model_key]
+                        X_test_for_eval = X_test_dict["X"]
+                        y_test_for_eval = y_test[target_key]
+                    else:
+                        # 代替ターゲットを探索
+                        self.logger.warning(f"ターゲット変数 {target_key} が見つかりません。代替ターゲットを探します。")
+                        # 利用可能な代替ターゲットを探す
+                        # まず target_price_direction_N を探す
+                        direct_alt = f"target_price_direction_{period}"
+                        if direct_alt in y_test:
+                            self.logger.info(f"代替ターゲットを使用します: {direct_alt}")
+                            fallback_target_key = direct_alt
+                            y_test_for_eval = y_test[direct_alt]
+                            X_test_for_eval = X_test_dict["X"]
+                        # 次に threshold_ternary_classification_N を探す
+                        elif f"threshold_ternary_classification_{period}" in y_test:
+                            ternary_key = f"threshold_ternary_classification_{period}"
+                            self.logger.info(f"代替ターゲットを使用します: {ternary_key}")
+                            fallback_target_key = ternary_key
+                            model = self.models[model_key]
+                            X_test_for_eval = X_test_dict["X"]
+                            y_test_for_eval = y_test[ternary_key]
+                        else:
+                            self.logger.warning(f"分類モデルの評価用の適切なターゲットが見つかりません")
+                            evaluation_results["classification"][f"period_{period}"] = {
+                                "error": "target_not_found",
+                                "message": f"ターゲット変数が見つかりません"
+                            }
+                            continue
+                    
+                    # 専用の評価器を使って評価
+                    result = self.classification_evaluator.evaluate(
+                        model, X_test_for_eval, y_test_for_eval, period
+                    )
+                    
+                    evaluation_results["classification"][f"period_{period}"] = result
+                    
+                    # 代替ターゲットを使用している場合はログに記録
+                    if fallback_target_key:
+                        self.logger.info(f"分類モデルの評価に代替ターゲット {fallback_target_key} を使用しました")
+                else:
+                    self.logger.warning(f"分類モデル {model_key} が見つかりません")
+        else:
+            self.logger.info("評価：分類モデルの評価は設定によって無効化されています")
 
         # 二値分類モデル（上昇/下落予測）の評価
-        if self.config.get("use_binary_classification", False):
+        if self.config.get("use_binary_classification", True):
             self.logger.info("evaluate_models: 二値分類モデルの評価を開始します")
             for period in self.config.get("target_periods", [1, 2, 3]):
                 model_key = f"binary_classification_{period}"
                 target_key = f"binary_classification_{period}"
 
-                if model_key in self.models and target_key in y_test:
-                    model = self.models[model_key]
+                # モデルは存在するが、適切なターゲット変数が見つからない場合は代替ターゲットを探す
+                fallback_target_key = None
+                if model_key in self.models:
+                    if target_key in y_test:
+                        # 正常パターン
+                        model = self.models[model_key]
+                        X_test_for_eval = X_test_dict["X"]
+                        y_test_for_eval = y_test[target_key]
+                    else:
+                        # 代替ターゲットを探索
+                        self.logger.warning(f"ターゲット変数 {target_key} が見つかりません。代替ターゲットを探します。")
+                        # 利用可能な代替ターゲットを探す
+                        alt_target = f"target_binary_{period}"
+                        if alt_target in y_test:
+                            self.logger.info(f"利用可能な代替ターゲットが見つかりました: {alt_target}")
+                            y_test_for_eval = y_test[alt_target]
+                            X_test_for_eval = X_test_dict["X"]
+                            fallback_target_key = alt_target
+                        else:
+                            self.logger.warning(f"二値分類モデルの評価用の適切なターゲットが見つかりません")
+                            evaluation_results["binary_classification"][f"period_{period}"] = {
+                                "error": "target_not_found",
+                                "message": f"ターゲット変数が見つかりません"
+                            }
+                            continue
                     
                     # 専用の評価器を使って評価
                     result = self.binary_classification_evaluator.evaluate(
-                        model, X_test_dict["X"], y_test[target_key], period
+                        model, X_test_for_eval, y_test_for_eval, period
                     )
                     
                     evaluation_results["binary_classification"][f"period_{period}"] = result
+                    
+                    # 代替ターゲットを使用している場合はログに記録
+                    if fallback_target_key:
+                        self.logger.info(f"二値分類モデルの評価に代替ターゲット {fallback_target_key} を使用しました")
+                else:
+                    self.logger.warning(f"二値分類モデル {model_key} が見つかりません")
                     
         # 閾値ベースの二値分類モデル（有意な上昇/下落予測）の評価
         if self.config.get("use_threshold_binary_classification", True):

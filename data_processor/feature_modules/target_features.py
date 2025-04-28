@@ -71,6 +71,17 @@ def generate_target_features(df: pd.DataFrame, target_periods: list, classificat
             1,  # 上昇
             0   # 下落
         )
+        
+        # 価格変動方向（-1: 下落, 0: 横ばい, 1: 上昇）- 分類モデル用
+        features[f'target_price_direction_{period}'] = np.where(
+            target_change >= classification_threshold,
+            1,  # 上昇
+            np.where(
+                target_change <= -classification_threshold,
+                -1,  # 下落
+                0   # 横ばい
+            )
+        )
 
     # データフレームに変換
     result_df = pd.DataFrame(features, index=df.index)
@@ -141,6 +152,21 @@ def _log_target_statistics(df: pd.DataFrame, target_periods: list) -> None:
                     logger.info(f"{binary_col} のクラスバランス比率: {class_ratio:.4f} (1に近いほど均等)")
             else:
                 logger.warning(f"{binary_col} に有効な値がありません")
+                
+        # 価格変動方向（-1, 0, 1の3分類）
+        direction_col = f'target_price_direction_{period}'
+        if direction_col in df.columns:
+            direction_counts = df[direction_col].value_counts()
+            direction_pcts = df[direction_col].value_counts(normalize=True) * 100
+            logger.info(f"{direction_col} のクラス分布:")
+            for cls, count in direction_counts.items():
+                pct = direction_pcts[cls]
+                logger.info(f"  クラス {cls}: {count} サンプル ({pct:.2f}%)")
+                
+            # クラスバランス比率
+            if len(direction_counts) > 1:
+                class_ratio = direction_counts.min() / direction_counts.max()
+                logger.info(f"{direction_col} のクラスバランス比率: {class_ratio:.4f} (1に近いほど均等)")
 
 def verify_target_variables(df: pd.DataFrame, threshold: float = 0.0005) -> Dict[str, Any]:
     """

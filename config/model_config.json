@@ -47,6 +47,7 @@
     "cv_splits": 5,
     "test_size": 0.2,
     "use_binary_classification": true,
+    "use_classification": true,
     "use_threshold_binary_classification": true,
     "threshold_binary_classification": {
       "model_params": {
@@ -77,6 +78,7 @@
     "classification_threshold": 0.0001,
     "use_dynamic_threshold": true,
     "use_binary_classification": true,
+    "use_classification": true,
     "use_threshold_binary_classification": true
   }
 }
