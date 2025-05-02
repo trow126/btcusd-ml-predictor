@@ -77,6 +77,12 @@ def fix_signals():
             logger.info(f"期間{period}の変数を生成中 ({target_col}を使用)")
             target_values = df[target_col].values
             
+            # 既存の高閾値シグナル変数を削除
+            existing_cols = [col for col in df.columns if f"target_high_threshold_" in col and f"_{period}" in col]
+            if existing_cols:
+                logger.info(f"期間{period}の既存の高閾値シグナル変数 {len(existing_cols)}個 を削除します")
+                df = df.drop(columns=existing_cols)
+            
             for threshold in thresholds:
                 threshold_str = str(int(threshold * 1000))
                 

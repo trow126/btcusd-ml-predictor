@@ -11,3 +11,9 @@ wheels/
 data/processed/*.csv
 data/raw/*.csv
 data/raw/btcusd_5m_data.csv
+models/high_threshold/*.joblib
+*.log
+.gitignore
+evaluation/high_threshold/*.json
+models/high_threshold/*.json
+models/*.joblib

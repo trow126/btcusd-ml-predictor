@@ -51,6 +51,13 @@ def generate_high_threshold_signals():
         high_threshold_df = pd.DataFrame(index=df.index)
         added_columns = []
 
+        # 既存の高閾値シグナル変数をチェック
+        existing_columns = [col for col in df.columns if 'high_threshold' in col]
+        if existing_columns:
+            logger.info(f"既存の高閾値シグナル変数が{len(existing_columns)}個見つかりました。これらを削除します。")
+            df = df.drop(columns=existing_columns)
+            logger.info(f"既存の高閾値シグナル変数を削除しました")
+            
         for period in periods:
             # 対応する価格変動率の列名
             target_col = f"target_price_change_pct_{period}"
@@ -100,19 +107,44 @@ def generate_high_threshold_signals():
         result_df = pd.concat([df, high_threshold_df], axis=1)
         logger.info(f"結合後のデータフレーム: 行数 {len(result_df)}, 列数 {len(result_df.columns)}")
         
+        # 重複列のチェック
+        duplicated_columns = result_df.columns[result_df.columns.duplicated()].tolist()
+        if duplicated_columns:
+            logger.warning(f"{len(duplicated_columns)}個の重複列が見つかりました: {duplicated_columns[:5]}など")
+            # 重複列を削除
+            result_df = result_df.loc[:, ~result_df.columns.duplicated()]
+            logger.info(f"重複列を削除しました。新しい列数: {len(result_df.columns)}")
+        
         # ステップ5: 特徴量を保存
         output_path = input_path  # 同じファイルを上書き
-        result_df.to_csv(output_path)
-        logger.info(f"更新された特徴量を保存しました: {output_path}")
+        try:
+            # CSVファイルに保存する前にデータ型を確認
+            # シグナル列は整数型に変換
+            for col in added_columns:
+                result_df[col] = result_df[col].astype(int)
+            
+            result_df.to_csv(output_path)
+            logger.info(f"更新された特徴量を保存しました: {output_path}")
+        except Exception as e:
+            logger.error(f"ファイル保存中にエラーが発生しました: {str(e)}")
+            return False
         
         # 追加された列を確認
         high_threshold_cols = [col for col in result_df.columns if "high_threshold" in col]
         logger.info(f"最終的な高閾値シグナル変数の数: {len(high_threshold_cols)}個")
         
+        # 各シグナル変数のシグナル数と発生率を記録
+        for col in high_threshold_cols:
+            signal_count = result_df[col].sum()
+            signal_ratio = signal_count / len(result_df) * 100
+            logger.info(f"{col}: シグナル数 {signal_count}個 ({signal_ratio:.2f}%)")
+        
         return True
     
     except Exception as e:
         logger.exception(f"高閾値シグナル変数の生成中にエラーが発生しました: {str(e)}")
+        import traceback
+        logger.error(f"トレースバック: {traceback.format_exc()}")
         return False
 
 if __name__ == "__main__":

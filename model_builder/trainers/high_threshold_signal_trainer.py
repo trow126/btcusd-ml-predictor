@@ -203,6 +203,8 @@ class HighThresholdSignalTrainer(BaseTrainer):
         # クラスが2つ以上ある場合のみ処理
         if len(class_counts) < 2:
             self.logger.warning(f"クラスが1つしかありません: {class_counts.to_dict()}")
+            # 全てのサンプルが同じクラスの場合、引き継ぎ処理でエラーが発生しないようにscale_pos_weightを設定
+            self.config["model_params"]["scale_pos_weight"] = 1.0
             return
             
         total_samples = len(y_train_filtered)
@@ -318,8 +320,29 @@ class HighThresholdSignalTrainer(BaseTrainer):
         Returns:
             Dict: 評価結果
         """
+        # 目標変数のクラス分布を確認
+        class_distribution = y_test.value_counts().to_dict()
+        self.logger.info(f"テストデータのクラス分布: {class_distribution}")
+        
         # 予測確率
-        y_pred_proba = model.predict(X_test)
+        try:
+            y_pred_proba = model.predict(X_test)
+            self.logger.info(f"予測確率の範囲: 最小={y_pred_proba.min():.4f}, 最大={y_pred_proba.max():.4f}, 平均={y_pred_proba.mean():.4f}")
+        except Exception as e:
+            self.logger.error(f"予測中にエラーが発生しました: {str(e)}")
+            # エラーが発生した場合は、デフォルトの結果を返す
+            return {
+                "accuracy": 0.0,
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1_score": 0.0,
+                "feature_importance": [],
+                "confidence_metrics": {},
+                "train_samples": len(X_train),
+                "test_samples": len(X_test),
+                "signal_ratio": float((y_test == 1).mean()),
+                "error": str(e)
+            }
         
         # 確信度閾値ごとの評価
         confidence_thresholds = [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]  # 低い閾値も評価対象に追加
@@ -333,19 +356,35 @@ class HighThresholdSignalTrainer(BaseTrainer):
             signal_rate = y_pred.mean()
             signal_count = y_pred.sum()
             
+            # シグナルの分布を確認
+            self.logger.info(f"閾値 {conf_threshold}: シグナル数={signal_count}, シグナル率={signal_rate:.4f}")
+            
             # シグナルが1つもない場合はスキップ
             if signal_count == 0:
                 confidence_metrics[conf_threshold] = {
-                    "precision": np.nan,
-                    "recall": np.nan,
-                    "f1_score": np.nan,
+                    "precision": 0.0,  # NaNよりもゼロの方がログ表示やJSON保存時に扱いやすい
+                    "recall": 0.0,
+                    "f1_score": 0.0,
                     "signal_rate": 0.0,
                     "signal_count": 0
                 }
                 continue
                 
+            # 実際の正例が1つもない場合もスキップ
+            if (y_test == 1).sum() == 0:
+                self.logger.warning(f"テストデータにシグナルクラスのサンプルがありません")
+                confidence_metrics[conf_threshold] = {
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "f1_score": 0.0,
+                    "signal_rate": float(signal_rate),
+                    "signal_count": int(signal_count)
+                }
+                continue
+                
             # 精度指標
             try:
+                # zero_division=0で除算のゼロ対策
                 precision = precision_score(y_test, y_pred, zero_division=0)
                 recall = recall_score(y_test, y_pred, zero_division=0)
                 f1 = f1_score(y_test, y_pred, zero_division=0)
@@ -361,12 +400,18 @@ class HighThresholdSignalTrainer(BaseTrainer):
                     "signal_rate": float(signal_rate),
                     "signal_count": int(signal_count)
                 }
+                self.logger.info(f"閾値 {conf_threshold}: 適合率={precision:.4f}, 再現率={recall:.4f}, F1スコア={f1:.4f}")
             except Exception as e:
                 self.logger.error(f"確信度閾値 {conf_threshold} での評価中にエラー: {str(e)}")
+                import traceback
+                self.logger.error(f"評価エラーのトレースバック: {traceback.format_exc()}")
                 confidence_metrics[conf_threshold] = {
                     "error": str(e),
                     "signal_rate": float(signal_rate),
-                    "signal_count": int(signal_count)
+                    "signal_count": int(signal_count),
+                    "precision": 0.0,
+                    "recall": 0.0,
+                    "f1_score": 0.0
                 }
         
         # デフォルト閾値（0.5）での評価
@@ -374,18 +419,43 @@ class HighThresholdSignalTrainer(BaseTrainer):
         default_recall = confidence_metrics.get(0.5, {}).get("recall", np.nan)
         default_f1 = confidence_metrics.get(0.5, {}).get("f1_score", np.nan)
         
-        # 特徴量重要度を計算
-        feature_importance = get_feature_importance(
-            model, X_train.columns, top_n=20
-        )
+        # デフォルト閾値（0.5）での評価
+        default_metrics = confidence_metrics.get(0.5, {})
+        default_precision = default_metrics.get("precision", 0.0)
+        default_recall = default_metrics.get("recall", 0.0)
+        default_f1 = default_metrics.get("f1_score", 0.0)
 
+        # 特徴量重要度を修正
+        try:
+            # 特徴量重要度の計算を試みる
+            feature_importance = get_feature_importance(model, X_train.columns, top_n=20)
+        except Exception as e:
+            self.logger.error(f"特徴量重要度の計算中にエラーが発生しました: {str(e)}")
+            feature_importance = []
+        
+        # 精度指標を安全に取得
+        try:
+            accuracy = float((y_test == (y_pred_proba >= 0.5).astype(int)).mean())
+        except Exception as e:
+            self.logger.warning(f"正確度計算に失敗しました: {str(e)}")
+            accuracy = 0.0
+            
+        # NaN値を処理
+        def safe_float(value, default=0.0):
+            if pd.isna(value) or value is None or isinstance(value, str):
+                return default
+            try:
+                return float(value)
+            except (ValueError, TypeError):
+                return default
+        
         # 結果をまとめる
         result = {
             "model": model,
-            "accuracy": float((y_test == (y_pred_proba >= 0.5).astype(int)).mean()),
-            "precision": float(default_precision),
-            "recall": float(default_recall),
-            "f1_score": float(default_f1),
+            "accuracy": accuracy,
+            "precision": safe_float(default_precision),
+            "recall": safe_float(default_recall),
+            "f1_score": safe_float(default_f1),
             "feature_importance": feature_importance,
             "confidence_metrics": confidence_metrics,
             "train_samples": len(X_train),
@@ -394,14 +464,16 @@ class HighThresholdSignalTrainer(BaseTrainer):
         }
 
         # ログ出力
-        self.logger.info(f"評価指標 - 精度: {result['accuracy']:.4f}, 適合率: {default_precision:.4f}, 再現率: {default_recall:.4f}, F1: {default_f1:.4f}")
+        self.logger.info(f"評価指標 - 精度: {result['accuracy']:.4f}, 適合率: {result['precision']:.4f}, 再現率: {result['recall']:.4f}, F1: {result['f1_score']:.4f}")
         self.logger.info(f"シグナル比率: {result['signal_ratio']:.4f}")
         
         # 確信度閾値ごとの結果
         self.logger.info("確信度閾値ごとの評価結果:")
         for threshold, metrics in confidence_metrics.items():
             if "precision" in metrics:
-                self.logger.info(f"  閾値 {threshold:.1f}: 適合率={metrics['precision']:.4f}, 発生率={metrics['signal_rate']:.4f}, シグナル数={metrics['signal_count']}")
+                self.logger.info(f"  閾値 {threshold:.1f}: 適合率={safe_float(metrics['precision']):.4f}, 発生率={metrics['signal_rate']:.4f}, シグナル数={metrics['signal_count']}")
+            else:
+                self.logger.info(f"  閾値 {threshold:.1f}: 評価指標が利用できません, 発生率={metrics.get('signal_rate', 0):.4f}, シグナル数={metrics.get('signal_count', 0)}")
         
         return result
 
@@ -419,11 +491,10 @@ class HighThresholdSignalTrainer(BaseTrainer):
         # 直接joblibを使って保存する
         try:
             # モデルの保存先を指定
-            output_dir = self.config.get("output_dir", "models")
-            output_subdir = "high_threshold"  # 高閾値モデル用のサブディレクトリ
+            output_dir = self.config.get("output_dir", "models/high_threshold")
             
             # サブディレクトリを含むパスを作成
-            model_dir = Path(output_dir) / output_subdir
+            model_dir = Path(output_dir)
             os.makedirs(model_dir, exist_ok=True)
             
             # パスを結合してフルパスのファイル名を生成

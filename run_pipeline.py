@@ -31,6 +31,31 @@ async def run_pipeline():
         Path("models").mkdir(exist_ok=True)
         Path("evaluation").mkdir(exist_ok=True)
         
+        # 高閾値シグナル変数を生成
+        logger.info("高閾値シグナル変数の生成を開始")
+        import add_high_threshold_signals
+        success = add_high_threshold_signals.add_high_threshold_signals()
+        if success:
+            logger.info("高閾値シグナル変数の生成が完了しました")
+        else:
+            logger.error("高閾値シグナル変数の生成に失敗しました")
+            # 失敗した場合は既存のスクリプトを試す
+            logger.info("既存のスクリプトで高閾値シグナル変数の生成を試みます")
+            import generate_high_threshold_signals
+            success = generate_high_threshold_signals.generate_high_threshold_signals()
+            if success:
+                logger.info("既存スクリプトでの高閾値シグナル変数の生成が完了しました")
+            else:
+                logger.error("既存スクリプトでの高閾値シグナル変数生成に失敗しました")
+                # 最後の手段として修正スクリプトを実行
+                logger.info("修正スクリプトで高閾値シグナル変数の修正を試みます")
+                import fix_high_threshold_signals
+                fix_success = fix_high_threshold_signals.fix_signals()
+                if fix_success:
+                    logger.info("高閾値シグナル変数の修正が完了しました")
+                else:
+                    logger.error("高閾値シグナル変数の修正に失敗しました")
+        
         # メインモジュールからパイプラインを実行
         logger.info("BTCUSDパイプラインの実行を開始")
         from main import main

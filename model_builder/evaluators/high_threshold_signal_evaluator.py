@@ -224,7 +224,7 @@ class HighThresholdSignalEvaluator(BaseEvaluator):
         results = {}
         
         # モデルディレクトリ
-        model_dir = Path(self.config.get("model_dir", "models")) / "high_threshold"
+        model_dir = Path(self.config.get("model_dir", "models/high_threshold"))
         
         if not model_dir.exists():
             self.logger.error(f"モデルディレクトリが存在しません: {model_dir}")

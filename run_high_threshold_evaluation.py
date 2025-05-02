@@ -160,32 +160,44 @@ def evaluate_high_threshold_models(
     }
     
     # 最良モデルを各閾値・方向ごとに特定
-    for threshold_key, threshold_data in results.items():
-        for direction_key, direction_data in threshold_data.items():
-            for period_key, period_data in direction_data.items():
-                summary["model_count"] += 1
+    if isinstance(results, dict):
+        for threshold_key, threshold_data in results.items():
+            if not isinstance(threshold_data, dict):
+                logger.warning(f"閾値 {threshold_key} の結果が辞書形式ではありません: {type(threshold_data)}")
+                continue
                 
-                if "error" in period_data:
-                    summary["error_count"] += 1
+            for direction_key, direction_data in threshold_data.items():
+                if not isinstance(direction_data, dict):
+                    logger.warning(f"方向 {direction_key} の結果が辞書形式ではありません: {type(direction_data)}")
                     continue
                     
-                summary["success_count"] += 1
-                
-                # 最良モデルの候補に追加（適合率ベース）
-                if "precision" in period_data and period_data["precision"] > 0.4: # 閾値を0.5から0.4に下げる
-                    # 確信度閾値0.7での指標
-                    conf_metrics = period_data.get("confidence_metrics", {}).get(0.7, {})
+                for period_key, period_data in direction_data.items():
+                    summary["model_count"] += 1
                     
-                    if "precision" in conf_metrics and conf_metrics["precision"] > 0.6 and conf_metrics["signal_rate"] > 0.005: # 閾値を緩和
-                        best_model = {
-                            "threshold": threshold_key,
-                            "direction": direction_key,
-                            "period": period_key,
-                            "precision": conf_metrics["precision"],
-                            "signal_rate": conf_metrics["signal_rate"],
-                            "efficiency": conf_metrics.get("trading_efficiency", 0)
-                        }
-                        summary["best_models"].append(best_model)
+                    if isinstance(period_data, dict) and "error" in period_data:
+                        summary["error_count"] += 1
+                        continue
+                        
+                    summary["success_count"] += 1
+                    
+                    # 最良モデルの候補に追加（適合率ベース）
+                    if isinstance(period_data, dict) and "precision" in period_data and period_data["precision"] > 0.4: # 閾値を0.5から0.4に下げる
+                        # 確信度閾値0.7での指標
+                        if "confidence_metrics" in period_data:
+                            conf_metrics = period_data.get("confidence_metrics", {}).get(0.7, {})
+                            
+                            if isinstance(conf_metrics, dict) and "precision" in conf_metrics and conf_metrics["precision"] > 0.6 and conf_metrics["signal_rate"] > 0.005: # 閾値を緩和
+                                best_model = {
+                                    "threshold": threshold_key,
+                                    "direction": direction_key,
+                                    "period": period_key,
+                                    "precision": conf_metrics["precision"],
+                                    "signal_rate": conf_metrics["signal_rate"],
+                                    "efficiency": conf_metrics.get("trading_efficiency", 0)
+                                }
+                                summary["best_models"].append(best_model)
+    else:
+        logger.error(f"評価結果が辞書形式ではありません: {type(results)}")    
     
     # 効率順にソート
     if summary["best_models"]:
@@ -209,34 +221,44 @@ def evaluate_high_threshold_models(
         results_file = Path(output_dir) / f"high_threshold_evaluation_{timestamp}.json"
         
         # JSONに変換できるように調整
-        json_results = {}
-        for threshold_key, threshold_data in results.items():
-            json_results[threshold_key] = {}
-            for direction_key, direction_data in threshold_data.items():
-                json_results[threshold_key][direction_key] = {}
-                for period_key, period_data in direction_data.items():
-                    # numpy型をPythonネイティブ型に変換
-                    clean_data = {}
-                    for k, v in period_data.items():
-                        if k == "confidence_metrics":
-                            # 確信度閾値をキーとして持つ辞書
-                            clean_confidence = {}
-                            for conf_threshold, conf_metrics in v.items():
-                                # 文字列キーに変換
-                                clean_confidence[str(conf_threshold)] = {
-                                    ck: float(cv) if isinstance(cv, (np.float32, np.float64)) else cv
-                                    for ck, cv in conf_metrics.items()
-                                }
-                            clean_data[k] = clean_confidence
-                        elif isinstance(v, (np.float32, np.float64)):
-                            clean_data[k] = float(v)
-                        else:
-                            clean_data[k] = v
-                    json_results[threshold_key][direction_key][period_key] = clean_data
-        
-        with open(results_file, "w", encoding="utf-8") as f:
-            json.dump(json_results, f, indent=2)
-        logger.info(f"評価結果を {results_file} に保存しました")
+        if isinstance(results, dict):
+            json_results = {}
+            for threshold_key, threshold_data in results.items():
+                if not isinstance(threshold_data, dict):
+                    continue
+                json_results[threshold_key] = {}
+                for direction_key, direction_data in threshold_data.items():
+                    if not isinstance(direction_data, dict):
+                        continue
+                    json_results[threshold_key][direction_key] = {}
+                    for period_key, period_data in direction_data.items():
+                        if not isinstance(period_data, dict):
+                            continue
+                        # numpy型をPythonネイティブ型に変換
+                        clean_data = {}
+                        for k, v in period_data.items():
+                            if k == "confidence_metrics" and isinstance(v, dict):
+                                # 確信度閾値をキーとして持つ辞書
+                                clean_confidence = {}
+                                for conf_threshold, conf_metrics in v.items():
+                                    if isinstance(conf_metrics, dict):
+                                        # 文字列キーに変換
+                                        clean_confidence[str(conf_threshold)] = {
+                                            ck: float(cv) if isinstance(cv, (np.float32, np.float64)) else cv
+                                            for ck, cv in conf_metrics.items()
+                                        }
+                                clean_data[k] = clean_confidence
+                            elif isinstance(v, (np.float32, np.float64)):
+                                clean_data[k] = float(v)
+                            else:
+                                clean_data[k] = v
+                        json_results[threshold_key][direction_key][period_key] = clean_data
+            
+            with open(results_file, "w", encoding="utf-8") as f:
+                json.dump(json_results, f, indent=2)
+            logger.info(f"評価結果を {results_file} に保存しました")
+        else:
+            logger.error("評価結果が辞書形式ではないため、保存をスキップします")
         
         # サマリー
         summary_file = Path(output_dir) / f"high_threshold_summary_{timestamp}.json"
