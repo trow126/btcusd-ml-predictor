@@ -359,6 +359,316 @@ def evaluate_models(config, features_df, logger):
         logger.error(f"モデル評価中にエラーが発生しました: {str(e)}")
         return None
 
+# 5. 高閾値シグナルモデルのトレーニングステップ
+def train_high_threshold_models(config, features_df, logger):
+    """高閾値シグナルモデルのトレーニングステップ"""
+    logger.info("高閾値シグナルモデルのトレーニングを開始します")
+    
+    try:
+        from model_builder.trainers.high_threshold_signal_trainer import HighThresholdSignalTrainer
+        from model_builder.utils.data.data_splitter import train_test_split
+        
+        # 設定を取得
+        high_threshold_config = config.get("high_threshold_models", {})
+        periods = high_threshold_config.get("target_periods", [1, 2, 3])
+        directions = high_threshold_config.get("directions", ["long", "short"])
+        thresholds = high_threshold_config.get("thresholds", [0.001, 0.002, 0.003, 0.005])
+        output_dir = high_threshold_config.get("output_dir", "models/high_threshold")
+        
+        logger.info(f"高閾値シグナルモデルの設定: 期間={periods}, 方向={directions}, 閾値={thresholds}")
+        
+        # 出力ディレクトリの作成
+        from pathlib import Path
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        
+        # データ準備
+        if features_df is None or features_df.empty:
+            logger.error("トレーニングデータが空です")
+            return None
+            
+        # 高閾値ターゲット変数の確認
+        high_threshold_targets = [col for col in features_df.columns if "high_threshold" in col]
+        if not high_threshold_targets:
+            logger.warning("高閾値ターゲット変数が見つかりません。データ処理ステップが正しく実行されたか確認してください。")
+            logger.info("利用可能なターゲット変数: " + ", ".join([col for col in features_df.columns if col.startswith("target_")])[:200] + "...")
+            return None
+        else:
+            logger.info(f"高閾値ターゲット変数: {len(high_threshold_targets)}個見つかりました")
+            for i, target in enumerate(high_threshold_targets[:10]):
+                logger.info(f"  {i+1}. {target}")
+            if len(high_threshold_targets) > 10:
+                logger.info(f"  ...他 {len(high_threshold_targets)-10}個")
+        
+        # 特徴量と目標変数の準備
+        from model_builder.utils.data.feature_selector import prepare_features
+        feature_groups = {"price": True, "volume": True, "technical": True}
+        X_dict, y_dict = prepare_features(features_df, feature_groups, periods)
+        
+        # データ分割
+        X_train, X_test, y_train, y_test = train_test_split(X_dict["X"], y_dict, test_size=0.2)
+        
+        # 訓練結果の保存用
+        results = {}
+        
+        # モデル訓練
+        for threshold in thresholds:
+            threshold_str = str(int(threshold * 1000))
+            threshold_results = {}
+            
+            for direction in directions:
+                direction_results = {}
+                
+                for period in periods:
+                    logger.info(f"閾値:{threshold*100}% 方向:{direction} 期間:{period}のモデルを訓練")
+                    
+                    # 目標変数名の生成と存在確認
+                    target_name = f"target_high_threshold_{threshold_str}p_{direction}_{period}"
+                    if target_name not in y_train:
+                        logger.warning(f"目標変数 {target_name} が見つかりません。スキップします。")
+                        continue
+                    
+                    # モデルトレーナーの初期化
+                    trainer_config = {"output_dir": output_dir}
+                    trainer = HighThresholdSignalTrainer(trainer_config)
+                    
+                    # モデルトレーニング
+                    result = trainer.train(
+                        X_train, X_test, y_train, y_test,
+                        period=period, direction=direction, threshold=threshold
+                    )
+                    
+                    # エラーチェック
+                    if "error" in result:
+                        logger.error(f"モデルトレーニングに失敗しました: {result.get('message', 'Unknown error')}")
+                        direction_results[f"period_{period}"] = {
+                            "error": result.get("error"),
+                            "message": result.get("message", "Unknown error")
+                        }
+                        continue
+                    
+                    # 結果の要約
+                    summary = {
+                        "accuracy": result.get("accuracy"),
+                        "precision": result.get("precision"),
+                        "recall": result.get("recall"),
+                        "f1_score": result.get("f1_score"),
+                        "signal_ratio": result.get("signal_ratio"),
+                        "train_samples": result.get("train_samples"),
+                        "test_samples": result.get("test_samples")
+                    }
+                    
+                    # 結果のログ出力
+                    logger.info(f"モデル評価: 精度={summary['accuracy']:.4f}, 適合率={summary['precision']:.4f}, 再現率={summary['recall']:.4f}")
+                    
+                    # 結果を格納
+                    direction_results[f"period_{period}"] = summary
+                
+                threshold_results[direction] = direction_results
+            
+            results[f"threshold_{threshold_str}p"] = threshold_results
+        
+        # 結果の保存
+        import json
+        import datetime as dt
+        timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+        results_file = Path(output_dir) / f"high_threshold_results_{timestamp}.json"
+        
+        # 結果の辞書をJSONに変換可能な形式に変換
+        json_results = {}
+        for threshold_key, threshold_data in results.items():
+            json_results[threshold_key] = {}
+            for direction_key, direction_data in threshold_data.items():
+                json_results[threshold_key][direction_key] = {}
+                for period_key, period_data in direction_data.items():
+                    # numpy型をPythonネイティブ型に変換
+                    clean_data = {}
+                    for k, v in period_data.items():
+                        if hasattr(v, "item") and callable(getattr(v, "item")):
+                            # numpy数値型を変換
+                            clean_data[k] = v.item()
+                        elif isinstance(v, (float, int)):
+                            clean_data[k] = float(v)
+                        else:
+                            clean_data[k] = v
+                    json_results[threshold_key][direction_key][period_key] = clean_data
+        
+        with open(results_file, "w", encoding="utf-8") as f:
+            json.dump(json_results, f, indent=2)
+        logger.info(f"訓練結果を {results_file} に保存しました")
+        
+        logger.info("高閾値シグナルモデルのトレーニングが完了しました")
+        return results
+    except Exception as e:
+        logger.error(f"高閾値シグナルモデルのトレーニング中にエラーが発生しました: {str(e)}")
+        import traceback
+        logger.error(f"トレースバック: {traceback.format_exc()}")
+        return None
+
+# 6. 高閾値シグナルモデルの評価ステップ
+def evaluate_high_threshold_models(config, features_df, logger):
+    """高閾値シグナルモデルの評価ステップ"""
+    logger.info("高閾値シグナルモデルの評価を開始します")
+    
+    try:
+        from model_builder.evaluators.high_threshold_signal_evaluator import HighThresholdSignalEvaluator
+        
+        # 設定を取得
+        high_threshold_config = config.get("high_threshold_models", {})
+        periods = high_threshold_config.get("target_periods", [1, 2, 3])
+        directions = high_threshold_config.get("directions", ["long", "short"])
+        thresholds = high_threshold_config.get("thresholds", [0.001, 0.002, 0.003, 0.005])
+        model_dir = high_threshold_config.get("output_dir", "models/high_threshold")
+        output_dir = high_threshold_config.get("evaluation_dir", "evaluation/high_threshold")
+        
+        # 出力ディレクトリの作成
+        from pathlib import Path
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        
+        # データ準備
+        if features_df is None or features_df.empty:
+            logger.error("評価データが空です")
+            return None
+            
+        # テストデータの準備
+        from model_builder.utils.data.data_splitter import prepare_test_data
+        test_size = high_threshold_config.get("test_size", 0.2)
+        X_test_dict, y_test = prepare_test_data(features_df, test_size, periods)
+        
+        if "X" not in X_test_dict or X_test_dict["X"].empty:
+            logger.error("テストデータの準備に失敗しました")
+            return None
+        
+        # 高閾値シグナル変数の確認
+        high_threshold_targets = {}
+        for key in y_test.keys():
+            if "high_threshold" in key:
+                high_threshold_targets[key] = y_test[key]
+                
+        logger.info(f"利用可能な高閾値シグナル変数: {len(high_threshold_targets)}個")
+        if len(high_threshold_targets) == 0:
+            logger.warning("高閾値シグナル変数が見つかりません。評価をスキップします。")
+            return None
+        
+        # 評価器の初期化
+        evaluator_config = {
+            "model_dir": model_dir,
+            "output_dir": output_dir
+        }
+        evaluator = HighThresholdSignalEvaluator(evaluator_config)
+        
+        # 全モデルの評価
+        logger.info("全モデルの評価を開始します")
+        results = evaluator.evaluate_all_models(
+            periods=periods,
+            directions=directions,
+            thresholds=thresholds,
+            X_test=X_test_dict["X"],
+            y_dict=y_test
+        )
+        
+        # 評価結果の要約
+        summary = {
+            "model_count": 0,
+            "success_count": 0,
+            "error_count": 0,
+            "best_models": []
+        }
+        
+        # 最良モデルを各閾値・方向ごとに特定
+        for threshold_key, threshold_data in results.items():
+            for direction_key, direction_data in threshold_data.items():
+                for period_key, period_data in direction_data.items():
+                    summary["model_count"] += 1
+                    
+                    if "error" in period_data:
+                        summary["error_count"] += 1
+                        continue
+                        
+                    summary["success_count"] += 1
+                    
+                    # 最良モデルの候補に追加（適合率ベース）
+                    if "precision" in period_data and period_data["precision"] > 0.5:
+                        # 確信度閾値0.7での指標
+                        conf_metrics = period_data.get("confidence_metrics", {}).get(0.7, {})
+                        
+                        if "precision" in conf_metrics and conf_metrics["precision"] > 0.7 and conf_metrics["signal_rate"] > 0.01:
+                            best_model = {
+                                "threshold": threshold_key,
+                                "direction": direction_key,
+                                "period": period_key,
+                                "precision": conf_metrics["precision"],
+                                "signal_rate": conf_metrics["signal_rate"],
+                                "efficiency": conf_metrics.get("trading_efficiency", 0)
+                            }
+                            summary["best_models"].append(best_model)
+        
+        # 効率順にソート
+        if summary["best_models"]:
+            summary["best_models"].sort(key=lambda x: x.get("efficiency", 0), reverse=True)
+        
+        # 結果のログ出力
+        logger.info(f"評価完了: 合計 {summary['model_count']} モデル, 成功: {summary['success_count']}, エラー: {summary['error_count']}")
+        
+        if summary["best_models"]:
+            logger.info("最良モデル（上位5件）:")
+            for i, model in enumerate(summary["best_models"][:5]):
+                logger.info(f"  {i+1}. 閾値: {model['threshold']}, 方向: {model['direction']}, 期間: {model['period']}")
+                logger.info(f"     適合率: {model['precision']:.4f}, シグナル率: {model['signal_rate']:.4f}, 効率: {model['efficiency']:.4f}")
+        else:
+            logger.info("基準を満たす優良モデルは見つかりませんでした")
+        
+        # 結果を保存
+        import json
+        import datetime as dt
+        
+        # 評価結果
+        timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+        results_file = Path(output_dir) / f"high_threshold_evaluation_{timestamp}.json"
+        
+        # JSONに変換できるように調整（numpy型の変換など）
+        json_results = {}
+        for threshold_key, threshold_data in results.items():
+            json_results[threshold_key] = {}
+            for direction_key, direction_data in threshold_data.items():
+                json_results[threshold_key][direction_key] = {}
+                for period_key, period_data in direction_data.items():
+                    # numpy型をPythonネイティブ型に変換
+                    clean_data = {}
+                    for k, v in period_data.items():
+                        if k == "confidence_metrics":
+                            # 確信度閾値をキーとして持つ辞書
+                            clean_confidence = {}
+                            for conf_threshold, conf_metrics in v.items():
+                                # 文字列キーに変換
+                                clean_confidence[str(conf_threshold)] = {
+                                    ck: float(cv) if hasattr(cv, "item") and callable(getattr(cv, "item")) else cv
+                                    for ck, cv in conf_metrics.items()
+                                }
+                            clean_data[k] = clean_confidence
+                        elif hasattr(v, "item") and callable(getattr(v, "item")):
+                            clean_data[k] = v.item()
+                        else:
+                            clean_data[k] = v
+                    json_results[threshold_key][direction_key][period_key] = clean_data
+        
+        with open(results_file, "w", encoding="utf-8") as f:
+            json.dump(json_results, f, indent=2)
+        logger.info(f"評価結果を {results_file} に保存しました")
+        
+        # サマリー
+        summary_file = Path(output_dir) / f"high_threshold_summary_{timestamp}.json"
+        with open(summary_file, "w", encoding="utf-8") as f:
+            json.dump(summary, f, indent=2)
+        logger.info(f"評価サマリーを {summary_file} に保存しました")
+        
+        logger.info("高閾値シグナルモデルの評価が完了しました")
+        return results
+    except Exception as e:
+        logger.error(f"高閾値シグナルモデルの評価中にエラーが発生しました: {str(e)}")
+        import traceback
+        logger.error(f"トレースバック: {traceback.format_exc()}")
+        return None
+
 # フルパイプライン実行関数
 async def run_full_pipeline(args, logger):
     """フルパイプラインの実行"""
@@ -408,6 +718,28 @@ async def run_full_pipeline(args, logger):
         evaluation_results = evaluate_models(config, features_df, logger)
         if evaluation_results is None and not args.continue_on_error:
             logger.error("モデル評価に失敗しました。パイプラインを中断します。")
+            return False
+            
+    # 6. 高閾値シグナルモデルのトレーニング
+    if hasattr(args, 'skip_high_threshold_training') and args.skip_high_threshold_training:
+        logger.info("高閾値シグナルモデルのトレーニングステップをスキップします")
+        high_threshold_training_results = None
+    else:
+        logger.info("高閾値シグナルモデルのトレーニングを開始します")
+        high_threshold_training_results = train_high_threshold_models(config, features_df, logger)
+        if high_threshold_training_results is None and not args.continue_on_error:
+            logger.error("高閾値シグナルモデルのトレーニングに失敗しました。パイプラインを中断します。")
+            return False
+
+    # 7. 高閾値シグナルモデルの評価
+    if hasattr(args, 'skip_high_threshold_evaluation') and args.skip_high_threshold_evaluation:
+        logger.info("高閾値シグナルモデルの評価ステップをスキップします")
+        high_threshold_evaluation_results = None
+    else:
+        logger.info("高閾値シグナルモデルの評価を開始します")
+        high_threshold_evaluation_results = evaluate_high_threshold_models(config, features_df, logger)
+        if high_threshold_evaluation_results is None and not args.continue_on_error:
+            logger.error("高閾値シグナルモデルの評価に失敗しました。パイプラインを中断します。")
             return False
 
     logger.info("=== BTCUSD ML Predictor パイプラインが完了しました ===")

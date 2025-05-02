@@ -6,7 +6,11 @@ from typing import Dict, Any, Optional
 
 logger = logging.getLogger("feature_engineering.target")
 
-def generate_target_features(df: pd.DataFrame, target_periods: list, classification_threshold: float) -> pd.DataFrame:
+def generate_target_features(df: pd.DataFrame, target_periods: list, classification_threshold: float, high_threshold_config: Dict[str, Any] = None) -> pd.DataFrame:
+    """デバッグ情報: generate_target_features 関数が呼び出されました"""
+    logger.info("DEBUG: generate_target_features 関数が呼び出されました")
+    logger.info(f"DEBUG: 引数 - periods={target_periods}, threshold={classification_threshold}, high_config={high_threshold_config}")
+    
     """
     予測対象（目標変数）を生成
 
@@ -30,6 +34,22 @@ def generate_target_features(df: pd.DataFrame, target_periods: list, classificat
 
     # 価格の平滑化
     smoothed_close = df['close'].rolling(3).mean()
+
+    # 高閾値設定の処理
+    if high_threshold_config and "thresholds" in high_threshold_config:
+        # 設定から高閾値を読み込み
+        high_thresholds = high_threshold_config["thresholds"]
+        high_directions = high_threshold_config.get("directions", ["long", "short"])
+        high_periods = high_threshold_config.get("target_periods", target_periods)
+        
+        logger.info(f"外部設定からの高閾値シグナル設定: {[t*100 for t in high_thresholds]}%")
+        logger.info(f"方向: {high_directions}, 期間: {high_periods}")
+    else:
+        # デフォルトの高閾値を使用
+        high_thresholds = [0.001, 0.002, 0.003, 0.005]  # 0.1%, 0.2%, 0.3%, 0.5%
+        high_directions = ["long", "short"]
+        high_periods = target_periods
+        logger.info(f"デフォルトの高閾値シグナル設定: {[t*100 for t in high_thresholds]}%")
 
     # 各予測時間軸に対する目標変数を生成
     for period in target_periods:
@@ -82,12 +102,54 @@ def generate_target_features(df: pd.DataFrame, target_periods: list, classificat
                 0   # 横ばい
             )
         )
+        
+        # 高閾値ベースのシグナル変数（ロング/ショート特化モデル用）
+        # この期間が高閾値の指定期間に含まれているか確認
+        if period in high_periods:
+            for threshold in high_thresholds:
+                threshold_str = str(int(threshold * 1000))  # 0.002 -> '2'
+                
+                # 方向指定に応じて生成
+                if "long" in high_directions:
+                    # ロング専用シグナル
+                    features[f'target_high_threshold_{threshold_str}p_long_{period}'] = np.where(
+                        target_change >= threshold,
+                        1,  # 上昇シグナル
+                        0   # シグナルなし
+                    )
+                    logger.info(f"高閾値シグナル変数 target_high_threshold_{threshold_str}p_long_{period} を生成しました")
+                
+                if "short" in high_directions:
+                    # ショート専用シグナル
+                    features[f'target_high_threshold_{threshold_str}p_short_{period}'] = np.where(
+                        target_change <= -threshold,
+                        1,  # 下落シグナル
+                        0   # シグナルなし
+                    )
+                    logger.info(f"高閾値シグナル変数 target_high_threshold_{threshold_str}p_short_{period} を生成しました")
+        else:
+            logger.info(f"期間 {period} は高閾値シグナル対象から除外されています")
+        
 
     # データフレームに変換
     result_df = pd.DataFrame(features, index=df.index)
 
     # 生成された目標変数の統計情報をログに出力
     _log_target_statistics(result_df, target_periods)
+    
+    # 高閾値シグナル変数の確認
+    high_threshold_targets = [col for col in result_df.columns if 'high_threshold' in col]
+    if high_threshold_targets:
+        logger.info(f"生成された高閾値シグナル変数: {len(high_threshold_targets)}個")
+        for i, col in enumerate(high_threshold_targets[:10]):
+            value_counts = result_df[col].value_counts()
+            signal_ratio = value_counts.get(1, 0) / len(result_df) * 100
+            logger.info(f"  {i+1}. {col}: シグナル比率 {signal_ratio:.2f}%")
+        
+        if len(high_threshold_targets) > 10:
+            logger.info(f"  ...他 {len(high_threshold_targets)-10} 個")
+    else:
+        logger.warning("高閾値シグナル変数が生成されていません")
 
     logger.info(f"目標変数を含むデータフレームを生成完了。サイズ: {result_df.shape}")
     return result_df
@@ -167,6 +229,39 @@ def _log_target_statistics(df: pd.DataFrame, target_periods: list) -> None:
             if len(direction_counts) > 1:
                 class_ratio = direction_counts.min() / direction_counts.max()
                 logger.info(f"{direction_col} のクラスバランス比率: {class_ratio:.4f} (1に近いほど均等)")
+                
+        # 高閾値シグナル変数（ロング/ショート特化モデル用）
+        high_thresholds = [0.001, 0.002, 0.003, 0.005]
+        for threshold in high_thresholds:
+            threshold_str = str(int(threshold * 1000))
+            
+            # ロング専用シグナル
+            long_signal_col = f'target_high_threshold_{threshold_str}p_long_{period}'
+            if long_signal_col in df.columns:
+                long_counts = df[long_signal_col].value_counts()
+                long_pcts = df[long_signal_col].value_counts(normalize=True) * 100
+                logger.info(f"{long_signal_col} のクラス分布:")
+                for cls, count in long_counts.items():
+                    pct = long_pcts[cls]
+                    logger.info(f"  クラス {cls}: {count} サンプル ({pct:.2f}%)")
+                
+                # シグナル発生率
+                signal_rate = long_counts.get(1, 0) / len(df) * 100
+                logger.info(f"{long_signal_col} のシグナル発生率: {signal_rate:.4f}%")
+            
+            # ショート専用シグナル
+            short_signal_col = f'target_high_threshold_{threshold_str}p_short_{period}'
+            if short_signal_col in df.columns:
+                short_counts = df[short_signal_col].value_counts()
+                short_pcts = df[short_signal_col].value_counts(normalize=True) * 100
+                logger.info(f"{short_signal_col} のクラス分布:")
+                for cls, count in short_counts.items():
+                    pct = short_pcts[cls]
+                    logger.info(f"  クラス {cls}: {count} サンプル ({pct:.2f}%)")
+                
+                # シグナル発生率
+                signal_rate = short_counts.get(1, 0) / len(df) * 100
+                logger.info(f"{short_signal_col} のシグナル発生率: {signal_rate:.4f}%")
 
 def verify_target_variables(df: pd.DataFrame, threshold: float = 0.0005) -> Dict[str, Any]:
     """

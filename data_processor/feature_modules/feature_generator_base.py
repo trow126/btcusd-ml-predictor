@@ -16,6 +16,12 @@ class FeatureGeneratorBase:
     """特徴量生成の基本クラス"""
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
+        logger.info("DEBUG: FeatureGeneratorBase.__init__ が呼び出されました")
+        if config:
+            logger.info(f"DEBUG: 渡された設定キー: {list(config.keys())}")
+            if "high_threshold_models" in config:
+                logger.info(f"DEBUG: high_threshold_modelsの内容: {config['high_threshold_models']}")
+        
         """
         特徴量生成クラスの初期化
 

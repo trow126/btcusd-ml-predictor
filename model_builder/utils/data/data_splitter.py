@@ -1,4 +1,3 @@
-# model_builder/utils/data/data_splitter.py
 import pandas as pd
 import numpy as np
 import logging
@@ -105,6 +104,26 @@ def prepare_test_data(df: pd.DataFrame, test_size: float, target_periods: list) 
                 X_key = f"X_threshold_binary_{period}"
                 X_dict[X_key] = X_test.loc[valid_mask]
                 logger.info(f"prepare_test_data: 閾値ベース二値分類用の特徴量セット {X_key} を作成 ({len(X_dict[X_key])} 行)")
+
+    # 高閾値シグナル変数の処理
+    high_threshold_cols = [col for col in test_df.columns if 'high_threshold' in col]
+    if high_threshold_cols:
+        logger.info(f"prepare_test_data: {len(high_threshold_cols)}個の高閾値シグナル変数を対象に追加")
+        for col in high_threshold_cols:
+            # 元の変数名をそのまま使用
+            target_name = col
+            y_test[target_name] = test_df[col]
+            logger.info(f"prepare_test_data: 高閾値シグナル変数 {target_name} を追加")
+            
+        # 存在確認のログ出力
+        high_threshold_targets = [key for key in y_test.keys() if 'high_threshold' in key]
+        logger.info(f"prepare_test_data: y_test内の高閾値シグナル変数: {len(high_threshold_targets)}個")
+        for key in high_threshold_targets[:5]:
+            logger.info(f"  - {key}")
+        if len(high_threshold_targets) > 5:
+            logger.info(f"  ...その他 {len(high_threshold_targets)-5}個")
+    else:
+        logger.warning("prepare_test_data: 高閾値シグナル変数が見つかりません")
 
     logger.info(f"prepare_test_data: テストデータ: {len(X_test)}行, 特徴量: {len(feature_cols)}個")
     logger.info(f"prepare_test_data: 特徴量セット: {list(X_dict.keys())}")

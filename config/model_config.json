@@ -6,6 +6,11 @@
     "output_filename": "btcusd_5m_features.csv",
     "classification_threshold": 0.0001,
     "target_periods": [1, 2, 3],
+    "high_threshold_models": {
+      "target_periods": [1, 2, 3],
+      "directions": ["long", "short"],
+      "thresholds": [0.001, 0.0015, 0.002, 0.0025, 0.003, 0.004, 0.005]
+    },
     "features": {
       "price_change": true,
       "volume_change": true,

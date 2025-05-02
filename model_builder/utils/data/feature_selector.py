@@ -126,6 +126,28 @@ def prepare_features(df: pd.DataFrame, feature_groups: Dict[str, bool], target_p
         else:
             logger.warning(f"prepare_features: 目標変数 {target_col} がカラムに見つかりません")
 
+    # 高閾値シグナル変数の追加
+    high_threshold_cols = [col for col in df.columns if 'high_threshold' in col]
+    if high_threshold_cols:
+        logger.info(f"prepare_features: 高閾値シグナル変数 {len(high_threshold_cols)}個を目標変数に追加します")
+        
+        # パターン分析で閾値、方向、期間を抽出
+        for col in high_threshold_cols:
+            # 例: target_high_threshold_2p_long_3
+            parts = col.split('_')
+            if len(parts) >= 5:
+                threshold_part = parts[3]  # '2p'
+                direction = parts[4]        # 'long'
+                period = parts[5]           # '3'
+                
+                # 目標変数名を生成
+                # 元の変数名をそのまま使用
+                target_name = col
+                
+                # 目標変数を追加
+                y_dict[target_name] = df[col]
+                logger.info(f"prepare_features: 高閾値シグナル目標変数 {target_name} を追加")
+    
     logger.info(f"prepare_features: 特徴量: {len(feature_cols)}個, 目標変数: {len(y_dict)}個")
     logger.info(f"prepare_features: 特徴量セット: {list(X_dict.keys())}")
     logger.info(f"prepare_features: 目標変数名: {list(y_dict.keys())}")

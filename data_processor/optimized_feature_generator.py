@@ -112,10 +112,17 @@ class OptimizedFeatureGenerator(FeatureGeneratorBase):
 
         # 目標変数（ターゲット）の生成
         logger.info("目標変数を生成中...")
+        
+        # 高閾値シグナルモデル用の設定をチェック
+        high_threshold_config = self.config.get("high_threshold_models", {})
+        if high_threshold_config:
+            logger.info(f"高閾値シグナル設定を検出: {high_threshold_config}")
+            
         target_features = generate_target_features(
             result_df, 
             self.config["target_periods"],
-            self.config["classification_threshold"]
+            self.config["classification_threshold"],
+            high_threshold_config=high_threshold_config
         )
         feature_dfs.append(target_features)
 
@@ -165,6 +172,13 @@ class OptimizedFeatureGenerator(FeatureGeneratorBase):
 
 # 実行部分（外部から呼び出す場合）
 def generate_optimized_features(config=None) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    # デバッグ情報
+    logger.info("DEBUG: generate_optimized_features関数が呼び出されました")
+    if config:
+        logger.info(f"DEBUG: 渡された設定キー: {list(config.keys())}")
+        if "high_threshold_models" in config:
+            logger.info(f"DEBUG: high_threshold_modelsの内容: {config['high_threshold_models']}")
+    
     """
     最適化された特徴量を生成して保存する関数
 
