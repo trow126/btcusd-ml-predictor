@@ -1125,3 +1125,1206 @@
 2025-05-03 07:45:07,585 - high_threshold_training - INFO -       シグナル率: 0.0359
 2025-05-03 07:45:07,588 - high_threshold_training - INFO - 訓練結果を models\high_threshold\high_threshold_results_20250503_074507.json に保存しました
 2025-05-03 07:45:07,588 - high_threshold_training - INFO - 高閾値シグナルモデルの訓練が完了しました
+2025-05-03 10:14:58,673 - high_threshold_training - INFO - 高閾値シグナルモデルの訓練を開始します
+2025-05-03 10:14:58,673 - high_threshold_training - INFO - 期間: [1, 2, 3], 方向: ['long', 'short'], 閾値: [0.001, 0.002, 0.003, 0.005]
+2025-05-03 10:14:58,674 - high_threshold_training - INFO - データの読み込み: data/processed/btcusd_5m_features.csv
+2025-05-03 10:14:58,674 - data_loader - INFO - load_data: データを data\processed\btcusd_5m_features.csv から読み込みます
+2025-05-03 10:14:58,686 - data_loader - INFO - ファイルのカラム: ['timestamp', 'close', 'volume', 'turnover', 'candle_size']... (全91列)
+2025-05-03 10:14:58,686 - data_loader - INFO - timestampカラムをインデックスとして読み込みます
+2025-05-03 10:14:59,757 - data_loader - INFO - load_data: 136342 行のデータを読み込みました
+2025-05-03 10:14:59,757 - high_threshold_training - INFO - データ情報: 行数=136342, 列数=90
+2025-05-03 10:14:59,757 - high_threshold_training - INFO - 高閾値ターゲット変数が24個見つかりました
+2025-05-03 10:14:59,757 - high_threshold_training - INFO -   1. target_high_threshold_1p_long_1
+2025-05-03 10:14:59,758 - high_threshold_training - INFO -   2. target_high_threshold_1p_short_1
+2025-05-03 10:14:59,758 - high_threshold_training - INFO -   3. target_high_threshold_2p_long_1
+2025-05-03 10:14:59,758 - high_threshold_training - INFO -   4. target_high_threshold_2p_short_1
+2025-05-03 10:14:59,758 - high_threshold_training - INFO -   5. target_high_threshold_3p_long_1
+2025-05-03 10:14:59,758 - high_threshold_training - INFO -   6. target_high_threshold_3p_short_1
+2025-05-03 10:14:59,758 - high_threshold_training - INFO -   7. target_high_threshold_5p_long_1
+2025-05-03 10:14:59,758 - high_threshold_training - INFO -   8. target_high_threshold_5p_short_1
+2025-05-03 10:14:59,759 - high_threshold_training - INFO -   9. target_high_threshold_1p_long_2
+2025-05-03 10:14:59,759 - high_threshold_training - INFO -   10. target_high_threshold_1p_short_2
+2025-05-03 10:14:59,759 - high_threshold_training - INFO -   ...その他 14 個
+2025-05-03 10:14:59,760 - high_threshold_training - INFO - target_high_threshold_1p_long_1 のクラス分布: {0: 111907, 1: 24435}
+2025-05-03 10:14:59,760 - high_threshold_training - INFO - target_high_threshold_1p_short_1 のクラス分布: {0: 112609, 1: 23733}
+2025-05-03 10:14:59,761 - high_threshold_training - INFO - target_high_threshold_2p_long_1 のクラス分布: {0: 128001, 1: 8341}
+2025-05-03 10:14:59,761 - high_threshold_training - INFO - 特徴量と目標変数の準備
+2025-05-03 10:14:59,761 - feature_selector - INFO - prepare_features: 特徴量と目標変数の準備を開始します
+2025-05-03 10:14:59,761 - feature_selector - INFO - 選択された特徴量: 42個
+2025-05-03 10:14:59,768 - feature_selector - WARNING - prepare_features: 目標変数 target_smoothed_change_1 がカラムに見つかりません
+2025-05-03 10:14:59,768 - feature_selector - WARNING - prepare_features: 目標変数 target_binary_1 がカラムに見つかりません
+2025-05-03 10:14:59,782 - feature_selector - INFO - prepare_features: threshold_binary_classification_1 用の特徴量セット X_threshold_binary_1 を作成 (136342 行)
+2025-05-03 10:14:59,782 - feature_selector - WARNING - prepare_features: 目標変数 target_smoothed_change_2 がカラムに見つかりません
+2025-05-03 10:14:59,782 - feature_selector - WARNING - prepare_features: 目標変数 target_binary_2 がカラムに見つかりません
+2025-05-03 10:14:59,793 - feature_selector - INFO - prepare_features: threshold_binary_classification_2 用の特徴量セット X_threshold_binary_2 を作成 (136342 行)
+2025-05-03 10:14:59,793 - feature_selector - WARNING - prepare_features: 目標変数 target_smoothed_change_3 がカラムに見つかりません
+2025-05-03 10:14:59,794 - feature_selector - WARNING - prepare_features: 目標変数 target_binary_3 がカラムに見つかりません
+2025-05-03 10:14:59,804 - feature_selector - INFO - prepare_features: threshold_binary_classification_3 用の特徴量セット X_threshold_binary_3 を作成 (136342 行)
+2025-05-03 10:14:59,804 - feature_selector - INFO - prepare_features: 高閾値シグナル変数 24個を目標変数に追加します
+2025-05-03 10:14:59,804 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_long_1 を追加
+2025-05-03 10:14:59,804 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_short_1 を追加
+2025-05-03 10:14:59,804 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_long_1 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_short_1 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_long_1 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_short_1 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_long_1 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_short_1 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_long_2 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_short_2 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_long_2 を追加
+2025-05-03 10:14:59,805 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_short_2 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_long_2 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_short_2 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_long_2 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_short_2 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_long_3 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_short_3 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_long_3 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_short_3 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_long_3 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_short_3 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_long_3 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_short_3 を追加
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 特徴量: 42個, 目標変数: 36個
+2025-05-03 10:14:59,806 - feature_selector - INFO - prepare_features: 特徴量セット: ['X', 'X_threshold_binary_1', 'X_threshold_binary_2', 'X_threshold_binary_3']
+2025-05-03 10:14:59,807 - feature_selector - INFO - prepare_features: 目標変数名: ['regression_1', 'classification_1', 'threshold_ternary_classification_1', 'threshold_binary_classification_1', 'regression_2', 'classification_2', 'threshold_ternary_classification_2', 'threshold_binary_classification_2', 'regression_3', 'classification_3', 'threshold_ternary_classification_3', 'threshold_binary_classification_3', 'target_high_threshold_1p_long_1', 'target_high_threshold_1p_short_1', 'target_high_threshold_2p_long_1', 'target_high_threshold_2p_short_1', 'target_high_threshold_3p_long_1', 'target_high_threshold_3p_short_1', 'target_high_threshold_5p_long_1', 'target_high_threshold_5p_short_1', 'target_high_threshold_1p_long_2', 'target_high_threshold_1p_short_2', 'target_high_threshold_2p_long_2', 'target_high_threshold_2p_short_2', 'target_high_threshold_3p_long_2', 'target_high_threshold_3p_short_2', 'target_high_threshold_5p_long_2', 'target_high_threshold_5p_short_2', 'target_high_threshold_1p_long_3', 'target_high_threshold_1p_short_3', 'target_high_threshold_2p_long_3', 'target_high_threshold_2p_short_3', 'target_high_threshold_3p_long_3', 'target_high_threshold_3p_short_3', 'target_high_threshold_5p_long_3', 'target_high_threshold_5p_short_3']
+2025-05-03 10:14:59,807 - feature_selector - INFO - prepare_features: classification_1 のクラスバランス: {1: 68199, -1: 68143}
+2025-05-03 10:14:59,808 - feature_selector - INFO - prepare_features: threshold_ternary_classification_1 のクラスバランス: {1: 68199, 0: 68143}
+2025-05-03 10:14:59,809 - feature_selector - INFO - prepare_features: threshold_binary_classification_1 のクラスバランス: {1.0: 68199, 0.0: 68143}
+2025-05-03 10:14:59,810 - feature_selector - INFO - prepare_features: classification_2 のクラスバランス: {1: 68308, -1: 68034}
+2025-05-03 10:14:59,811 - feature_selector - INFO - prepare_features: threshold_ternary_classification_2 のクラスバランス: {1: 68308, 0: 68034}
+2025-05-03 10:14:59,812 - feature_selector - INFO - prepare_features: threshold_binary_classification_2 のクラスバランス: {1.0: 68308, 0.0: 68034}
+2025-05-03 10:14:59,812 - feature_selector - INFO - prepare_features: classification_3 のクラスバランス: {1: 68344, -1: 67998}
+2025-05-03 10:14:59,813 - feature_selector - INFO - prepare_features: threshold_ternary_classification_3 のクラスバランス: {1: 68344, 0: 67998}
+2025-05-03 10:14:59,814 - feature_selector - INFO - prepare_features: threshold_binary_classification_3 のクラスバランス: {1.0: 68344, 0.0: 67998}
+2025-05-03 10:14:59,814 - feature_selector - INFO - prepare_features: 特徴量と目標変数の準備を終了します
+2025-05-03 10:14:59,814 - high_threshold_training - INFO - トレーニングデータとテストデータの分割
+2025-05-03 10:14:59,814 - data_splitter - INFO - train_test_split: トレーニングデータとテストデータへの分割を開始します
+2025-05-03 10:14:59,832 - data_splitter - INFO - train_test_split: トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:14:59,832 - data_splitter - INFO - train_test_split: トレーニングデータとテストデータへの分割を終了します
+2025-05-03 10:14:59,832 - high_threshold_training - INFO - 利用可能な目標変数の確認:
+2025-05-03 10:14:59,832 - high_threshold_training - INFO - - target_high_threshold_1p_long_1
+2025-05-03 10:14:59,832 - high_threshold_training - INFO - - target_high_threshold_1p_short_1
+2025-05-03 10:14:59,832 - high_threshold_training - INFO - - target_high_threshold_2p_long_1
+2025-05-03 10:14:59,832 - high_threshold_training - INFO - - target_high_threshold_2p_short_1
+2025-05-03 10:14:59,832 - high_threshold_training - INFO - - target_high_threshold_3p_long_1
+2025-05-03 10:14:59,832 - high_threshold_training - INFO - - target_high_threshold_3p_short_1
+2025-05-03 10:14:59,832 - high_threshold_training - INFO - - target_high_threshold_5p_long_1
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_5p_short_1
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_1p_long_2
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_1p_short_2
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_2p_long_2
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_2p_short_2
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_3p_long_2
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_3p_short_2
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_5p_long_2
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_5p_short_2
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_1p_long_3
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_1p_short_3
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_2p_long_3
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_2p_short_3
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_3p_long_3
+2025-05-03 10:14:59,833 - high_threshold_training - INFO - - target_high_threshold_3p_short_3
+2025-05-03 10:14:59,834 - high_threshold_training - INFO - - target_high_threshold_5p_long_3
+2025-05-03 10:14:59,834 - high_threshold_training - INFO - - target_high_threshold_5p_short_3
+2025-05-03 10:14:59,834 - high_threshold_training - INFO - 閾値:0.1% 方向:long 期間:1のモデルを訓練
+2025-05-03 10:14:59,834 - base_trainer - INFO - ==== train: 1期先の高閾値(0.1%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:14:59,834 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_1p_long_1 の準備を開始
+2025-05-03 10:14:59,835 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 90136, 1: 18938}
+2025-05-03 10:14:59,835 - base_trainer - INFO - シグナル発生率: 17.36%
+2025-05-03 10:14:59,835 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:14:59,836 - base_trainer - INFO - クラス不均衡比率: 4.7595 (シグナル:非シグナル = 1:4.8)
+2025-05-03 10:14:59,836 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 4.7595
+2025-05-03 10:14:59,836 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(4.7595311014890695), 'verbose': -1}
+2025-05-03 10:14:59,836 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:00,183 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 5)
+2025-05-03 10:15:00,184 - base_trainer - INFO - テストデータのクラス分布: {0: 21771, 1: 5497}
+2025-05-03 10:15:00,186 - base_trainer - INFO - 予測確率の範囲: 最小=0.1645, 最大=0.2638, 平均=0.2231
+2025-05-03 10:15:00,186 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,186 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,186 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,186 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,187 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,187 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,187 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,187 - base_trainer - INFO - 評価指標 - 精度: 0.7984, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:00,187 - base_trainer - INFO - シグナル比率: 0.2016
+2025-05-03 10:15:00,187 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:00,187 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,188 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,188 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,188 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,188 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,188 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,188 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,188 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_1p_long_1.joblib
+2025-05-03 10:15:00,190 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_1p_long_1.joblib に保存しました
+2025-05-03 10:15:00,190 - high_threshold_training - INFO - モデル評価: 精度=0.7984, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:00,190 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,190 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,190 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,190 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,190 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,190 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,190 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,190 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:00,190 - high_threshold_training - INFO - 閾値:0.1% 方向:long 期間:2のモデルを訓練
+2025-05-03 10:15:00,190 - base_trainer - INFO - ==== train: 2期先の高閾値(0.1%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:00,191 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_1p_long_2 の準備を開始
+2025-05-03 10:15:00,192 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 82416, 1: 26658}
+2025-05-03 10:15:00,192 - base_trainer - INFO - シグナル発生率: 24.44%
+2025-05-03 10:15:00,192 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:00,193 - base_trainer - INFO - クラス不均衡比率: 3.0916 (シグナル:非シグナル = 1:3.1)
+2025-05-03 10:15:00,193 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 3.0916
+2025-05-03 10:15:00,193 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(3.091604771550754), 'verbose': -1}
+2025-05-03 10:15:00,193 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:00,556 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 7)
+2025-05-03 10:15:00,557 - base_trainer - INFO - テストデータのクラス分布: {0: 19625, 1: 7643}
+2025-05-03 10:15:00,559 - base_trainer - INFO - 予測確率の範囲: 最小=0.2264, 最大=0.3398, 平均=0.2981
+2025-05-03 10:15:00,559 - base_trainer - INFO - 閾値 0.3: シグナル数=12372, シグナル率=0.4537
+2025-05-03 10:15:00,571 - base_trainer - INFO - 閾値 0.3: 適合率=0.3480, 再現率=0.5633, F1スコア=0.4302
+2025-05-03 10:15:00,571 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,571 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,571 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,571 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,571 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,571 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,572 - base_trainer - INFO - 評価指標 - 精度: 0.7197, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:00,572 - base_trainer - INFO - シグナル比率: 0.2803
+2025-05-03 10:15:00,572 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:00,572 - base_trainer - INFO -   閾値 0.3: 適合率=0.3480, 発生率=0.4537, シグナル数=12372
+2025-05-03 10:15:00,572 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,572 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,572 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,572 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,572 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,572 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,573 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_1p_long_2.joblib
+2025-05-03 10:15:00,574 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_1p_long_2.joblib に保存しました
+2025-05-03 10:15:00,574 - high_threshold_training - INFO - モデル評価: 精度=0.7197, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:00,574 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.3480, シグナル率=0.4537, シグナル数=12372
+2025-05-03 10:15:00,575 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,575 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,575 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,575 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,575 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,575 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,575 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:00,575 - high_threshold_training - INFO - 閾値:0.1% 方向:long 期間:3のモデルを訓練
+2025-05-03 10:15:00,575 - base_trainer - INFO - ==== train: 3期先の高閾値(0.1%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:00,575 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_1p_long_3 の準備を開始
+2025-05-03 10:15:00,576 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 78466, 1: 30608}
+2025-05-03 10:15:00,577 - base_trainer - INFO - シグナル発生率: 28.06%
+2025-05-03 10:15:00,577 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:00,578 - base_trainer - INFO - クラス不均衡比率: 2.5636 (シグナル:非シグナル = 1:2.6)
+2025-05-03 10:15:00,578 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 2.5636
+2025-05-03 10:15:00,578 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(2.563578149503398), 'verbose': -1}
+2025-05-03 10:15:00,578 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:00,941 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 7)
+2025-05-03 10:15:00,943 - base_trainer - INFO - テストデータのクラス分布: {0: 18803, 1: 8465}
+2025-05-03 10:15:00,944 - base_trainer - INFO - 予測確率の範囲: 最小=0.2648, 最大=0.3665, 平均=0.3274
+2025-05-03 10:15:00,945 - base_trainer - INFO - 閾値 0.3: シグナル数=26219, シグナル率=0.9615
+2025-05-03 10:15:00,955 - base_trainer - INFO - 閾値 0.3: 適合率=0.3185, 再現率=0.9864, F1スコア=0.4815
+2025-05-03 10:15:00,955 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,955 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,955 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,956 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,956 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,956 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:00,956 - base_trainer - INFO - 評価指標 - 精度: 0.6896, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:00,956 - base_trainer - INFO - シグナル比率: 0.3104
+2025-05-03 10:15:00,956 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:00,956 - base_trainer - INFO -   閾値 0.3: 適合率=0.3185, 発生率=0.9615, シグナル数=26219
+2025-05-03 10:15:00,957 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,957 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,957 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,957 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,957 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,957 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:00,957 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_1p_long_3.joblib
+2025-05-03 10:15:00,959 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_1p_long_3.joblib に保存しました
+2025-05-03 10:15:00,959 - high_threshold_training - INFO - モデル評価: 精度=0.6896, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:00,959 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.3185, シグナル率=0.9615, シグナル数=26219
+2025-05-03 10:15:00,959 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,959 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,959 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,959 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,959 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,959 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:00,959 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:00,959 - high_threshold_training - INFO - 閾値:0.1% 方向:short 期間:1のモデルを訓練
+2025-05-03 10:15:00,960 - base_trainer - INFO - ==== train: 1期先の高閾値(0.1%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:00,960 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_1p_short_1 の準備を開始
+2025-05-03 10:15:00,961 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 90753, 1: 18321}
+2025-05-03 10:15:00,961 - base_trainer - INFO - シグナル発生率: 16.80%
+2025-05-03 10:15:00,961 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:00,962 - base_trainer - INFO - クラス不均衡比率: 4.9535 (シグナル:非シグナル = 1:5.0)
+2025-05-03 10:15:00,962 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 4.9535
+2025-05-03 10:15:00,962 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(4.953495988210251), 'verbose': -1}
+2025-05-03 10:15:00,963 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:01,321 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 6)
+2025-05-03 10:15:01,322 - base_trainer - INFO - テストデータのクラス分布: {0: 21856, 1: 5412}
+2025-05-03 10:15:01,324 - base_trainer - INFO - 予測確率の範囲: 最小=0.1602, 最大=0.2682, 平均=0.2245
+2025-05-03 10:15:01,324 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,325 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,325 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,325 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,325 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,325 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,325 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,326 - base_trainer - INFO - 評価指標 - 精度: 0.8015, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:01,326 - base_trainer - INFO - シグナル比率: 0.1985
+2025-05-03 10:15:01,326 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:01,326 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,326 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,326 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,326 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,326 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,326 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,326 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,327 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_1p_short_1.joblib
+2025-05-03 10:15:01,328 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_1p_short_1.joblib に保存しました
+2025-05-03 10:15:01,328 - high_threshold_training - INFO - モデル評価: 精度=0.8015, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:01,328 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,328 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,328 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,328 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,328 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,328 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,329 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,329 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:01,329 - high_threshold_training - INFO - 閾値:0.1% 方向:short 期間:2のモデルを訓練
+2025-05-03 10:15:01,329 - base_trainer - INFO - ==== train: 2期先の高閾値(0.1%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:01,329 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_1p_short_2 の準備を開始
+2025-05-03 10:15:01,330 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 83105, 1: 25969}
+2025-05-03 10:15:01,330 - base_trainer - INFO - シグナル発生率: 23.81%
+2025-05-03 10:15:01,330 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:01,331 - base_trainer - INFO - クラス不均衡比率: 3.2002 (シグナル:非シグナル = 1:3.2)
+2025-05-03 10:15:01,332 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 3.2002
+2025-05-03 10:15:01,332 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(3.2001617312950055), 'verbose': -1}
+2025-05-03 10:15:01,332 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:01,690 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 7)
+2025-05-03 10:15:01,692 - base_trainer - INFO - テストデータのクラス分布: {0: 19825, 1: 7443}
+2025-05-03 10:15:01,693 - base_trainer - INFO - 予測確率の範囲: 最小=0.2182, 最大=0.3289, 平均=0.2922
+2025-05-03 10:15:01,694 - base_trainer - INFO - 閾値 0.3: シグナル数=10528, シグナル率=0.3861
+2025-05-03 10:15:01,704 - base_trainer - INFO - 閾値 0.3: 適合率=0.3537, 再現率=0.5003, F1スコア=0.4144
+2025-05-03 10:15:01,704 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,704 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,705 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,705 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,705 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,705 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:01,705 - base_trainer - INFO - 評価指標 - 精度: 0.7270, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:01,705 - base_trainer - INFO - シグナル比率: 0.2730
+2025-05-03 10:15:01,705 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:01,706 - base_trainer - INFO -   閾値 0.3: 適合率=0.3537, 発生率=0.3861, シグナル数=10528
+2025-05-03 10:15:01,706 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,706 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,706 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,706 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,706 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,706 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:01,706 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_1p_short_2.joblib
+2025-05-03 10:15:01,708 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_1p_short_2.joblib に保存しました
+2025-05-03 10:15:01,708 - high_threshold_training - INFO - モデル評価: 精度=0.7270, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:01,708 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.3537, シグナル率=0.3861, シグナル数=10528
+2025-05-03 10:15:01,708 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,708 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,708 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,708 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,708 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,708 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:01,709 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:01,709 - high_threshold_training - INFO - 閾値:0.1% 方向:short 期間:3のモデルを訓練
+2025-05-03 10:15:01,709 - base_trainer - INFO - ==== train: 3期先の高閾値(0.1%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:01,709 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_1p_short_3 の準備を開始
+2025-05-03 10:15:01,710 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 79177, 1: 29897}
+2025-05-03 10:15:01,710 - base_trainer - INFO - シグナル発生率: 27.41%
+2025-05-03 10:15:01,710 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:01,711 - base_trainer - INFO - クラス不均衡比率: 2.6483 (シグナル:非シグナル = 1:2.6)
+2025-05-03 10:15:01,711 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 2.6483
+2025-05-03 10:15:01,712 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(2.6483259189885273), 'verbose': -1}
+2025-05-03 10:15:01,712 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:02,080 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 7)
+2025-05-03 10:15:02,082 - base_trainer - INFO - テストデータのクラス分布: {0: 18978, 1: 8290}
+2025-05-03 10:15:02,083 - base_trainer - INFO - 予測確率の範囲: 最小=0.2455, 最大=0.3538, 平均=0.3212
+2025-05-03 10:15:02,084 - base_trainer - INFO - 閾値 0.3: シグナル数=24142, シグナル率=0.8854
+2025-05-03 10:15:02,094 - base_trainer - INFO - 閾値 0.3: 適合率=0.3199, 再現率=0.9315, F1スコア=0.4762
+2025-05-03 10:15:02,095 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,095 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,095 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,095 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,095 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,095 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,096 - base_trainer - INFO - 評価指標 - 精度: 0.6960, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:02,096 - base_trainer - INFO - シグナル比率: 0.3040
+2025-05-03 10:15:02,096 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:02,096 - base_trainer - INFO -   閾値 0.3: 適合率=0.3199, 発生率=0.8854, シグナル数=24142
+2025-05-03 10:15:02,096 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,096 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,096 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,096 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,096 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,096 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,096 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_1p_short_3.joblib
+2025-05-03 10:15:02,098 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_1p_short_3.joblib に保存しました
+2025-05-03 10:15:02,098 - high_threshold_training - INFO - モデル評価: 精度=0.6960, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:02,098 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.3199, シグナル率=0.8854, シグナル数=24142
+2025-05-03 10:15:02,098 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,098 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,098 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,098 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,098 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,098 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,099 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:02,099 - high_threshold_training - INFO - 閾値:0.2% 方向:long 期間:1のモデルを訓練
+2025-05-03 10:15:02,099 - base_trainer - INFO - ==== train: 1期先の高閾値(0.2%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:02,099 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_2p_long_1 の準備を開始
+2025-05-03 10:15:02,100 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 102669, 1: 6405}
+2025-05-03 10:15:02,100 - base_trainer - INFO - シグナル発生率: 5.87%
+2025-05-03 10:15:02,100 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:02,101 - base_trainer - INFO - クラス不均衡比率: 16.0295 (シグナル:非シグナル = 1:16.0)
+2025-05-03 10:15:02,101 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 16.0295
+2025-05-03 10:15:02,101 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(16.029508196721313), 'verbose': -1}
+2025-05-03 10:15:02,102 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:02,450 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 3)
+2025-05-03 10:15:02,452 - base_trainer - INFO - テストデータのクラス分布: {0: 25332, 1: 1936}
+2025-05-03 10:15:02,453 - base_trainer - INFO - 予測確率の範囲: 最小=0.0561, 最大=0.1385, 平均=0.0952
+2025-05-03 10:15:02,454 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,454 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,454 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,454 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,454 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,454 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,455 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,455 - base_trainer - INFO - 評価指標 - 精度: 0.9290, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:02,455 - base_trainer - INFO - シグナル比率: 0.0710
+2025-05-03 10:15:02,455 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:02,455 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,455 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,455 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,455 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,455 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,456 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,456 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,456 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_2p_long_1.joblib
+2025-05-03 10:15:02,457 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_2p_long_1.joblib に保存しました
+2025-05-03 10:15:02,457 - high_threshold_training - INFO - モデル評価: 精度=0.9290, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:02,457 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,457 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,457 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,458 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,458 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,458 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,458 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,458 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:02,458 - high_threshold_training - INFO - 閾値:0.2% 方向:long 期間:2のモデルを訓練
+2025-05-03 10:15:02,458 - base_trainer - INFO - ==== train: 2期先の高閾値(0.2%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:02,458 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_2p_long_2 の準備を開始
+2025-05-03 10:15:02,459 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 97305, 1: 11769}
+2025-05-03 10:15:02,460 - base_trainer - INFO - シグナル発生率: 10.79%
+2025-05-03 10:15:02,460 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:02,461 - base_trainer - INFO - クラス不均衡比率: 8.2679 (シグナル:非シグナル = 1:8.3)
+2025-05-03 10:15:02,461 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 8.2679
+2025-05-03 10:15:02,461 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(8.26790721386694), 'verbose': -1}
+2025-05-03 10:15:02,461 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:02,816 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 3)
+2025-05-03 10:15:02,818 - base_trainer - INFO - テストデータのクラス分布: {0: 23767, 1: 3501}
+2025-05-03 10:15:02,819 - base_trainer - INFO - 予測確率の範囲: 最小=0.1035, 最大=0.1732, 平均=0.1431
+2025-05-03 10:15:02,819 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,820 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,820 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,820 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,820 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,820 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,820 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:02,821 - base_trainer - INFO - 評価指標 - 精度: 0.8716, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:02,821 - base_trainer - INFO - シグナル比率: 0.1284
+2025-05-03 10:15:02,821 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:02,821 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,821 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,821 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,821 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,821 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,821 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,821 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:02,822 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_2p_long_2.joblib
+2025-05-03 10:15:02,823 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_2p_long_2.joblib に保存しました
+2025-05-03 10:15:02,823 - high_threshold_training - INFO - モデル評価: 精度=0.8716, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:02,823 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,823 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,823 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,823 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,823 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,823 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,824 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:02,824 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:02,824 - high_threshold_training - INFO - 閾値:0.2% 方向:long 期間:3のモデルを訓練
+2025-05-03 10:15:02,824 - base_trainer - INFO - ==== train: 3期先の高閾値(0.2%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:02,824 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_2p_long_3 の準備を開始
+2025-05-03 10:15:02,825 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 93902, 1: 15172}
+2025-05-03 10:15:02,825 - base_trainer - INFO - シグナル発生率: 13.91%
+2025-05-03 10:15:02,825 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:02,826 - base_trainer - INFO - クラス不均衡比率: 6.1892 (シグナル:非シグナル = 1:6.2)
+2025-05-03 10:15:02,826 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 6.1892
+2025-05-03 10:15:02,827 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(6.189164249934089), 'verbose': -1}
+2025-05-03 10:15:02,827 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:03,181 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 4)
+2025-05-03 10:15:03,183 - base_trainer - INFO - テストデータのクラス分布: {0: 22776, 1: 4492}
+2025-05-03 10:15:03,184 - base_trainer - INFO - 予測確率の範囲: 最小=0.1324, 最大=0.2193, 平均=0.1822
+2025-05-03 10:15:03,185 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,185 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,185 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,185 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,185 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,185 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,186 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,186 - base_trainer - INFO - 評価指標 - 精度: 0.8353, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:03,186 - base_trainer - INFO - シグナル比率: 0.1647
+2025-05-03 10:15:03,186 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:03,186 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,187 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,187 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,187 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,187 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,187 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,187 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,187 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_2p_long_3.joblib
+2025-05-03 10:15:03,189 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_2p_long_3.joblib に保存しました
+2025-05-03 10:15:03,189 - high_threshold_training - INFO - モデル評価: 精度=0.8353, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:03,189 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,189 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,189 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,189 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,189 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,189 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,189 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,189 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:03,190 - high_threshold_training - INFO - 閾値:0.2% 方向:short 期間:1のモデルを訓練
+2025-05-03 10:15:03,190 - base_trainer - INFO - ==== train: 1期先の高閾値(0.2%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:03,190 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_2p_short_1 の準備を開始
+2025-05-03 10:15:03,191 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 102962, 1: 6112}
+2025-05-03 10:15:03,191 - base_trainer - INFO - シグナル発生率: 5.60%
+2025-05-03 10:15:03,191 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:03,192 - base_trainer - INFO - クラス不均衡比率: 16.8459 (シグナル:非シグナル = 1:16.8)
+2025-05-03 10:15:03,192 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 16.8459
+2025-05-03 10:15:03,193 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(16.845876963350786), 'verbose': -1}
+2025-05-03 10:15:03,193 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:03,532 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 3)
+2025-05-03 10:15:03,533 - base_trainer - INFO - テストデータのクラス分布: {0: 25348, 1: 1920}
+2025-05-03 10:15:03,535 - base_trainer - INFO - 予測確率の範囲: 最小=0.0535, 最大=0.1341, 平均=0.0918
+2025-05-03 10:15:03,535 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,535 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,535 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,536 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,536 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,536 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,536 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,536 - base_trainer - INFO - 評価指標 - 精度: 0.9296, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:03,537 - base_trainer - INFO - シグナル比率: 0.0704
+2025-05-03 10:15:03,537 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:03,537 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,537 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,537 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,537 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,537 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,537 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,537 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,537 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_2p_short_1.joblib
+2025-05-03 10:15:03,539 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_2p_short_1.joblib に保存しました
+2025-05-03 10:15:03,539 - high_threshold_training - INFO - モデル評価: 精度=0.9296, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:03,539 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,539 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,539 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,539 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,539 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,539 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,539 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,539 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:03,539 - high_threshold_training - INFO - 閾値:0.2% 方向:short 期間:2のモデルを訓練
+2025-05-03 10:15:03,539 - base_trainer - INFO - ==== train: 2期先の高閾値(0.2%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:03,540 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_2p_short_2 の準備を開始
+2025-05-03 10:15:03,540 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 97958, 1: 11116}
+2025-05-03 10:15:03,541 - base_trainer - INFO - シグナル発生率: 10.19%
+2025-05-03 10:15:03,541 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:03,542 - base_trainer - INFO - クラス不均衡比率: 8.8123 (シグナル:非シグナル = 1:8.8)
+2025-05-03 10:15:03,542 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 8.8123
+2025-05-03 10:15:03,542 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(8.812342569269521), 'verbose': -1}
+2025-05-03 10:15:03,542 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:03,882 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 4)
+2025-05-03 10:15:03,884 - base_trainer - INFO - テストデータのクラス分布: {0: 23815, 1: 3453}
+2025-05-03 10:15:03,885 - base_trainer - INFO - 予測確率の範囲: 最小=0.0965, 最大=0.1855, 平均=0.1463
+2025-05-03 10:15:03,886 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,886 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,886 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,886 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,886 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,886 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,887 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:03,887 - base_trainer - INFO - 評価指標 - 精度: 0.8734, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:03,887 - base_trainer - INFO - シグナル比率: 0.1266
+2025-05-03 10:15:03,887 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:03,887 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,887 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,887 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,887 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,887 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,887 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,888 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:03,888 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_2p_short_2.joblib
+2025-05-03 10:15:03,889 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_2p_short_2.joblib に保存しました
+2025-05-03 10:15:03,889 - high_threshold_training - INFO - モデル評価: 精度=0.8734, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:03,889 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,889 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,889 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,890 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,890 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,890 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,890 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:03,890 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:03,890 - high_threshold_training - INFO - 閾値:0.2% 方向:short 期間:3のモデルを訓練
+2025-05-03 10:15:03,890 - base_trainer - INFO - ==== train: 3期先の高閾値(0.2%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:03,890 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_2p_short_3 の準備を開始
+2025-05-03 10:15:03,891 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 94552, 1: 14522}
+2025-05-03 10:15:03,891 - base_trainer - INFO - シグナル発生率: 13.31%
+2025-05-03 10:15:03,892 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:03,893 - base_trainer - INFO - クラス不均衡比率: 6.5109 (シグナル:非シグナル = 1:6.5)
+2025-05-03 10:15:03,893 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 6.5109
+2025-05-03 10:15:03,893 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(6.510948905109489), 'verbose': -1}
+2025-05-03 10:15:03,893 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:04,235 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 4)
+2025-05-03 10:15:04,240 - base_trainer - INFO - テストデータのクラス分布: {0: 22864, 1: 4404}
+2025-05-03 10:15:04,242 - base_trainer - INFO - 予測確率の範囲: 最小=0.1267, 最大=0.2076, 平均=0.1756
+2025-05-03 10:15:04,242 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,242 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,242 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,242 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,242 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,243 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,243 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,243 - base_trainer - INFO - 評価指標 - 精度: 0.8385, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:04,243 - base_trainer - INFO - シグナル比率: 0.1615
+2025-05-03 10:15:04,243 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:04,243 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,243 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,243 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,244 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,244 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,244 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,244 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,244 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_2p_short_3.joblib
+2025-05-03 10:15:04,245 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_2p_short_3.joblib に保存しました
+2025-05-03 10:15:04,245 - high_threshold_training - INFO - モデル評価: 精度=0.8385, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:04,245 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,246 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,246 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,246 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,246 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,246 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,246 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,246 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:04,246 - high_threshold_training - INFO - 閾値:0.3% 方向:long 期間:1のモデルを訓練
+2025-05-03 10:15:04,246 - base_trainer - INFO - ==== train: 1期先の高閾値(0.3%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:04,246 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_3p_long_1 の準備を開始
+2025-05-03 10:15:04,247 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 106280, 1: 2794}
+2025-05-03 10:15:04,247 - base_trainer - INFO - シグナル発生率: 2.56%
+2025-05-03 10:15:04,248 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:04,249 - base_trainer - INFO - クラス不均衡比率: 38.0387 (シグナル:非シグナル = 1:38.0)
+2025-05-03 10:15:04,249 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 38.0387
+2025-05-03 10:15:04,249 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(38.0386542591267), 'verbose': -1}
+2025-05-03 10:15:04,249 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:04,579 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 1)
+2025-05-03 10:15:04,580 - base_trainer - INFO - テストデータのクラス分布: {0: 26402, 1: 866}
+2025-05-03 10:15:04,581 - base_trainer - INFO - 予測確率の範囲: 最小=0.0249, 最大=0.0684, 平均=0.0379
+2025-05-03 10:15:04,581 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,581 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,581 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,582 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,582 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,582 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,582 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,582 - base_trainer - INFO - 評価指標 - 精度: 0.9682, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:04,583 - base_trainer - INFO - シグナル比率: 0.0318
+2025-05-03 10:15:04,583 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:04,583 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,583 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,583 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,583 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,583 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,583 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,583 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,583 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_3p_long_1.joblib
+2025-05-03 10:15:04,585 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_3p_long_1.joblib に保存しました
+2025-05-03 10:15:04,585 - high_threshold_training - INFO - モデル評価: 精度=0.9682, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:04,585 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,585 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,585 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,585 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,585 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,585 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,585 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,585 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:04,585 - high_threshold_training - INFO - 閾値:0.3% 方向:long 期間:2のモデルを訓練
+2025-05-03 10:15:04,585 - base_trainer - INFO - ==== train: 2期先の高閾値(0.3%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:04,585 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_3p_long_2 の準備を開始
+2025-05-03 10:15:04,586 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 103285, 1: 5789}
+2025-05-03 10:15:04,587 - base_trainer - INFO - シグナル発生率: 5.31%
+2025-05-03 10:15:04,587 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:04,588 - base_trainer - INFO - クラス不均衡比率: 17.8416 (シグナル:非シグナル = 1:17.8)
+2025-05-03 10:15:04,588 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 17.8416
+2025-05-03 10:15:04,588 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(17.841596130592503), 'verbose': -1}
+2025-05-03 10:15:04,588 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:04,921 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 2)
+2025-05-03 10:15:04,926 - base_trainer - INFO - テストデータのクラス分布: {0: 25536, 1: 1732}
+2025-05-03 10:15:04,927 - base_trainer - INFO - 予測確率の範囲: 最小=0.0515, 最大=0.1124, 平均=0.0773
+2025-05-03 10:15:04,927 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,928 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,929 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,929 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,929 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,929 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,930 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:04,930 - base_trainer - INFO - 評価指標 - 精度: 0.9365, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:04,930 - base_trainer - INFO - シグナル比率: 0.0635
+2025-05-03 10:15:04,930 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:04,930 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,930 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,930 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,930 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,931 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,931 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,931 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:04,931 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_3p_long_2.joblib
+2025-05-03 10:15:04,932 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_3p_long_2.joblib に保存しました
+2025-05-03 10:15:04,933 - high_threshold_training - INFO - モデル評価: 精度=0.9365, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:04,933 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,933 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,933 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,933 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,933 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,933 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,933 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:04,933 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:04,933 - high_threshold_training - INFO - 閾値:0.3% 方向:long 期間:3のモデルを訓練
+2025-05-03 10:15:04,933 - base_trainer - INFO - ==== train: 3期先の高閾値(0.3%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:04,933 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_3p_long_3 の準備を開始
+2025-05-03 10:15:04,934 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 100716, 1: 8358}
+2025-05-03 10:15:04,935 - base_trainer - INFO - シグナル発生率: 7.66%
+2025-05-03 10:15:04,935 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:04,936 - base_trainer - INFO - クラス不均衡比率: 12.0503 (シグナル:非シグナル = 1:12.1)
+2025-05-03 10:15:04,936 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 12.0503
+2025-05-03 10:15:04,936 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(12.050251256281408), 'verbose': -1}
+2025-05-03 10:15:04,936 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:05,273 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 3)
+2025-05-03 10:15:05,273 - base_trainer - INFO - テストデータのクラス分布: {0: 24794, 1: 2474}
+2025-05-03 10:15:05,275 - base_trainer - INFO - 予測確率の範囲: 最小=0.0759, 最大=0.1502, 平均=0.1127
+2025-05-03 10:15:05,275 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,275 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,275 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,275 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,275 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,276 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,276 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,276 - base_trainer - INFO - 評価指標 - 精度: 0.9093, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:05,276 - base_trainer - INFO - シグナル比率: 0.0907
+2025-05-03 10:15:05,276 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:05,276 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,276 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,277 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,277 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,277 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,277 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,277 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,277 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_3p_long_3.joblib
+2025-05-03 10:15:05,278 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_3p_long_3.joblib に保存しました
+2025-05-03 10:15:05,278 - high_threshold_training - INFO - モデル評価: 精度=0.9093, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:05,279 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,279 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,279 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,279 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,279 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,279 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,279 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,279 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:05,279 - high_threshold_training - INFO - 閾値:0.3% 方向:short 期間:1のモデルを訓練
+2025-05-03 10:15:05,279 - base_trainer - INFO - ==== train: 1期先の高閾値(0.3%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:05,279 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_3p_short_1 の準備を開始
+2025-05-03 10:15:05,280 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 106395, 1: 2679}
+2025-05-03 10:15:05,281 - base_trainer - INFO - シグナル発生率: 2.46%
+2025-05-03 10:15:05,281 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:05,282 - base_trainer - INFO - クラス不均衡比率: 39.7144 (シグナル:非シグナル = 1:39.7)
+2025-05-03 10:15:05,282 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 39.7144
+2025-05-03 10:15:05,282 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(39.71444568868981), 'verbose': -1}
+2025-05-03 10:15:05,282 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:05,586 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 1)
+2025-05-03 10:15:05,587 - base_trainer - INFO - テストデータのクラス分布: {0: 26400, 1: 868}
+2025-05-03 10:15:05,588 - base_trainer - INFO - 予測確率の範囲: 最小=0.0238, 最大=0.0679, 平均=0.0385
+2025-05-03 10:15:05,588 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,588 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,588 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,589 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,589 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,589 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,589 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,589 - base_trainer - INFO - 評価指標 - 精度: 0.9682, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:05,589 - base_trainer - INFO - シグナル比率: 0.0318
+2025-05-03 10:15:05,590 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:05,590 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,590 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,590 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,590 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,590 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,590 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,590 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,590 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_3p_short_1.joblib
+2025-05-03 10:15:05,592 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_3p_short_1.joblib に保存しました
+2025-05-03 10:15:05,592 - high_threshold_training - INFO - モデル評価: 精度=0.9682, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:05,592 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,592 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,592 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,592 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,592 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,592 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,592 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,593 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:05,593 - high_threshold_training - INFO - 閾値:0.3% 方向:short 期間:2のモデルを訓練
+2025-05-03 10:15:05,593 - base_trainer - INFO - ==== train: 2期先の高閾値(0.3%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:05,593 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_3p_short_2 の準備を開始
+2025-05-03 10:15:05,594 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 103647, 1: 5427}
+2025-05-03 10:15:05,594 - base_trainer - INFO - シグナル発生率: 4.98%
+2025-05-03 10:15:05,594 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:05,595 - base_trainer - INFO - クラス不均衡比率: 19.0984 (シグナル:非シグナル = 1:19.1)
+2025-05-03 10:15:05,595 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 19.0984
+2025-05-03 10:15:05,595 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(19.098396904367053), 'verbose': -1}
+2025-05-03 10:15:05,596 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:05,911 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 3)
+2025-05-03 10:15:05,911 - base_trainer - INFO - テストデータのクラス分布: {0: 25538, 1: 1730}
+2025-05-03 10:15:05,913 - base_trainer - INFO - 予測確率の範囲: 最小=0.0490, 最大=0.1299, 平均=0.0847
+2025-05-03 10:15:05,913 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,913 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,913 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,913 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,913 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,914 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,914 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:05,914 - base_trainer - INFO - 評価指標 - 精度: 0.9366, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:05,914 - base_trainer - INFO - シグナル比率: 0.0634
+2025-05-03 10:15:05,914 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:05,914 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,914 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,915 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,915 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,915 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,915 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,915 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:05,915 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_3p_short_2.joblib
+2025-05-03 10:15:05,916 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_3p_short_2.joblib に保存しました
+2025-05-03 10:15:05,916 - high_threshold_training - INFO - モデル評価: 精度=0.9366, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:05,917 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,917 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,917 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,917 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,917 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,917 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,917 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:05,917 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:05,917 - high_threshold_training - INFO - 閾値:0.3% 方向:short 期間:3のモデルを訓練
+2025-05-03 10:15:05,917 - base_trainer - INFO - ==== train: 3期先の高閾値(0.3%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:05,917 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_3p_short_3 の準備を開始
+2025-05-03 10:15:05,918 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 101340, 1: 7734}
+2025-05-03 10:15:05,918 - base_trainer - INFO - シグナル発生率: 7.09%
+2025-05-03 10:15:05,919 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:05,920 - base_trainer - INFO - クラス不均衡比率: 13.1032 (シグナル:非シグナル = 1:13.1)
+2025-05-03 10:15:05,920 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 13.1032
+2025-05-03 10:15:05,920 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(13.103180760279287), 'verbose': -1}
+2025-05-03 10:15:05,920 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:06,245 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 3)
+2025-05-03 10:15:06,245 - base_trainer - INFO - テストデータのクラス分布: {0: 24793, 1: 2475}
+2025-05-03 10:15:06,247 - base_trainer - INFO - 予測確率の範囲: 最小=0.0687, 最大=0.1417, 平均=0.1059
+2025-05-03 10:15:06,247 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,247 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,247 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,247 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,248 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,248 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,248 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,248 - base_trainer - INFO - 評価指標 - 精度: 0.9092, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:06,248 - base_trainer - INFO - シグナル比率: 0.0908
+2025-05-03 10:15:06,248 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:06,248 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,249 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,249 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,249 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,249 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,249 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,249 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,249 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_3p_short_3.joblib
+2025-05-03 10:15:06,250 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_3p_short_3.joblib に保存しました
+2025-05-03 10:15:06,251 - high_threshold_training - INFO - モデル評価: 精度=0.9092, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:06,251 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,251 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,251 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,251 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,251 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,251 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,251 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,251 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:06,251 - high_threshold_training - INFO - 閾値:0.5% 方向:long 期間:1のモデルを訓練
+2025-05-03 10:15:06,251 - base_trainer - INFO - ==== train: 1期先の高閾値(0.5%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:06,251 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_5p_long_1 の準備を開始
+2025-05-03 10:15:06,252 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 108155, 1: 919}
+2025-05-03 10:15:06,253 - base_trainer - INFO - シグナル発生率: 0.84%
+2025-05-03 10:15:06,253 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:06,254 - base_trainer - INFO - クラス不均衡比率: 117.6877 (シグナル:非シグナル = 1:117.7)
+2025-05-03 10:15:06,254 - base_trainer - INFO - クラス重み比率を 100.0 に制限します
+2025-05-03 10:15:06,254 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 100.0000
+2025-05-03 10:15:06,254 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': 100, 'verbose': -1}
+2025-05-03 10:15:06,254 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:06,560 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 1)
+2025-05-03 10:15:06,561 - base_trainer - INFO - テストデータのクラス分布: {0: 26987, 1: 281}
+2025-05-03 10:15:06,562 - base_trainer - INFO - 予測確率の範囲: 最小=0.0082, 最大=0.1681, 平均=0.0300
+2025-05-03 10:15:06,562 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,562 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,562 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,562 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,563 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,563 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,563 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,563 - base_trainer - INFO - 評価指標 - 精度: 0.9897, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:06,563 - base_trainer - INFO - シグナル比率: 0.0103
+2025-05-03 10:15:06,563 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:06,564 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,564 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,564 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,564 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,564 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,564 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,564 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,564 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_5p_long_1.joblib
+2025-05-03 10:15:06,565 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_5p_long_1.joblib に保存しました
+2025-05-03 10:15:06,566 - high_threshold_training - INFO - モデル評価: 精度=0.9897, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:06,566 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,566 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,566 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,566 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,566 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,566 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,566 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,566 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:06,566 - high_threshold_training - INFO - 閾値:0.5% 方向:long 期間:2のモデルを訓練
+2025-05-03 10:15:06,566 - base_trainer - INFO - ==== train: 2期先の高閾値(0.5%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:06,566 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_5p_long_2 の準備を開始
+2025-05-03 10:15:06,567 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 106946, 1: 2128}
+2025-05-03 10:15:06,568 - base_trainer - INFO - シグナル発生率: 1.95%
+2025-05-03 10:15:06,568 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:06,569 - base_trainer - INFO - クラス不均衡比率: 50.2566 (シグナル:非シグナル = 1:50.3)
+2025-05-03 10:15:06,569 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 50.2566
+2025-05-03 10:15:06,569 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(50.25657894736842), 'verbose': -1}
+2025-05-03 10:15:06,569 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:06,883 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 1)
+2025-05-03 10:15:06,884 - base_trainer - INFO - テストデータのクラス分布: {0: 26621, 1: 647}
+2025-05-03 10:15:06,885 - base_trainer - INFO - 予測確率の範囲: 最小=0.0189, 最大=0.0741, 平均=0.0336
+2025-05-03 10:15:06,885 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,885 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,885 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,885 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,886 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,886 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,886 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:06,886 - base_trainer - INFO - 評価指標 - 精度: 0.9763, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:06,886 - base_trainer - INFO - シグナル比率: 0.0237
+2025-05-03 10:15:06,886 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:06,887 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,887 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,887 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,887 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,887 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,887 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,887 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:06,887 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_5p_long_2.joblib
+2025-05-03 10:15:06,888 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_5p_long_2.joblib に保存しました
+2025-05-03 10:15:06,888 - high_threshold_training - INFO - モデル評価: 精度=0.9763, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:06,888 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,889 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,889 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,889 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,889 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,889 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,889 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:06,889 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:06,889 - high_threshold_training - INFO - 閾値:0.5% 方向:long 期間:3のモデルを訓練
+2025-05-03 10:15:06,889 - base_trainer - INFO - ==== train: 3期先の高閾値(0.5%)シグナルモデル（long）のトレーニングを開始 ====
+2025-05-03 10:15:06,889 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_5p_long_3 の準備を開始
+2025-05-03 10:15:06,890 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 105775, 1: 3299}
+2025-05-03 10:15:06,891 - base_trainer - INFO - シグナル発生率: 3.02%
+2025-05-03 10:15:06,891 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:06,892 - base_trainer - INFO - クラス不均衡比率: 32.0627 (シグナル:非シグナル = 1:32.1)
+2025-05-03 10:15:06,892 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 32.0627
+2025-05-03 10:15:06,892 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(32.06274628675356), 'verbose': -1}
+2025-05-03 10:15:06,892 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:07,199 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 2)
+2025-05-03 10:15:07,205 - base_trainer - INFO - テストデータのクラス分布: {0: 26288, 1: 980}
+2025-05-03 10:15:07,206 - base_trainer - INFO - 予測確率の範囲: 最小=0.0285, 最大=0.1065, 平均=0.0539
+2025-05-03 10:15:07,206 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,206 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,206 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,207 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,207 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,207 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,207 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,207 - base_trainer - INFO - 評価指標 - 精度: 0.9641, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:07,208 - base_trainer - INFO - シグナル比率: 0.0359
+2025-05-03 10:15:07,208 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:07,208 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,208 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,208 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,208 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,208 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,208 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,208 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,208 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_5p_long_3.joblib
+2025-05-03 10:15:07,210 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_5p_long_3.joblib に保存しました
+2025-05-03 10:15:07,210 - high_threshold_training - INFO - モデル評価: 精度=0.9641, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:07,210 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,210 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,210 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,210 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,210 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,210 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,210 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,210 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:07,210 - high_threshold_training - INFO - 閾値:0.5% 方向:short 期間:1のモデルを訓練
+2025-05-03 10:15:07,210 - base_trainer - INFO - ==== train: 1期先の高閾値(0.5%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:07,211 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_5p_short_1 の準備を開始
+2025-05-03 10:15:07,212 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 108214, 1: 860}
+2025-05-03 10:15:07,212 - base_trainer - INFO - シグナル発生率: 0.79%
+2025-05-03 10:15:07,212 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:07,213 - base_trainer - INFO - クラス不均衡比率: 125.8302 (シグナル:非シグナル = 1:125.8)
+2025-05-03 10:15:07,213 - base_trainer - INFO - クラス重み比率を 100.0 に制限します
+2025-05-03 10:15:07,213 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 100.0000
+2025-05-03 10:15:07,213 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': 100, 'verbose': -1}
+2025-05-03 10:15:07,213 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:07,520 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 1)
+2025-05-03 10:15:07,526 - base_trainer - INFO - テストデータのクラス分布: {0: 26999, 1: 269}
+2025-05-03 10:15:07,527 - base_trainer - INFO - 予測確率の範囲: 最小=0.0077, 最大=0.1880, 平均=0.0316
+2025-05-03 10:15:07,527 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,528 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,528 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,528 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,528 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,528 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,528 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,529 - base_trainer - INFO - 評価指標 - 精度: 0.9901, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:07,529 - base_trainer - INFO - シグナル比率: 0.0099
+2025-05-03 10:15:07,529 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:07,529 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,529 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,529 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,529 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,529 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,529 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,529 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,530 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_5p_short_1.joblib
+2025-05-03 10:15:07,531 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_5p_short_1.joblib に保存しました
+2025-05-03 10:15:07,531 - high_threshold_training - INFO - モデル評価: 精度=0.9901, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:07,531 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,531 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,531 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,531 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,531 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,532 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,532 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,532 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:07,532 - high_threshold_training - INFO - 閾値:0.5% 方向:short 期間:2のモデルを訓練
+2025-05-03 10:15:07,532 - base_trainer - INFO - ==== train: 2期先の高閾値(0.5%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:07,532 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_5p_short_2 の準備を開始
+2025-05-03 10:15:07,533 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 107072, 1: 2002}
+2025-05-03 10:15:07,533 - base_trainer - INFO - シグナル発生率: 1.84%
+2025-05-03 10:15:07,533 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:07,534 - base_trainer - INFO - クラス不均衡比率: 53.4825 (シグナル:非シグナル = 1:53.5)
+2025-05-03 10:15:07,534 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 53.4825
+2025-05-03 10:15:07,534 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(53.48251748251748), 'verbose': -1}
+2025-05-03 10:15:07,535 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:07,861 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 1)
+2025-05-03 10:15:07,862 - base_trainer - INFO - テストデータのクラス分布: {0: 26638, 1: 630}
+2025-05-03 10:15:07,863 - base_trainer - INFO - 予測確率の範囲: 最小=0.0178, 最大=0.0745, 平均=0.0332
+2025-05-03 10:15:07,863 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,863 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,863 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,864 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,864 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,864 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,864 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:07,864 - base_trainer - INFO - 評価指標 - 精度: 0.9769, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:07,865 - base_trainer - INFO - シグナル比率: 0.0231
+2025-05-03 10:15:07,865 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:07,865 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,865 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,865 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,865 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,865 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,865 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,865 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:07,865 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_5p_short_2.joblib
+2025-05-03 10:15:07,867 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_5p_short_2.joblib に保存しました
+2025-05-03 10:15:07,867 - high_threshold_training - INFO - モデル評価: 精度=0.9769, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:07,867 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,867 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,867 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,867 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,867 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,867 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,867 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:07,867 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:07,867 - high_threshold_training - INFO - 閾値:0.5% 方向:short 期間:3のモデルを訓練
+2025-05-03 10:15:07,867 - base_trainer - INFO - ==== train: 3期先の高閾値(0.5%)シグナルモデル（short）のトレーニングを開始 ====
+2025-05-03 10:15:07,867 - base_trainer - INFO - _prepare_data: 目標変数 target_high_threshold_5p_short_3 の準備を開始
+2025-05-03 10:15:07,868 - base_trainer - INFO - トレーニングデータのクラスバランス: {0: 106023, 1: 3051}
+2025-05-03 10:15:07,869 - base_trainer - INFO - シグナル発生率: 2.80%
+2025-05-03 10:15:07,869 - base_trainer - INFO - _prepare_data: 特徴量と目標変数の準備完了。トレーニングデータ: 109074行, テストデータ: 27268行
+2025-05-03 10:15:07,870 - base_trainer - INFO - クラス不均衡比率: 34.7502 (シグナル:非シグナル = 1:34.8)
+2025-05-03 10:15:07,870 - base_trainer - INFO - シグナルクラスの重みを増加: scale_pos_weight = 34.7502
+2025-05-03 10:15:07,870 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.03, 'feature_fraction': 0.8, 'bagging_fraction': 0.7, 'bagging_freq': 3, 'min_child_samples': 20, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(34.750245821042284), 'verbose': -1}
+2025-05-03 10:15:07,870 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1500)
+2025-05-03 10:15:08,195 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 1)
+2025-05-03 10:15:08,198 - base_trainer - INFO - テストデータのクラス分布: {0: 26289, 1: 979}
+2025-05-03 10:15:08,199 - base_trainer - INFO - 予測確率の範囲: 最小=0.0287, 最大=0.0674, 平均=0.0421
+2025-05-03 10:15:08,199 - base_trainer - INFO - 閾値 0.3: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:08,199 - base_trainer - INFO - 閾値 0.4: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:08,200 - base_trainer - INFO - 閾値 0.5: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:08,200 - base_trainer - INFO - 閾値 0.6: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:08,200 - base_trainer - INFO - 閾値 0.7: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:08,200 - base_trainer - INFO - 閾値 0.8: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:08,200 - base_trainer - INFO - 閾値 0.9: シグナル数=0, シグナル率=0.0000
+2025-05-03 10:15:08,201 - base_trainer - INFO - 評価指標 - 精度: 0.9641, 適合率: 0.0000, 再現率: 0.0000, F1: 0.0000
+2025-05-03 10:15:08,201 - base_trainer - INFO - シグナル比率: 0.0359
+2025-05-03 10:15:08,201 - base_trainer - INFO - 確信度閾値ごとの評価結果:
+2025-05-03 10:15:08,201 - base_trainer - INFO -   閾値 0.3: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:08,201 - base_trainer - INFO -   閾値 0.4: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:08,201 - base_trainer - INFO -   閾値 0.5: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:08,201 - base_trainer - INFO -   閾値 0.6: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:08,201 - base_trainer - INFO -   閾値 0.7: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:08,201 - base_trainer - INFO -   閾値 0.8: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:08,201 - base_trainer - INFO -   閾値 0.9: 適合率=0.0000, 発生率=0.0000, シグナル数=0
+2025-05-03 10:15:08,202 - base_trainer - INFO - モデルを保存します: models\high_threshold\target_high_threshold_5p_short_3.joblib
+2025-05-03 10:15:08,203 - base_trainer - INFO - モデルを models\high_threshold\target_high_threshold_5p_short_3.joblib に保存しました
+2025-05-03 10:15:08,203 - high_threshold_training - INFO - モデル評価: 精度=0.9641, 適合率=0.0000, 再現率=0.0000
+2025-05-03 10:15:08,203 - high_threshold_training - INFO -   確信度閾値=0.3: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:08,203 - high_threshold_training - INFO -   確信度閾値=0.4: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:08,203 - high_threshold_training - INFO -   確信度閾値=0.5: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:08,203 - high_threshold_training - INFO -   確信度閾値=0.6: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:08,203 - high_threshold_training - INFO -   確信度閾値=0.7: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:08,203 - high_threshold_training - INFO -   確信度閾値=0.8: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:08,203 - high_threshold_training - INFO -   確信度閾値=0.9: 適合率=0.0000, シグナル率=0.0000, シグナル数=0
+2025-05-03 10:15:08,203 - high_threshold_training - INFO - 特徴量重要度情報が利用できません
+2025-05-03 10:15:08,204 - high_threshold_training - INFO - ===== トレーニング結果サマリー =====
+2025-05-03 10:15:08,204 - high_threshold_training - INFO - 閾値: threshold_1p
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -   方向: long
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -     期間: period_1
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       精度: 0.7984
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       シグナル率: 0.2016
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -     期間: period_2
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       精度: 0.7197
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       シグナル率: 0.2803
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -     期間: period_3
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       精度: 0.6896
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -       シグナル率: 0.3104
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -   方向: short
+2025-05-03 10:15:08,204 - high_threshold_training - INFO -     期間: period_1
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       精度: 0.8015
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       シグナル率: 0.1985
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -     期間: period_2
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       精度: 0.7270
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       シグナル率: 0.2730
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -     期間: period_3
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       精度: 0.6960
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       シグナル率: 0.3040
+2025-05-03 10:15:08,205 - high_threshold_training - INFO - 閾値: threshold_2p
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -   方向: long
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -     期間: period_1
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       精度: 0.9290
+2025-05-03 10:15:08,205 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       シグナル率: 0.0710
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -     期間: period_2
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       精度: 0.8716
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       シグナル率: 0.1284
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -     期間: period_3
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       精度: 0.8353
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       シグナル率: 0.1647
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -   方向: short
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -     期間: period_1
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       精度: 0.9296
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       シグナル率: 0.0704
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -     期間: period_2
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       精度: 0.8734
+2025-05-03 10:15:08,206 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       シグナル率: 0.1266
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -     期間: period_3
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       精度: 0.8385
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       シグナル率: 0.1615
+2025-05-03 10:15:08,207 - high_threshold_training - INFO - 閾値: threshold_3p
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -   方向: long
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -     期間: period_1
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       精度: 0.9682
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       シグナル率: 0.0318
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -     期間: period_2
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       精度: 0.9365
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -       シグナル率: 0.0635
+2025-05-03 10:15:08,207 - high_threshold_training - INFO -     期間: period_3
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -       精度: 0.9093
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -       シグナル率: 0.0907
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -   方向: short
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -     期間: period_1
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -       精度: 0.9682
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -       シグナル率: 0.0318
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -     期間: period_2
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -       精度: 0.9366
+2025-05-03 10:15:08,208 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       シグナル率: 0.0634
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -     期間: period_3
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       精度: 0.9092
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       シグナル率: 0.0908
+2025-05-03 10:15:08,209 - high_threshold_training - INFO - 閾値: threshold_5p
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -   方向: long
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -     期間: period_1
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       精度: 0.9897
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       シグナル率: 0.0103
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -     期間: period_2
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       精度: 0.9763
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,209 - high_threshold_training - INFO -       シグナル率: 0.0237
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -     期間: period_3
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       精度: 0.9641
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       シグナル率: 0.0359
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -   方向: short
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -     期間: period_1
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       精度: 0.9901
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       シグナル率: 0.0099
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -     期間: period_2
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       精度: 0.9769
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       シグナル率: 0.0231
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -     期間: period_3
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       精度: 0.9641
+2025-05-03 10:15:08,210 - high_threshold_training - INFO -       適合率: 0.0000
+2025-05-03 10:15:08,211 - high_threshold_training - INFO -       シグナル率: 0.0359
+2025-05-03 10:15:08,213 - high_threshold_training - INFO - 訓練結果を models\high_threshold\high_threshold_results_20250503_101508.json に保存しました
+2025-05-03 10:15:08,213 - high_threshold_training - INFO - 高閾値シグナルモデルの訓練が完了しました

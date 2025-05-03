@@ -57,3 +57,88 @@
 2025-05-03 07:44:28,887 - high_threshold_generation - INFO - 結合後のデータフレーム: 行数 136321, 列数 162
 2025-05-03 07:44:35,190 - high_threshold_generation - INFO - 更新された特徴量を保存しました: data\processed\btcusd_5m_features.csv
 2025-05-03 07:44:35,190 - high_threshold_generation - INFO - 最終的な高閾値シグナル変数の数: 96個
+2025-05-03 10:14:37,465 - high_threshold_generation - INFO - 高閾値シグナル変数の生成を開始します
+2025-05-03 10:14:37,466 - high_threshold_generation - INFO - 特徴量ファイルを読み込み中: data\processed\btcusd_5m_features.csv
+2025-05-03 10:14:38,559 - high_threshold_generation - INFO - 特徴量ファイルを読み込みました。行数: 136342, 列数: 84
+2025-05-03 10:14:38,559 - high_threshold_generation - INFO - 目標変数: ['target_price_change_pct_1', 'target_price_change_pct_2', 'target_price_change_pct_3']
+2025-05-03 10:14:38,559 - high_threshold_generation - INFO - 既存の高閾値シグナル変数が18個見つかりました。これらを削除します。
+2025-05-03 10:14:38,572 - high_threshold_generation - INFO - 既存の高閾値シグナル変数を削除しました
+2025-05-03 10:14:38,573 - high_threshold_generation - INFO - 期間 1 の高閾値シグナル変数を生成中...
+2025-05-03 10:14:38,574 - high_threshold_generation - INFO - 生成: target_high_threshold_1p_long_1
+2025-05-03 10:14:38,575 - high_threshold_generation - INFO - 生成: target_high_threshold_1p_short_1
+2025-05-03 10:14:38,575 - high_threshold_generation - INFO - 生成: target_high_threshold_2p_long_1
+2025-05-03 10:14:38,576 - high_threshold_generation - INFO - 生成: target_high_threshold_2p_short_1
+2025-05-03 10:14:38,577 - high_threshold_generation - INFO - 生成: target_high_threshold_3p_long_1
+2025-05-03 10:14:38,578 - high_threshold_generation - INFO - 生成: target_high_threshold_3p_short_1
+2025-05-03 10:14:38,578 - high_threshold_generation - INFO - 生成: target_high_threshold_5p_long_1
+2025-05-03 10:14:38,579 - high_threshold_generation - INFO - 生成: target_high_threshold_5p_short_1
+2025-05-03 10:14:38,579 - high_threshold_generation - INFO - 期間 2 の高閾値シグナル変数を生成中...
+2025-05-03 10:14:38,580 - high_threshold_generation - INFO - 生成: target_high_threshold_1p_long_2
+2025-05-03 10:14:38,581 - high_threshold_generation - INFO - 生成: target_high_threshold_1p_short_2
+2025-05-03 10:14:38,581 - high_threshold_generation - INFO - 生成: target_high_threshold_2p_long_2
+2025-05-03 10:14:38,582 - high_threshold_generation - INFO - 生成: target_high_threshold_2p_short_2
+2025-05-03 10:14:38,583 - high_threshold_generation - INFO - 生成: target_high_threshold_3p_long_2
+2025-05-03 10:14:38,583 - high_threshold_generation - INFO - 生成: target_high_threshold_3p_short_2
+2025-05-03 10:14:38,584 - high_threshold_generation - INFO - 生成: target_high_threshold_5p_long_2
+2025-05-03 10:14:38,584 - high_threshold_generation - INFO - 生成: target_high_threshold_5p_short_2
+2025-05-03 10:14:38,585 - high_threshold_generation - INFO - 期間 3 の高閾値シグナル変数を生成中...
+2025-05-03 10:14:38,585 - high_threshold_generation - INFO - 生成: target_high_threshold_1p_long_3
+2025-05-03 10:14:38,586 - high_threshold_generation - INFO - 生成: target_high_threshold_1p_short_3
+2025-05-03 10:14:38,586 - high_threshold_generation - INFO - 生成: target_high_threshold_2p_long_3
+2025-05-03 10:14:38,587 - high_threshold_generation - INFO - 生成: target_high_threshold_2p_short_3
+2025-05-03 10:14:38,588 - high_threshold_generation - INFO - 生成: target_high_threshold_3p_long_3
+2025-05-03 10:14:38,588 - high_threshold_generation - INFO - 生成: target_high_threshold_3p_short_3
+2025-05-03 10:14:38,589 - high_threshold_generation - INFO - 生成: target_high_threshold_5p_long_3
+2025-05-03 10:14:38,589 - high_threshold_generation - INFO - 生成: target_high_threshold_5p_short_3
+2025-05-03 10:14:38,590 - high_threshold_generation - INFO - 生成された高閾値シグナル変数: 24個
+2025-05-03 10:14:38,590 - high_threshold_generation - INFO - target_high_threshold_1p_long_1: シグナル数 24435個 (17.92%)
+2025-05-03 10:14:38,590 - high_threshold_generation - INFO - target_high_threshold_1p_short_1: シグナル数 23733個 (17.41%)
+2025-05-03 10:14:38,590 - high_threshold_generation - INFO - target_high_threshold_2p_long_1: シグナル数 8341個 (6.12%)
+2025-05-03 10:14:38,590 - high_threshold_generation - INFO - target_high_threshold_2p_short_1: シグナル数 8032個 (5.89%)
+2025-05-03 10:14:38,591 - high_threshold_generation - INFO - target_high_threshold_3p_long_1: シグナル数 3660個 (2.68%)
+2025-05-03 10:14:38,591 - high_threshold_generation - INFO - target_high_threshold_3p_short_1: シグナル数 3547個 (2.60%)
+2025-05-03 10:14:38,591 - high_threshold_generation - INFO - target_high_threshold_5p_long_1: シグナル数 1200個 (0.88%)
+2025-05-03 10:14:38,591 - high_threshold_generation - INFO - target_high_threshold_5p_short_1: シグナル数 1129個 (0.83%)
+2025-05-03 10:14:38,591 - high_threshold_generation - INFO - target_high_threshold_1p_long_2: シグナル数 34301個 (25.16%)
+2025-05-03 10:14:38,591 - high_threshold_generation - INFO - target_high_threshold_1p_short_2: シグナル数 33412個 (24.51%)
+2025-05-03 10:14:38,592 - high_threshold_generation - INFO - target_high_threshold_2p_long_2: シグナル数 15270個 (11.20%)
+2025-05-03 10:14:38,592 - high_threshold_generation - INFO - target_high_threshold_2p_short_2: シグナル数 14569個 (10.69%)
+2025-05-03 10:14:38,592 - high_threshold_generation - INFO - target_high_threshold_3p_long_2: シグナル数 7521個 (5.52%)
+2025-05-03 10:14:38,592 - high_threshold_generation - INFO - target_high_threshold_3p_short_2: シグナル数 7157個 (5.25%)
+2025-05-03 10:14:38,592 - high_threshold_generation - INFO - target_high_threshold_5p_long_2: シグナル数 2775個 (2.04%)
+2025-05-03 10:14:38,592 - high_threshold_generation - INFO - target_high_threshold_5p_short_2: シグナル数 2632個 (1.93%)
+2025-05-03 10:14:38,593 - high_threshold_generation - INFO - target_high_threshold_1p_long_3: シグナル数 39073個 (28.66%)
+2025-05-03 10:14:38,593 - high_threshold_generation - INFO - target_high_threshold_1p_short_3: シグナル数 38187個 (28.01%)
+2025-05-03 10:14:38,593 - high_threshold_generation - INFO - target_high_threshold_2p_long_3: シグナル数 19664個 (14.42%)
+2025-05-03 10:14:38,593 - high_threshold_generation - INFO - target_high_threshold_2p_short_3: シグナル数 18926個 (13.88%)
+2025-05-03 10:14:38,593 - high_threshold_generation - INFO - target_high_threshold_3p_long_3: シグナル数 10832個 (7.94%)
+2025-05-03 10:14:38,593 - high_threshold_generation - INFO - target_high_threshold_3p_short_3: シグナル数 10209個 (7.49%)
+2025-05-03 10:14:38,593 - high_threshold_generation - INFO - target_high_threshold_5p_long_3: シグナル数 4279個 (3.14%)
+2025-05-03 10:14:38,594 - high_threshold_generation - INFO - target_high_threshold_5p_short_3: シグナル数 4030個 (2.96%)
+2025-05-03 10:14:38,617 - high_threshold_generation - INFO - 結合後のデータフレーム: 行数 136342, 列数 90
+2025-05-03 10:14:44,331 - high_threshold_generation - INFO - 更新された特徴量を保存しました: data\processed\btcusd_5m_features.csv
+2025-05-03 10:14:44,331 - high_threshold_generation - INFO - 最終的な高閾値シグナル変数の数: 24個
+2025-05-03 10:14:44,331 - high_threshold_generation - INFO - target_high_threshold_1p_long_1: シグナル数 24435個 (17.92%)
+2025-05-03 10:14:44,332 - high_threshold_generation - INFO - target_high_threshold_1p_short_1: シグナル数 23733個 (17.41%)
+2025-05-03 10:14:44,332 - high_threshold_generation - INFO - target_high_threshold_2p_long_1: シグナル数 8341個 (6.12%)
+2025-05-03 10:14:44,332 - high_threshold_generation - INFO - target_high_threshold_2p_short_1: シグナル数 8032個 (5.89%)
+2025-05-03 10:14:44,332 - high_threshold_generation - INFO - target_high_threshold_3p_long_1: シグナル数 3660個 (2.68%)
+2025-05-03 10:14:44,332 - high_threshold_generation - INFO - target_high_threshold_3p_short_1: シグナル数 3547個 (2.60%)
+2025-05-03 10:14:44,332 - high_threshold_generation - INFO - target_high_threshold_5p_long_1: シグナル数 1200個 (0.88%)
+2025-05-03 10:14:44,332 - high_threshold_generation - INFO - target_high_threshold_5p_short_1: シグナル数 1129個 (0.83%)
+2025-05-03 10:14:44,333 - high_threshold_generation - INFO - target_high_threshold_1p_long_2: シグナル数 34301個 (25.16%)
+2025-05-03 10:14:44,333 - high_threshold_generation - INFO - target_high_threshold_1p_short_2: シグナル数 33412個 (24.51%)
+2025-05-03 10:14:44,333 - high_threshold_generation - INFO - target_high_threshold_2p_long_2: シグナル数 15270個 (11.20%)
+2025-05-03 10:14:44,333 - high_threshold_generation - INFO - target_high_threshold_2p_short_2: シグナル数 14569個 (10.69%)
+2025-05-03 10:14:44,333 - high_threshold_generation - INFO - target_high_threshold_3p_long_2: シグナル数 7521個 (5.52%)
+2025-05-03 10:14:44,333 - high_threshold_generation - INFO - target_high_threshold_3p_short_2: シグナル数 7157個 (5.25%)
+2025-05-03 10:14:44,333 - high_threshold_generation - INFO - target_high_threshold_5p_long_2: シグナル数 2775個 (2.04%)
+2025-05-03 10:14:44,333 - high_threshold_generation - INFO - target_high_threshold_5p_short_2: シグナル数 2632個 (1.93%)
+2025-05-03 10:14:44,334 - high_threshold_generation - INFO - target_high_threshold_1p_long_3: シグナル数 39073個 (28.66%)
+2025-05-03 10:14:44,334 - high_threshold_generation - INFO - target_high_threshold_1p_short_3: シグナル数 38187個 (28.01%)
+2025-05-03 10:14:44,334 - high_threshold_generation - INFO - target_high_threshold_2p_long_3: シグナル数 19664個 (14.42%)
+2025-05-03 10:14:44,334 - high_threshold_generation - INFO - target_high_threshold_2p_short_3: シグナル数 18926個 (13.88%)
+2025-05-03 10:14:44,334 - high_threshold_generation - INFO - target_high_threshold_3p_long_3: シグナル数 10832個 (7.94%)
+2025-05-03 10:14:44,334 - high_threshold_generation - INFO - target_high_threshold_3p_short_3: シグナル数 10209個 (7.49%)
+2025-05-03 10:14:44,334 - high_threshold_generation - INFO - target_high_threshold_5p_long_3: シグナル数 4279個 (3.14%)
+2025-05-03 10:14:44,334 - high_threshold_generation - INFO - target_high_threshold_5p_short_3: シグナル数 4030個 (2.96%)
