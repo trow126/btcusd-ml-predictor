@@ -1,0 +1,36 @@
+2025-05-03 13:45:28,573 - fix_signals - INFO - ファイル読み込み: data\processed\btcusd_5m_features.csv
+2025-05-03 13:45:28,599 - fix_signals - INFO - 読み込み成功: 行数=2699, 列数=85
+2025-05-03 13:45:28,599 - fix_signals - INFO - 最初の10列: ['Unnamed: 0', 'close', 'volume', 'turnover', 'candle_size', 'body_size', 'upper_shadow', 'lower_shadow', 'price_change_pct_1', 'price_change_pct_2']
+2025-05-03 13:45:28,599 - fix_signals - INFO - ターゲット変数: ['target_price_change_pct_1', 'target_price_change_pct_2', 'target_price_change_pct_3', 'target_price_direction_1', 'target_price_direction_2', 'target_price_direction_3', 'target_threshold_binary_1', 'target_threshold_binary_2', 'target_threshold_binary_3', 'target_threshold_ternary_1', 'target_threshold_ternary_2', 'target_threshold_ternary_3', 'target_high_threshold_1p_long_1', 'target_high_threshold_1p_short_1', 'target_high_threshold_5p_long_1', 'target_high_threshold_5p_short_1', 'target_high_threshold_1p_long_2', 'target_high_threshold_1p_short_2', 'target_high_threshold_2p_long_2', 'target_high_threshold_2p_short_2', 'target_high_threshold_5p_long_2', 'target_high_threshold_5p_short_2', 'target_high_threshold_1p_long_3', 'target_high_threshold_1p_short_3', 'target_high_threshold_2p_long_3', 'target_high_threshold_2p_short_3', 'target_high_threshold_3p_long_3', 'target_high_threshold_3p_short_3', 'target_high_threshold_5p_long_3', 'target_high_threshold_5p_short_3']
+2025-05-03 13:45:28,599 - fix_signals - INFO - 価格変動率列: ['price_change_pct_1', 'price_change_pct_2', 'price_change_pct_3', 'price_change_pct_4', 'price_change_pct_6', 'price_change_pct_10', 'price_change_to_atr', 'target_price_change_pct_1', 'target_price_change_pct_2', 'target_price_change_pct_3']
+2025-05-03 13:45:28,600 - fix_signals - INFO - 期間1の有効なターゲット列: target_price_change_pct_1
+2025-05-03 13:45:28,600 - fix_signals - INFO - 期間2の有効なターゲット列: target_price_change_pct_2
+2025-05-03 13:45:28,600 - fix_signals - INFO - 期間3の有効なターゲット列: target_price_change_pct_3
+2025-05-03 13:45:28,600 - fix_signals - INFO - 高閾値シグナル変数を生成します
+2025-05-03 13:45:28,600 - fix_signals - INFO - 期間1の変数を生成中 (target_price_change_pct_1を使用)
+2025-05-03 13:45:28,600 - fix_signals - INFO - 期間1の既存の高閾値シグナル変数 8個 を削除します
+2025-05-03 13:45:28,602 - fix_signals - INFO - 期間2の変数を生成中 (target_price_change_pct_2を使用)
+2025-05-03 13:45:28,602 - fix_signals - INFO - 期間2の既存の高閾値シグナル変数 8個 を削除します
+2025-05-03 13:45:28,603 - fix_signals - INFO - 期間3の変数を生成中 (target_price_change_pct_3を使用)
+2025-05-03 13:45:28,603 - fix_signals - INFO - 期間3の既存の高閾値シグナル変数 8個 を削除します
+2025-05-03 13:45:28,604 - fix_signals - INFO - 合計24個の高閾値シグナル変数を追加しました
+2025-05-03 13:45:28,604 - fix_signals - INFO - 生成された高閾値シグナル変数: ['target_high_threshold_1p_long_1', 'target_high_threshold_1p_short_1', 'target_high_threshold_5p_long_1', 'target_high_threshold_5p_short_1', 'target_high_threshold_1p_long_2', 'target_high_threshold_1p_short_2', 'target_high_threshold_2p_long_2', 'target_high_threshold_2p_short_2', 'target_high_threshold_5p_long_2', 'target_high_threshold_5p_short_2', 'target_high_threshold_1p_long_3', 'target_high_threshold_1p_short_3', 'target_high_threshold_2p_long_3', 'target_high_threshold_2p_short_3', 'target_high_threshold_3p_long_3', 'target_high_threshold_3p_short_3', 'target_high_threshold_5p_long_3', 'target_high_threshold_5p_short_3']
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_1p_long_1: シグナル数=1216個 (45.05%)
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_1p_short_1: シグナル数=1219個 (45.16%)
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_5p_long_1: シグナル数=677個 (25.08%)
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_5p_short_1: シグナル数=661個 (24.49%)
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_1p_long_2: シグナル数=1229個 (45.54%)
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_1p_short_2: シグナル数=1216個 (45.05%)
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_2p_long_2: シグナル数=1088個 (40.31%)
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_2p_short_2: シグナル数=1074個 (39.79%)
+2025-05-03 13:45:28,605 - fix_signals - INFO - target_high_threshold_5p_long_2: シグナル数=741個 (27.45%)
+2025-05-03 13:45:28,606 - fix_signals - INFO - target_high_threshold_5p_short_2: シグナル数=692個 (25.64%)
+2025-05-03 13:45:28,606 - fix_signals - INFO - target_high_threshold_1p_long_3: シグナル数=1280個 (47.42%)
+2025-05-03 13:45:28,606 - fix_signals - INFO - target_high_threshold_1p_short_3: シグナル数=1203個 (44.57%)
+2025-05-03 13:45:28,606 - fix_signals - INFO - target_high_threshold_2p_long_3: シグナル数=1147個 (42.50%)
+2025-05-03 13:45:28,606 - fix_signals - INFO - target_high_threshold_2p_short_3: シグナル数=1092個 (40.46%)
+2025-05-03 13:45:28,606 - fix_signals - INFO - target_high_threshold_3p_long_3: シグナル数=1013個 (37.53%)
+2025-05-03 13:45:28,606 - fix_signals - INFO - target_high_threshold_3p_short_3: シグナル数=944個 (34.98%)
+2025-05-03 13:45:28,606 - fix_signals - INFO - target_high_threshold_5p_long_3: シグナル数=761個 (28.20%)
+2025-05-03 13:45:28,607 - fix_signals - INFO - target_high_threshold_5p_short_3: シグナル数=742個 (27.49%)
+2025-05-03 13:45:28,735 - fix_signals - INFO - 更新されたファイルを保存しました: data\processed\btcusd_5m_features.csv

@@ -93,7 +93,18 @@ def generate_training_report(results: Dict[str, Any]) -> Dict[str, Any]:
     if "regression" in results:
         regression_results = results["regression"]
         for target_name, result in regression_results.items():
-            period = int(target_name.split("_")[1])
+            # 修正: 例外処理を追加して安全にperiodを取得
+            try:
+                # ターゲット名が期間を含む形式かチェック（例: "regression_1"）
+                parts = target_name.split("_")
+                if len(parts) >= 2 and parts[-1].isdigit():
+                    period = int(parts[-1])  # 最後の部分が数字ならそれを使用
+                else:
+                    period = 1  # デフォルト値
+                    print(f"Warning: Could not extract period from {target_name}, using default {period}")
+            except (ValueError, IndexError):
+                period = 1  # エラー時のデフォルト値
+                print(f"Error extracting period from {target_name}, using default {period}")
 
             report["regression"][f"period_{period}"] = {
                 "mae": result["mae"],
@@ -104,7 +115,18 @@ def generate_training_report(results: Dict[str, Any]) -> Dict[str, Any]:
     if "classification" in results:
         classification_results = results["classification"]
         for target_name, result in classification_results.items():
-            period = int(target_name.split("_")[1])
+            # 修正: 例外処理を追加して安全にperiodを取得
+            try:
+                # ターゲット名から期間を抽出
+                parts = target_name.split("_")
+                if len(parts) >= 2 and parts[-1].isdigit():
+                    period = int(parts[-1])  # 最後の部分が数字ならそれを使用
+                else:
+                    period = 1  # デフォルト値
+                    print(f"Warning: Could not extract period from {target_name}, using default {period}")
+            except (ValueError, IndexError):
+                period = 1  # エラー時のデフォルト値
+                print(f"Error extracting period from {target_name}, using default {period}")
 
             report["classification"][f"period_{period}"] = {
                 "accuracy": result["accuracy"],
@@ -121,7 +143,18 @@ def generate_training_report(results: Dict[str, Any]) -> Dict[str, Any]:
     if "binary_classification" in results and results["binary_classification"]:
         binary_classification_results = results["binary_classification"]
         for target_name, result in binary_classification_results.items():
-            period = int(target_name.split("_")[1])
+            # 修正: 例外処理を追加して安全にperiodを取得
+            try:
+                # ターゲット名から期間を抽出
+                parts = target_name.split("_")
+                if len(parts) >= 2 and parts[-1].isdigit():
+                    period = int(parts[-1])  # 最後の部分が数字ならそれを使用
+                else:
+                    period = 1  # デフォルト値
+                    print(f"Warning: Could not extract period from {target_name}, using default {period}")
+            except (ValueError, IndexError):
+                period = 1  # エラー時のデフォルト値
+                print(f"Error extracting period from {target_name}, using default {period}")
 
             report["binary_classification"][f"period_{period}"] = {
                 "accuracy": result["accuracy"],

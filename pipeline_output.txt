@@ -1,0 +1,518 @@
+2025-05-03 12:17:21,783 - btcusd_predictor - INFO - === BTCUSD ML Predictor パイプラインを開始します ===
+2025-05-03 12:17:21,789 - config_loader - INFO - 設定を config\data_config.json から読み込みました
+2025-05-03 12:17:21,795 - config_loader - INFO - 設定を config\model_config.json から読み込みました
+2025-05-03 12:17:21,795 - btcusd_predictor - INFO - 設定ファイルをロードしました
+2025-05-03 12:17:21,795 - btcusd_predictor - INFO - データ収集ステップをスキップします
+2025-05-03 12:17:21,795 - btcusd_predictor - INFO - 特徴量生成ステップをスキップします
+2025-05-03 12:17:21,795 - btcusd_predictor - INFO - モデル訓練を開始します
+2025-05-03 12:17:21,795 - btcusd_predictor - ERROR - モデルトレーニングの入力データが空または無効です
+2025-05-03 12:17:21,795 - data_loader - INFO - load_data: データを data\processed\btcusd_5m_features.csv から読み込みます
+2025-05-03 12:17:21,800 - data_loader - INFO - ファイルのカラム: ['timestamp', 'close', 'volume', 'turnover', 'candle_size']... (全98列)
+2025-05-03 12:17:21,800 - data_loader - INFO - timestampカラムをインデックスとして読み込みます
+2025-05-03 12:17:22,933 - data_loader - INFO - load_data: 136355 行のデータを読み込みました
+2025-05-03 12:17:22,933 - btcusd_predictor - INFO - 閾値ベースの二値分類ターゲット変数を確認
+2025-05-03 12:17:22,934 - btcusd_predictor - INFO - 閾値ベース二値分類ターゲット列: ['target_threshold_binary_1', 'target_threshold_binary_2', 'target_threshold_binary_3']
+2025-05-03 12:17:22,935 - btcusd_predictor - INFO - target_threshold_binary_1 の統計: 有効データ 136355行, NaN 0行
+2025-05-03 12:17:22,936 - btcusd_predictor - INFO - target_threshold_binary_1 のクラス分布: {1.0: 68206, 0.0: 68149}
+2025-05-03 12:17:22,938 - btcusd_predictor - INFO - target_threshold_binary_2 の統計: 有効データ 136355行, NaN 0行
+2025-05-03 12:17:22,939 - btcusd_predictor - INFO - target_threshold_binary_2 のクラス分布: {1.0: 68314, 0.0: 68041}
+2025-05-03 12:17:22,940 - btcusd_predictor - INFO - target_threshold_binary_3 の統計: 有効データ 136355行, NaN 0行
+2025-05-03 12:17:22,941 - btcusd_predictor - INFO - target_threshold_binary_3 のクラス分布: {1.0: 68350, 0.0: 68005}
+2025-05-03 12:17:22,941 - feature_selector - INFO - prepare_features: 特徴量と目標変数の準備を開始します
+2025-05-03 12:17:22,941 - feature_selector - INFO - 選択された特徴量: 42個
+2025-05-03 12:17:22,962 - feature_selector - INFO - prepare_features: threshold_binary_classification_1 用の特徴量セット X_threshold_binary_1 を作成 (136355 行)
+2025-05-03 12:17:22,973 - feature_selector - INFO - prepare_features: threshold_binary_classification_2 用の特徴量セット X_threshold_binary_2 を作成 (136355 行)
+2025-05-03 12:17:22,984 - feature_selector - INFO - prepare_features: threshold_binary_classification_3 用の特徴量セット X_threshold_binary_3 を作成 (136355 行)
+2025-05-03 12:17:22,984 - feature_selector - INFO - prepare_features: 高閾値シグナル変数 24個を目標変数に追加します
+2025-05-03 12:17:22,984 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_long_1 を追加
+2025-05-03 12:17:22,984 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_short_1 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_long_1 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_short_1 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_long_2 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_short_2 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_long_2 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_short_2 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_long_2 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_short_2 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_long_3 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_1p_short_3 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_long_3 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_short_3 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_long_3 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_short_3 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_long_3 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_5p_short_3 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_long_1 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_2p_short_1 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_long_1 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_short_1 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_long_2 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 高閾値シグナル目標変数 target_high_threshold_3p_short_2 を追加
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 特徴量: 42個, 目標変数: 42個
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 特徴量セット: ['X', 'X_threshold_binary_1', 'X_threshold_binary_2', 'X_threshold_binary_3']
+2025-05-03 12:17:22,985 - feature_selector - INFO - prepare_features: 目標変数名: ['regression_1', 'regression_smoothed_1', 'classification_1', 'binary_classification_1', 'threshold_ternary_classification_1', 'threshold_binary_classification_1', 'regression_2', 'regression_smoothed_2', 'classification_2', 'binary_classification_2', 'threshold_ternary_classification_2', 'threshold_binary_classification_2', 'regression_3', 'regression_smoothed_3', 'classification_3', 'binary_classification_3', 'threshold_ternary_classification_3', 'threshold_binary_classification_3', 'target_high_threshold_1p_long_1', 'target_high_threshold_1p_short_1', 'target_high_threshold_5p_long_1', 'target_high_threshold_5p_short_1', 'target_high_threshold_1p_long_2', 'target_high_threshold_1p_short_2', 'target_high_threshold_2p_long_2', 'target_high_threshold_2p_short_2', 'target_high_threshold_5p_long_2', 'target_high_threshold_5p_short_2', 'target_high_threshold_1p_long_3', 'target_high_threshold_1p_short_3', 'target_high_threshold_2p_long_3', 'target_high_threshold_2p_short_3', 'target_high_threshold_3p_long_3', 'target_high_threshold_3p_short_3', 'target_high_threshold_5p_long_3', 'target_high_threshold_5p_short_3', 'target_high_threshold_2p_long_1', 'target_high_threshold_2p_short_1', 'target_high_threshold_3p_long_1', 'target_high_threshold_3p_short_1', 'target_high_threshold_3p_long_2', 'target_high_threshold_3p_short_2']
+2025-05-03 12:17:22,986 - feature_selector - INFO - prepare_features: classification_1 のクラスバランス: {1: 68206, -1: 68149}
+2025-05-03 12:17:22,986 - feature_selector - INFO - prepare_features: binary_classification_1 のクラスバランス: {1: 68206, 0: 68149}
+2025-05-03 12:17:22,987 - feature_selector - INFO - prepare_features: threshold_ternary_classification_1 のクラスバランス: {1: 68206, 0: 68149}
+2025-05-03 12:17:22,988 - feature_selector - INFO - prepare_features: threshold_binary_classification_1 のクラスバランス: {1.0: 68206, 0.0: 68149}
+2025-05-03 12:17:22,989 - feature_selector - INFO - prepare_features: classification_2 のクラスバランス: {1: 68314, -1: 68041}
+2025-05-03 12:17:22,989 - feature_selector - INFO - prepare_features: binary_classification_2 のクラスバランス: {1: 68314, 0: 68041}
+2025-05-03 12:17:22,990 - feature_selector - INFO - prepare_features: threshold_ternary_classification_2 のクラスバランス: {1: 68314, 0: 68041}
+2025-05-03 12:17:22,991 - feature_selector - INFO - prepare_features: threshold_binary_classification_2 のクラスバランス: {1.0: 68314, 0.0: 68041}
+2025-05-03 12:17:22,991 - feature_selector - INFO - prepare_features: classification_3 のクラスバランス: {1: 68350, -1: 68005}
+2025-05-03 12:17:22,992 - feature_selector - INFO - prepare_features: binary_classification_3 のクラスバランス: {1: 68350, 0: 68005}
+2025-05-03 12:17:22,993 - feature_selector - INFO - prepare_features: threshold_ternary_classification_3 のクラスバランス: {1: 68350, 0: 68005}
+2025-05-03 12:17:22,994 - feature_selector - INFO - prepare_features: threshold_binary_classification_3 のクラスバランス: {1.0: 68350, 0.0: 68005}
+2025-05-03 12:17:22,994 - feature_selector - INFO - prepare_features: 特徴量と目標変数の準備を終了します
+2025-05-03 12:17:22,994 - btcusd_predictor - INFO - 閾値ベースの二値分類ターゲット: ['threshold_binary_classification_1', 'threshold_binary_classification_2', 'threshold_binary_classification_3']
+2025-05-03 12:17:22,994 - data_splitter - INFO - train_test_split: トレーニングデータとテストデータへの分割を開始します
+2025-05-03 12:17:23,012 - data_splitter - INFO - train_test_split: トレーニングデータ: 109084行, テストデータ: 27271行
+2025-05-03 12:17:23,012 - data_splitter - INFO - train_test_split: トレーニングデータとテストデータへの分割を終了します
+2025-05-03 12:17:23,012 - btcusd_predictor - INFO - 特殊特徴量セット 'X_threshold_binary_1' の分割: トレーニング(109084行), テスト(27271行)
+2025-05-03 12:17:23,012 - btcusd_predictor - INFO - 特殊特徴量セット 'X_threshold_binary_2' の分割: トレーニング(109084行), テスト(27271行)
+2025-05-03 12:17:23,012 - btcusd_predictor - INFO - 特殊特徴量セット 'X_threshold_binary_3' の分割: トレーニング(109084行), テスト(27271行)
+2025-05-03 12:17:23,012 - btcusd_predictor - INFO - 回帰モデルのトレーニングを開始
+2025-05-03 12:17:23,012 - base_trainer - INFO - train_regression_models: 回帰モデルのトレーニングを開始します
+2025-05-03 12:17:23,012 - base_trainer - INFO - train: 1期先の価格変動率予測モデルをトレーニングします
+Training until validation scores don't improve for 50 rounds
+Early stopping, best iteration is:
+[5]	train's l1: 0.00107309	valid's l1: 0.00120676
+2025-05-03 12:17:23,218 - base_trainer - INFO - train: 1期先の価格変動率予測モデル - MAE: 0.001207
+2025-05-03 12:17:23,218 - base_trainer - INFO - train: 1期先の回帰モデルのトレーニングを終了します
+2025-05-03 12:17:23,218 - base_trainer - INFO - _save_model: モデル 'regression_model_period_1' の保存を開始します
+2025-05-03 12:17:23,218 - model_saver - INFO - save_model: モデル 'regression_model_period_1' の保存を開始します
+2025-05-03 12:17:23,218 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:23,220 - model_saver - INFO - save_model: モデルを models\regression_model_period_1.joblib に保存しました
+2025-05-03 12:17:23,220 - model_saver - INFO - 保存されたモデルのファイルサイズ: 21.19 KB
+2025-05-03 12:17:23,220 - model_saver - INFO - ファイルの存在を確認: models\regression_model_period_1.joblib は正常に保存されました
+2025-05-03 12:17:23,220 - model_saver - INFO - save_model: モデル 'regression_model_period_1' の保存を終了します
+2025-05-03 12:17:23,220 - base_trainer - INFO - _save_model: モデル 'regression_model_period_1' の保存が成功しました
+2025-05-03 12:17:23,221 - base_trainer - INFO - train: 2期先の価格変動率予測モデルをトレーニングします
+Training until validation scores don't improve for 50 rounds
+Early stopping, best iteration is:
+[5]	train's l1: 0.00151549	valid's l1: 0.00172949
+2025-05-03 12:17:23,443 - base_trainer - INFO - train: 2期先の価格変動率予測モデル - MAE: 0.001729
+2025-05-03 12:17:23,443 - base_trainer - INFO - train: 2期先の回帰モデルのトレーニングを終了します
+2025-05-03 12:17:23,443 - base_trainer - INFO - _save_model: モデル 'regression_model_period_2' の保存を開始します
+2025-05-03 12:17:23,443 - model_saver - INFO - save_model: モデル 'regression_model_period_2' の保存を開始します
+2025-05-03 12:17:23,443 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:23,445 - model_saver - INFO - save_model: モデルを models\regression_model_period_2.joblib に保存しました
+2025-05-03 12:17:23,445 - model_saver - INFO - 保存されたモデルのファイルサイズ: 21.24 KB
+2025-05-03 12:17:23,445 - model_saver - INFO - ファイルの存在を確認: models\regression_model_period_2.joblib は正常に保存されました
+2025-05-03 12:17:23,445 - model_saver - INFO - save_model: モデル 'regression_model_period_2' の保存を終了します
+2025-05-03 12:17:23,445 - base_trainer - INFO - _save_model: モデル 'regression_model_period_2' の保存が成功しました
+2025-05-03 12:17:23,446 - base_trainer - INFO - train: 3期先の価格変動率予測モデルをトレーニングします
+Training until validation scores don't improve for 50 rounds
+Early stopping, best iteration is:
+[8]	train's l1: 0.00184149	valid's l1: 0.00209824
+2025-05-03 12:17:23,677 - base_trainer - INFO - train: 3期先の価格変動率予測モデル - MAE: 0.002098
+2025-05-03 12:17:23,677 - base_trainer - INFO - train: 3期先の回帰モデルのトレーニングを終了します
+2025-05-03 12:17:23,677 - base_trainer - INFO - _save_model: モデル 'regression_model_period_3' の保存を開始します
+2025-05-03 12:17:23,677 - model_saver - INFO - save_model: モデル 'regression_model_period_3' の保存を開始します
+2025-05-03 12:17:23,677 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:23,678 - model_saver - INFO - save_model: モデルを models\regression_model_period_3.joblib に保存しました
+2025-05-03 12:17:23,679 - model_saver - INFO - 保存されたモデルのファイルサイズ: 30.12 KB
+2025-05-03 12:17:23,679 - model_saver - INFO - ファイルの存在を確認: models\regression_model_period_3.joblib は正常に保存されました
+2025-05-03 12:17:23,679 - model_saver - INFO - save_model: モデル 'regression_model_period_3' の保存を終了します
+2025-05-03 12:17:23,679 - base_trainer - INFO - _save_model: モデル 'regression_model_period_3' の保存が成功しました
+2025-05-03 12:17:23,680 - btcusd_predictor - INFO - 分類モデルのトレーニングを開始
+2025-05-03 12:17:23,680 - base_trainer - INFO - train_classification_models: 分類モデルのトレーニングを開始します
+2025-05-03 12:17:23,680 - base_trainer - INFO - train: 1期先の価格変動方向予測モデルをトレーニングします
+2025-05-03 12:17:23,682 - base_trainer - INFO - クラス重み: {2: 0.996562005360386, 0: 1.0034558162518268}
+Training until validation scores don't improve for 50 rounds
+Early stopping, best iteration is:
+[30]	train's multi_logloss: 0.686112	valid's multi_logloss: 0.691735
+2025-05-03 12:17:24,281 - base_trainer - INFO - train: 1期先の価格変動方向予測モデル - 正解率: 0.5181
+2025-05-03 12:17:24,281 - base_trainer - INFO - train: 1期先の分類モデルのトレーニングを終了します
+2025-05-03 12:17:24,281 - base_trainer - INFO - _save_model: モデル 'classification_model_period_1' の保存を開始します
+2025-05-03 12:17:24,281 - model_saver - INFO - save_model: モデル 'classification_model_period_1' の保存を開始します
+2025-05-03 12:17:24,281 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:24,285 - model_saver - INFO - save_model: モデルを models\classification_model_period_1.joblib に保存しました
+2025-05-03 12:17:24,285 - model_saver - INFO - 保存されたモデルのファイルサイズ: 222.05 KB
+2025-05-03 12:17:24,285 - model_saver - INFO - ファイルの存在を確認: models\classification_model_period_1.joblib は正常に保存されました
+2025-05-03 12:17:24,285 - model_saver - INFO - save_model: モデル 'classification_model_period_1' の保存を終了します
+2025-05-03 12:17:24,285 - base_trainer - INFO - _save_model: モデル 'classification_model_period_1' の保存が成功しました
+2025-05-03 12:17:24,287 - base_trainer - INFO - train: 2期先の価格変動方向予測モデルをトレーニングします
+2025-05-03 12:17:24,288 - base_trainer - INFO - クラス重み: {2: 0.996233766017394, 0: 1.0037876316367227}
+Training until validation scores don't improve for 50 rounds
+Early stopping, best iteration is:
+[33]	train's multi_logloss: 0.684892	valid's multi_logloss: 0.691421
+2025-05-03 12:17:24,898 - base_trainer - INFO - train: 2期先の価格変動方向予測モデル - 正解率: 0.5205
+2025-05-03 12:17:24,898 - base_trainer - INFO - train: 2期先の分類モデルのトレーニングを終了します
+2025-05-03 12:17:24,898 - base_trainer - INFO - _save_model: モデル 'classification_model_period_2' の保存を開始します
+2025-05-03 12:17:24,898 - model_saver - INFO - save_model: モデル 'classification_model_period_2' の保存を開始します
+2025-05-03 12:17:24,898 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:24,902 - model_saver - INFO - save_model: モデルを models\classification_model_period_2.joblib に保存しました
+2025-05-03 12:17:24,902 - model_saver - INFO - 保存されたモデルのファイルサイズ: 243.78 KB
+2025-05-03 12:17:24,902 - model_saver - INFO - ファイルの存在を確認: models\classification_model_period_2.joblib は正常に保存されました
+2025-05-03 12:17:24,902 - model_saver - INFO - save_model: モデル 'classification_model_period_2' の保存を終了します
+2025-05-03 12:17:24,902 - base_trainer - INFO - _save_model: モデル 'classification_model_period_2' の保存が成功しました
+2025-05-03 12:17:24,905 - base_trainer - INFO - train: 3期先の価格変動方向予測モデルをトレーニングします
+2025-05-03 12:17:24,906 - base_trainer - INFO - クラス重み: {2: 0.9957234937276529, 0: 1.0043041161312076}
+Training until validation scores don't improve for 50 rounds
+Early stopping, best iteration is:
+[29]	train's multi_logloss: 0.684497	valid's multi_logloss: 0.691486
+2025-05-03 12:17:25,500 - base_trainer - INFO - train: 3期先の価格変動方向予測モデル - 正解率: 0.5230
+2025-05-03 12:17:25,501 - base_trainer - INFO - train: 3期先の分類モデルのトレーニングを終了します
+2025-05-03 12:17:25,501 - base_trainer - INFO - _save_model: モデル 'classification_model_period_3' の保存を開始します
+2025-05-03 12:17:25,501 - model_saver - INFO - save_model: モデル 'classification_model_period_3' の保存を開始します
+2025-05-03 12:17:25,501 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:25,505 - model_saver - INFO - save_model: モデルを models\classification_model_period_3.joblib に保存しました
+2025-05-03 12:17:25,505 - model_saver - INFO - 保存されたモデルのファイルサイズ: 214.97 KB
+2025-05-03 12:17:25,505 - model_saver - INFO - ファイルの存在を確認: models\classification_model_period_3.joblib は正常に保存されました
+2025-05-03 12:17:25,505 - model_saver - INFO - save_model: モデル 'classification_model_period_3' の保存を終了します
+2025-05-03 12:17:25,505 - base_trainer - INFO - _save_model: モデル 'classification_model_period_3' の保存が成功しました
+2025-05-03 12:17:25,507 - btcusd_predictor - INFO - 二値分類モデルのトレーニングを開始
+2025-05-03 12:17:25,508 - base_trainer - INFO - train_binary_classification_models: 二値分類モデルのトレーニングを開始します
+2025-05-03 12:17:25,508 - base_trainer - INFO - train: 1期先の価格上昇/下落予測モデルをトレーニングします
+2025-05-03 12:17:25,508 - base_trainer - INFO - クラス重み: {1: 0.9982795226590526, 0: 1.0017264178665883}
+Training until validation scores don't improve for 100 rounds
+[100]	train's binary_logloss: 0.683901	train's auc: 0.585548	train's binary_error: 0.44113	valid's binary_logloss: 0.691817	valid's auc: 0.52804	valid's binary_error: 0.483407
+Early stopping, best iteration is:
+[56]	train's binary_logloss: 0.686617	train's auc: 0.575558	train's binary_error: 0.449625	valid's binary_logloss: 0.691768	valid's auc: 0.528316	valid's binary_error: 0.483297
+2025-05-03 12:17:28,197 - base_trainer - INFO - train: 1期先の価格上昇/下落予測モデル - 正解率: 0.5167, ROC AUC: 0.5283
+2025-05-03 12:17:28,197 - base_trainer - INFO - train: 1期先の二値分類モデルのトレーニングを終了します
+2025-05-03 12:17:28,197 - base_trainer - INFO - _save_model: モデル 'binary_classification_model_period_1' の保存を開始します
+2025-05-03 12:17:28,197 - model_saver - INFO - save_model: モデル 'binary_classification_model_period_1' の保存を開始します
+2025-05-03 12:17:28,197 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:28,201 - model_saver - INFO - save_model: モデルを models\binary_classification_model_period_1.joblib に保存しました
+2025-05-03 12:17:28,201 - model_saver - INFO - 保存されたモデルのファイルサイズ: 201.96 KB
+2025-05-03 12:17:28,201 - model_saver - INFO - ファイルの存在を確認: models\binary_classification_model_period_1.joblib は正常に保存されました
+2025-05-03 12:17:28,201 - model_saver - INFO - save_model: モデル 'binary_classification_model_period_1' の保存を終了します
+2025-05-03 12:17:28,201 - base_trainer - INFO - _save_model: モデル 'binary_classification_model_period_1' の保存が成功しました
+2025-05-03 12:17:28,203 - base_trainer - INFO - train: 2期先の価格上昇/下落予測モデルをトレーニングします
+2025-05-03 12:17:28,204 - base_trainer - INFO - クラス重み: {1: 0.9981151065971269, 0: 1.0018920259372877}
+Training until validation scores don't improve for 100 rounds
+[100]	train's binary_logloss: 0.68292	train's auc: 0.59101	train's binary_error: 0.436009	valid's binary_logloss: 0.691574	valid's auc: 0.532848	valid's binary_error: 0.478457
+Early stopping, best iteration is:
+[48]	train's binary_logloss: 0.686584	train's auc: 0.578166	train's binary_error: 0.446627	valid's binary_logloss: 0.691382	valid's auc: 0.531808	valid's binary_error: 0.478347
+2025-05-03 12:17:30,826 - base_trainer - INFO - train: 2期先の価格上昇/下落予測モデル - 正解率: 0.5217, ROC AUC: 0.5318
+2025-05-03 12:17:30,826 - base_trainer - INFO - train: 2期先の二値分類モデルのトレーニングを終了します
+2025-05-03 12:17:30,826 - base_trainer - INFO - _save_model: モデル 'binary_classification_model_period_2' の保存を開始します
+2025-05-03 12:17:30,826 - model_saver - INFO - save_model: モデル 'binary_classification_model_period_2' の保存を開始します
+2025-05-03 12:17:30,827 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:30,830 - model_saver - INFO - save_model: モデルを models\binary_classification_model_period_2.joblib に保存しました
+2025-05-03 12:17:30,831 - model_saver - INFO - 保存されたモデルのファイルサイズ: 174.11 KB
+2025-05-03 12:17:30,831 - model_saver - INFO - ファイルの存在を確認: models\binary_classification_model_period_2.joblib は正常に保存されました
+2025-05-03 12:17:30,831 - model_saver - INFO - save_model: モデル 'binary_classification_model_period_2' の保存を終了します
+2025-05-03 12:17:30,831 - base_trainer - INFO - _save_model: モデル 'binary_classification_model_period_2' の保存が成功しました
+2025-05-03 12:17:30,832 - base_trainer - INFO - train: 3期先の価格上昇/下落予測モデルをトレーニングします
+2025-05-03 12:17:30,833 - base_trainer - INFO - クラス重み: {1: 0.9978594558993029, 0: 1.0021497473587506}
+Training until validation scores don't improve for 100 rounds
+[100]	train's binary_logloss: 0.681616	train's auc: 0.594911	train's binary_error: 0.434114	valid's binary_logloss: 0.692149	valid's auc: 0.530867	valid's binary_error: 0.47908
+Early stopping, best iteration is:
+[42]	train's binary_logloss: 0.686195	train's auc: 0.581568	train's binary_error: 0.445061	valid's binary_logloss: 0.691569	valid's auc: 0.53122	valid's binary_error: 0.47941
+2025-05-03 12:17:33,342 - base_trainer - INFO - train: 3期先の価格上昇/下落予測モデル - 正解率: 0.5206, ROC AUC: 0.5312
+2025-05-03 12:17:33,342 - base_trainer - INFO - train: 3期先の二値分類モデルのトレーニングを終了します
+2025-05-03 12:17:33,342 - base_trainer - INFO - _save_model: モデル 'binary_classification_model_period_3' の保存を開始します
+2025-05-03 12:17:33,342 - model_saver - INFO - save_model: モデル 'binary_classification_model_period_3' の保存を開始します
+2025-05-03 12:17:33,342 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:33,346 - model_saver - INFO - save_model: モデルを models\binary_classification_model_period_3.joblib に保存しました
+2025-05-03 12:17:33,346 - model_saver - INFO - 保存されたモデルのファイルサイズ: 153.11 KB
+2025-05-03 12:17:33,346 - model_saver - INFO - ファイルの存在を確認: models\binary_classification_model_period_3.joblib は正常に保存されました
+2025-05-03 12:17:33,346 - model_saver - INFO - save_model: モデル 'binary_classification_model_period_3' の保存を終了します
+2025-05-03 12:17:33,346 - base_trainer - INFO - _save_model: モデル 'binary_classification_model_period_3' の保存が成功しました
+2025-05-03 12:17:33,348 - btcusd_predictor - INFO - 閾値ベース分類モデルのトレーニングを開始
+2025-05-03 12:17:33,348 - base_trainer - INFO - ===== train_threshold_binary_classification_models: 閾値ベースの二値分類モデルのトレーニングを開始します =====
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: threshold_ternary_classification_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: threshold_binary_classification_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: threshold_ternary_classification_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: threshold_binary_classification_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: threshold_ternary_classification_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: threshold_binary_classification_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_1p_long_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_1p_short_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_5p_long_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_5p_short_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_1p_long_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_1p_short_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_2p_long_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_2p_short_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_5p_long_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_5p_short_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_1p_long_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_1p_short_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_2p_long_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_2p_short_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_3p_long_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_3p_short_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_5p_long_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_5p_short_3
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_2p_long_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_2p_short_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_3p_long_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_3p_short_1
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_3p_long_2
+2025-05-03 12:17:33,348 - base_trainer - INFO - 閾値関連の目標変数が見つかりました: target_high_threshold_3p_short_2
+2025-05-03 12:17:33,351 - base_trainer - INFO - threshold_binary_classification_1 のクラスバランス: {1.0: 54636, 0.0: 54448}
+2025-05-03 12:17:33,351 - base_trainer - INFO - 閾値ベースの二値分類モデル（1期先）のトレーニングを開始します
+2025-05-03 12:17:33,351 - base_trainer - INFO - ==== train: 1期先の閾値ベース二値分類モデル（上昇/下落予測）のトレーニングを開始 ====
+2025-05-03 12:17:33,351 - base_trainer - INFO - train: 専用特徴量セット X_threshold_binary_1 を使用 (109084 行)
+2025-05-03 12:17:33,351 - base_trainer - INFO - train: テスト用専用特徴量セット X_threshold_binary_1 を使用 (27271 行)
+2025-05-03 12:17:33,352 - base_trainer - INFO - train: トレーニングデータのクラスバランス: {1.0: 54636, 0.0: 54448}
+2025-05-03 12:17:33,352 - base_trainer - INFO - 特徴量列数: 42列
+2025-05-03 12:17:33,354 - base_trainer - INFO - クラス比率: 0.9966 (1に近いほど均等)
+2025-05-03 12:17:33,354 - base_trainer - INFO - クラス重み: {1.0: 0.9982795226590526, 0.0: 1.0017264178665883}
+2025-05-03 12:17:33,354 - base_trainer - INFO - 下落クラスの重みを増加: scale_pos_weight = 1.0035
+2025-05-03 12:17:33,354 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'bagging_fraction': 0.8, 'bagging_freq': 5, 'min_child_samples': 25, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(1.0034528357331767), 'verbose': -1}
+2025-05-03 12:17:33,354 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1000)
+2025-05-03 12:17:33,671 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 27)
+2025-05-03 12:17:33,700 - base_trainer - INFO - 評価指標 - 精度: 0.5182, 適合率: 0.5151, 再現率: 0.5428, F1: 0.5286
+2025-05-03 12:17:33,700 - base_trainer - INFO - _save_model: モデル 'threshold_binary_classification_model_period_1' の保存を開始します
+2025-05-03 12:17:33,700 - model_saver - INFO - save_model: モデル 'threshold_binary_classification_model_period_1' の保存を開始します
+2025-05-03 12:17:33,700 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:33,703 - model_saver - INFO - save_model: モデルを models\threshold_binary_classification_model_period_1.joblib に保存しました
+2025-05-03 12:17:33,703 - model_saver - INFO - 保存されたモデルのファイルサイズ: 100.16 KB
+2025-05-03 12:17:33,703 - model_saver - INFO - ファイルの存在を確認: models\threshold_binary_classification_model_period_1.joblib は正常に保存されました
+2025-05-03 12:17:33,703 - model_saver - INFO - save_model: モデル 'threshold_binary_classification_model_period_1' の保存を終了します
+2025-05-03 12:17:33,703 - base_trainer - INFO - _save_model: モデル 'threshold_binary_classification_model_period_1' の保存が成功しました
+2025-05-03 12:17:33,703 - base_trainer - INFO - モデルを models\threshold_binary_classification_model_period_1.joblib に保存しました
+2025-05-03 12:17:33,703 - base_trainer - INFO - 閾値ベースの二値分類モデル（1期先）のトレーニングが完了しました
+2025-05-03 12:17:33,705 - base_trainer - INFO - threshold_binary_classification_2 のクラスバランス: {1.0: 54645, 0.0: 54439}
+2025-05-03 12:17:33,705 - base_trainer - INFO - 閾値ベースの二値分類モデル（2期先）のトレーニングを開始します
+2025-05-03 12:17:33,705 - base_trainer - INFO - ==== train: 2期先の閾値ベース二値分類モデル（上昇/下落予測）のトレーニングを開始 ====
+2025-05-03 12:17:33,705 - base_trainer - INFO - train: 専用特徴量セット X_threshold_binary_2 を使用 (109084 行)
+2025-05-03 12:17:33,705 - base_trainer - INFO - train: テスト用専用特徴量セット X_threshold_binary_2 を使用 (27271 行)
+2025-05-03 12:17:33,706 - base_trainer - INFO - train: トレーニングデータのクラスバランス: {1.0: 54645, 0.0: 54439}
+2025-05-03 12:17:33,706 - base_trainer - INFO - 特徴量列数: 42列
+2025-05-03 12:17:33,708 - base_trainer - INFO - クラス比率: 0.9962 (1に近いほど均等)
+2025-05-03 12:17:33,708 - base_trainer - INFO - クラス重み: {1.0: 0.9981151065971269, 0.0: 1.0018920259372877}
+2025-05-03 12:17:33,708 - base_trainer - INFO - 下落クラスの重みを増加: scale_pos_weight = 1.0038
+2025-05-03 12:17:33,708 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'bagging_fraction': 0.8, 'bagging_freq': 5, 'min_child_samples': 25, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(1.003784051874575), 'verbose': -1}
+2025-05-03 12:17:33,708 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1000)
+2025-05-03 12:17:34,027 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 19)
+2025-05-03 12:17:34,057 - base_trainer - INFO - 評価指標 - 精度: 0.5199, 適合率: 0.5202, 再現率: 0.5419, F1: 0.5308
+2025-05-03 12:17:34,057 - base_trainer - INFO - _save_model: モデル 'threshold_binary_classification_model_period_2' の保存を開始します
+2025-05-03 12:17:34,057 - model_saver - INFO - save_model: モデル 'threshold_binary_classification_model_period_2' の保存を開始します
+2025-05-03 12:17:34,057 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:34,059 - model_saver - INFO - save_model: モデルを models\threshold_binary_classification_model_period_2.joblib に保存しました
+2025-05-03 12:17:34,059 - model_saver - INFO - 保存されたモデルのファイルサイズ: 72.35 KB
+2025-05-03 12:17:34,059 - model_saver - INFO - ファイルの存在を確認: models\threshold_binary_classification_model_period_2.joblib は正常に保存されました
+2025-05-03 12:17:34,059 - model_saver - INFO - save_model: モデル 'threshold_binary_classification_model_period_2' の保存を終了します
+2025-05-03 12:17:34,059 - base_trainer - INFO - _save_model: モデル 'threshold_binary_classification_model_period_2' の保存が成功しました
+2025-05-03 12:17:34,059 - base_trainer - INFO - モデルを models\threshold_binary_classification_model_period_2.joblib に保存しました
+2025-05-03 12:17:34,060 - base_trainer - INFO - 閾値ベースの二値分類モデル（2期先）のトレーニングが完了しました
+2025-05-03 12:17:34,061 - base_trainer - INFO - threshold_binary_classification_3 のクラスバランス: {1.0: 54659, 0.0: 54425}
+2025-05-03 12:17:34,062 - base_trainer - INFO - 閾値ベースの二値分類モデル（3期先）のトレーニングを開始します
+2025-05-03 12:17:34,062 - base_trainer - INFO - ==== train: 3期先の閾値ベース二値分類モデル（上昇/下落予測）のトレーニングを開始 ====
+2025-05-03 12:17:34,062 - base_trainer - INFO - train: 専用特徴量セット X_threshold_binary_3 を使用 (109084 行)
+2025-05-03 12:17:34,062 - base_trainer - INFO - train: テスト用専用特徴量セット X_threshold_binary_3 を使用 (27271 行)
+2025-05-03 12:17:34,063 - base_trainer - INFO - train: トレーニングデータのクラスバランス: {1.0: 54659, 0.0: 54425}
+2025-05-03 12:17:34,063 - base_trainer - INFO - 特徴量列数: 42列
+2025-05-03 12:17:34,064 - base_trainer - INFO - クラス比率: 0.9957 (1に近いほど均等)
+2025-05-03 12:17:34,064 - base_trainer - INFO - クラス重み: {1.0: 0.9978594558993029, 0.0: 1.0021497473587506}
+2025-05-03 12:17:34,064 - base_trainer - INFO - 下落クラスの重みを増加: scale_pos_weight = 1.0043
+2025-05-03 12:17:34,064 - base_trainer - INFO - モデルパラメータ: {'objective': 'binary', 'metric': 'binary_logloss', 'boosting_type': 'gbdt', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'bagging_fraction': 0.8, 'bagging_freq': 5, 'min_child_samples': 25, 'max_depth': 6, 'reg_alpha': 0.01, 'reg_lambda': 0.05, 'min_split_gain': 0.01, 'subsample': 0.9, 'scale_pos_weight': np.float64(1.004299494717501), 'verbose': -1}
+2025-05-03 12:17:34,065 - base_trainer - INFO - モデルトレーニングを開始 (最大ラウンド: 1000)
+2025-05-03 12:17:34,390 - base_trainer - INFO - モデルトレーニング完了 (実際のラウンド: 26)
+2025-05-03 12:17:34,420 - base_trainer - INFO - 評価指標 - 精度: 0.5200, 適合率: 0.5198, 再現率: 0.5756, F1: 0.5463
+2025-05-03 12:17:34,420 - base_trainer - INFO - _save_model: モデル 'threshold_binary_classification_model_period_3' の保存を開始します
+2025-05-03 12:17:34,420 - model_saver - INFO - save_model: モデル 'threshold_binary_classification_model_period_3' の保存を開始します
+2025-05-03 12:17:34,421 - model_saver - INFO - 出力ディレクトリを確認/作成しました: models
+2025-05-03 12:17:34,423 - model_saver - INFO - save_model: モデルを models\threshold_binary_classification_model_period_3.joblib に保存しました
+2025-05-03 12:17:34,423 - model_saver - INFO - 保存されたモデルのファイルサイズ: 96.60 KB
+2025-05-03 12:17:34,423 - model_saver - INFO - ファイルの存在を確認: models\threshold_binary_classification_model_period_3.joblib は正常に保存されました
+2025-05-03 12:17:34,423 - model_saver - INFO - save_model: モデル 'threshold_binary_classification_model_period_3' の保存を終了します
+2025-05-03 12:17:34,423 - base_trainer - INFO - _save_model: モデル 'threshold_binary_classification_model_period_3' の保存が成功しました
+2025-05-03 12:17:34,423 - base_trainer - INFO - モデルを models\threshold_binary_classification_model_period_3.joblib に保存しました
+2025-05-03 12:17:34,423 - base_trainer - INFO - 閾値ベースの二値分類モデル（3期先）のトレーニングが完了しました
+2025-05-03 12:17:34,423 - base_trainer - INFO - ===== train_threshold_binary_classification_models: 閾値ベースの二値分類モデルのトレーニングが完了しました =====
+2025-05-03 12:17:34,425 - btcusd_predictor - INFO - 閾値ベース分類モデルの結果: 成功 3, 失敗 0
+2025-05-03 12:17:34,425 - base_trainer - INFO - generate_training_report: トレーニングレポートの生成を開始します
+2025-05-03 12:17:34,425 - base_trainer - INFO - generate_training_report: トレーニングレポートの生成を終了します
+2025-05-03 12:17:34,425 - btcusd_predictor - INFO - モデル訓練が完了しました
+2025-05-03 12:17:34,439 - btcusd_predictor - INFO - モデル評価を開始します
+2025-05-03 12:17:34,439 - btcusd_predictor - INFO - 評価用データを読み込み中...
+2025-05-03 12:17:34,439 - data_loader - INFO - load_data: データを data\processed\btcusd_5m_features.csv から読み込みます
+2025-05-03 12:17:34,444 - data_loader - INFO - ファイルのカラム: ['timestamp', 'close', 'volume', 'turnover', 'candle_size']... (全98列)
+2025-05-03 12:17:34,444 - data_loader - INFO - timestampカラムをインデックスとして読み込みます
+2025-05-03 12:17:35,650 - data_loader - INFO - load_data: 136355 行のデータを読み込みました
+2025-05-03 12:17:35,651 - btcusd_predictor - INFO - 閾値ベースの二値分類ターゲット変数を確認
+2025-05-03 12:17:35,651 - btcusd_predictor - INFO - 閾値ベース二値分類ターゲット列: ['target_threshold_binary_1', 'target_threshold_binary_2', 'target_threshold_binary_3']
+2025-05-03 12:17:35,652 - btcusd_predictor - INFO - target_threshold_binary_1 の統計: 有効データ 136355行, NaN 0行
+2025-05-03 12:17:35,653 - btcusd_predictor - INFO - target_threshold_binary_1 のクラス分布: {1.0: 68206, 0.0: 68149}
+2025-05-03 12:17:35,654 - btcusd_predictor - INFO - target_threshold_binary_2 の統計: 有効データ 136355行, NaN 0行
+2025-05-03 12:17:35,655 - btcusd_predictor - INFO - target_threshold_binary_2 のクラス分布: {1.0: 68314, 0.0: 68041}
+2025-05-03 12:17:35,656 - btcusd_predictor - INFO - target_threshold_binary_3 の統計: 有効データ 136355行, NaN 0行
+2025-05-03 12:17:35,657 - btcusd_predictor - INFO - target_threshold_binary_3 のクラス分布: {1.0: 68350, 0.0: 68005}
+2025-05-03 12:17:35,658 - base_evaluator - INFO - load_models: モデルの読み込みを開始します
+2025-05-03 12:17:35,658 - model_loader - INFO - === load_models: モデルのロードを開始します ===
+2025-05-03 12:17:35,658 - model_loader - INFO - 利用可能なモデルファイル: ['binary_classification_model_period_1.joblib', 'binary_classification_model_period_2.joblib', 'binary_classification_model_period_3.joblib', 'classification_model_period_1.joblib', 'classification_model_period_2.joblib', 'classification_model_period_3.joblib', 'high_threshold_2p_long_model_period_1.joblib', 'high_threshold_2p_long_model_period_2.joblib', 'high_threshold_2p_long_model_period_3.joblib', 'high_threshold_2p_short_model_period_1.joblib', 'high_threshold_2p_short_model_period_2.joblib', 'high_threshold_2p_short_model_period_3.joblib', 'high_threshold_3p_long_model_period_1.joblib', 'high_threshold_3p_long_model_period_2.joblib', 'high_threshold_3p_long_model_period_3.joblib', 'high_threshold_3p_short_model_period_1.joblib', 'high_threshold_3p_short_model_period_2.joblib', 'high_threshold_3p_short_model_period_3.joblib', 'regression_model_period_1.joblib', 'regression_model_period_2.joblib', 'regression_model_period_3.joblib', 'threshold_binary_classification_model_period_1.joblib', 'threshold_binary_classification_model_period_2.joblib', 'threshold_binary_classification_model_period_3.joblib']
+2025-05-03 12:17:35,658 - model_loader - INFO - モデルをロード中: models\regression_model_period_1.joblib
+2025-05-03 12:17:35,666 - model_loader - INFO - モデルを models\regression_model_period_1.joblib から読み込みました
+2025-05-03 12:17:35,666 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,666 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,666 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,666 - model_loader - INFO - regressionモデル（1期先）をロードしました
+2025-05-03 12:17:35,666 - model_loader - INFO - モデルをロード中: models\regression_model_period_2.joblib
+2025-05-03 12:17:35,675 - model_loader - INFO - モデルを models\regression_model_period_2.joblib から読み込みました
+2025-05-03 12:17:35,676 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,676 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,676 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,676 - model_loader - INFO - regressionモデル（2期先）をロードしました
+2025-05-03 12:17:35,676 - model_loader - INFO - モデルをロード中: models\regression_model_period_3.joblib
+2025-05-03 12:17:35,683 - model_loader - INFO - モデルを models\regression_model_period_3.joblib から読み込みました
+2025-05-03 12:17:35,683 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,683 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,683 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,683 - model_loader - INFO - regressionモデル（3期先）をロードしました
+2025-05-03 12:17:35,683 - model_loader - INFO - モデルをロード中: models\classification_model_period_1.joblib
+2025-05-03 12:17:35,690 - model_loader - INFO - モデルを models\classification_model_period_1.joblib から読み込みました
+2025-05-03 12:17:35,690 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,690 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,690 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,690 - model_loader - INFO - classificationモデル（1期先）をロードしました
+2025-05-03 12:17:35,690 - model_loader - INFO - モデルをロード中: models\classification_model_period_2.joblib
+2025-05-03 12:17:35,696 - model_loader - INFO - モデルを models\classification_model_period_2.joblib から読み込みました
+2025-05-03 12:17:35,696 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,696 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,696 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,696 - model_loader - INFO - classificationモデル（2期先）をロードしました
+2025-05-03 12:17:35,697 - model_loader - INFO - モデルをロード中: models\classification_model_period_3.joblib
+2025-05-03 12:17:35,703 - model_loader - INFO - モデルを models\classification_model_period_3.joblib から読み込みました
+2025-05-03 12:17:35,703 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,703 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,703 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,703 - model_loader - INFO - classificationモデル（3期先）をロードしました
+2025-05-03 12:17:35,703 - model_loader - INFO - モデルをロード中: models\binary_classification_model_period_1.joblib
+2025-05-03 12:17:35,709 - model_loader - INFO - モデルを models\binary_classification_model_period_1.joblib から読み込みました
+2025-05-03 12:17:35,709 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,709 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,709 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,709 - model_loader - INFO - binary_classificationモデル（1期先）をロードしました
+2025-05-03 12:17:35,709 - model_loader - INFO - モデルをロード中: models\binary_classification_model_period_2.joblib
+2025-05-03 12:17:35,715 - model_loader - INFO - モデルを models\binary_classification_model_period_2.joblib から読み込みました
+2025-05-03 12:17:35,715 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,715 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,715 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,715 - model_loader - INFO - binary_classificationモデル（2期先）をロードしました
+2025-05-03 12:17:35,715 - model_loader - INFO - モデルをロード中: models\binary_classification_model_period_3.joblib
+2025-05-03 12:17:35,721 - model_loader - INFO - モデルを models\binary_classification_model_period_3.joblib から読み込みました
+2025-05-03 12:17:35,721 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,721 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,721 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,721 - model_loader - INFO - binary_classificationモデル（3期先）をロードしました
+2025-05-03 12:17:35,721 - model_loader - INFO - モデルをロード中: models\threshold_binary_classification_model_period_1.joblib
+2025-05-03 12:17:35,727 - model_loader - INFO - モデルを models\threshold_binary_classification_model_period_1.joblib から読み込みました
+2025-05-03 12:17:35,727 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,727 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,727 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,727 - model_loader - INFO - threshold_binary_classificationモデル（1期先）をロードしました
+2025-05-03 12:17:35,727 - model_loader - INFO - モデルをロード中: models\threshold_binary_classification_model_period_2.joblib
+2025-05-03 12:17:35,733 - model_loader - INFO - モデルを models\threshold_binary_classification_model_period_2.joblib から読み込みました
+2025-05-03 12:17:35,733 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,733 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,733 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,733 - model_loader - INFO - threshold_binary_classificationモデル（2期先）をロードしました
+2025-05-03 12:17:35,733 - model_loader - INFO - モデルをロード中: models\threshold_binary_classification_model_period_3.joblib
+2025-05-03 12:17:35,738 - model_loader - INFO - モデルを models\threshold_binary_classification_model_period_3.joblib から読み込みました
+2025-05-03 12:17:35,738 - model_loader - INFO - モデルの特徴量数: 42
+2025-05-03 12:17:35,739 - model_loader - INFO - 特徴量サンプル: ['price_change_pct_1', 'macd_hist', 'volume', 'turnover', 'dist_from_low_10']...
+2025-05-03 12:17:35,739 - model_loader - INFO - モデルタイプ: Booster
+2025-05-03 12:17:35,739 - model_loader - INFO - threshold_binary_classificationモデル（3期先）をロードしました
+2025-05-03 12:17:35,739 - model_loader - INFO - === load_models: 12 個のモデルを読み込みました ===
+2025-05-03 12:17:35,739 - model_loader - INFO - 読み込まれたモデルの種類: ['regression_1', 'regression_2', 'regression_3', 'classification_1', 'classification_2', 'classification_3', 'binary_classification_1', 'binary_classification_2', 'binary_classification_3', 'threshold_binary_classification_1', 'threshold_binary_classification_2', 'threshold_binary_classification_3']
+2025-05-03 12:17:35,739 - model_loader - INFO - load_models: モデルのロードを終了します
+2025-05-03 12:17:35,739 - base_evaluator - INFO - load_models: 12 個のモデルを読み込みました
+2025-05-03 12:17:35,739 - base_evaluator - INFO - 読み込まれたモデル: ['regression_1', 'regression_2', 'regression_3', 'classification_1', 'classification_2', 'classification_3', 'binary_classification_1', 'binary_classification_2', 'binary_classification_3', 'threshold_binary_classification_1', 'threshold_binary_classification_2', 'threshold_binary_classification_3']
+2025-05-03 12:17:35,739 - base_evaluator - INFO - load_models: モデルの読み込みを終了します
+2025-05-03 12:17:35,739 - base_evaluator - INFO - prepare_test_data: テストデータの準備を開始します
+2025-05-03 12:17:35,739 - data_splitter - INFO - prepare_test_data: テストデータの準備を開始します
+2025-05-03 12:17:35,749 - data_splitter - INFO - prepare_test_data: 閾値ベース二値分類用の特徴量セット X_threshold_binary_1 を作成 (27271 行)
+2025-05-03 12:17:35,753 - data_splitter - INFO - prepare_test_data: 閾値ベース二値分類用の特徴量セット X_threshold_binary_2 を作成 (27271 行)
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 閾値ベース二値分類用の特徴量セット X_threshold_binary_3 を作成 (27271 行)
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 24個の高閾値シグナル変数を対象に追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_1p_long_1 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_1p_short_1 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_5p_long_1 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_5p_short_1 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_1p_long_2 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_1p_short_2 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_2p_long_2 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_2p_short_2 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_5p_long_2 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_5p_short_2 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_1p_long_3 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_1p_short_3 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_2p_long_3 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_2p_short_3 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_3p_long_3 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_3p_short_3 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_5p_long_3 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_5p_short_3 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_2p_long_1 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_2p_short_1 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_3p_long_1 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_3p_short_1 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_3p_long_2 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: 高閾値シグナル変数 target_high_threshold_3p_short_2 を追加
+2025-05-03 12:17:35,757 - data_splitter - INFO - prepare_test_data: y_test内の高閾値シグナル変数: 24個
+2025-05-03 12:17:35,757 - data_splitter - INFO -   - target_high_threshold_1p_long_1
+2025-05-03 12:17:35,757 - data_splitter - INFO -   - target_high_threshold_1p_short_1
+2025-05-03 12:17:35,757 - data_splitter - INFO -   - target_high_threshold_5p_long_1
+2025-05-03 12:17:35,758 - data_splitter - INFO -   - target_high_threshold_5p_short_1
+2025-05-03 12:17:35,758 - data_splitter - INFO -   - target_high_threshold_1p_long_2
+2025-05-03 12:17:35,758 - data_splitter - INFO -   ...その他 19個
+2025-05-03 12:17:35,758 - data_splitter - INFO - prepare_test_data: テストデータ: 27271行, 特徴量: 55個
+2025-05-03 12:17:35,758 - data_splitter - INFO - prepare_test_data: 特徴量セット: ['X', 'X_threshold_binary_1', 'X_threshold_binary_2', 'X_threshold_binary_3']
+2025-05-03 12:17:35,758 - data_splitter - INFO - prepare_test_data: テストデータの準備を終了します
+2025-05-03 12:17:35,758 - base_evaluator - INFO - prepare_test_data: テストデータの準備を終了します
+2025-05-03 12:17:35,758 - base_evaluator - INFO - evaluate_models: モデルの評価を開始します
+2025-05-03 12:17:35,758 - base_evaluator - INFO - evaluate_models: 回帰モデルの評価を開始します
+2025-05-03 12:17:35,758 - base_evaluator - INFO - evaluate: 1期先の回帰モデルの評価を開始します
+2025-05-03 12:17:35,763 - base_evaluator - INFO - evaluate: 1期先の回帰モデル評価 - MAE: 0.001207
+2025-05-03 12:17:35,763 - base_evaluator - INFO - evaluate: 1期先の回帰モデルの評価を終了します
+2025-05-03 12:17:35,763 - base_evaluator - INFO - evaluate: 2期先の回帰モデルの評価を開始します
+2025-05-03 12:17:35,768 - base_evaluator - INFO - evaluate: 2期先の回帰モデル評価 - MAE: 0.001729
+2025-05-03 12:17:35,768 - base_evaluator - INFO - evaluate: 2期先の回帰モデルの評価を終了します
+2025-05-03 12:17:35,768 - base_evaluator - INFO - evaluate: 3期先の回帰モデルの評価を開始します
+2025-05-03 12:17:35,773 - base_evaluator - INFO - evaluate: 3期先の回帰モデル評価 - MAE: 0.002098
+2025-05-03 12:17:35,773 - base_evaluator - INFO - evaluate: 3期先の回帰モデルの評価を終了します
+2025-05-03 12:17:35,773 - base_evaluator - INFO - evaluate_models: 分類モデルの評価を開始します
+2025-05-03 12:17:35,773 - base_evaluator - INFO - evaluate: 1期先の分類モデルの評価を開始します
+2025-05-03 12:17:35,797 - base_evaluator - INFO - evaluate: 1期先の分類モデル評価 - 正解率: 0.5181
+2025-05-03 12:17:35,797 - base_evaluator - INFO - evaluate: 1期先の分類モデルの評価を終了します
+2025-05-03 12:17:35,798 - base_evaluator - INFO - evaluate: 2期先の分類モデルの評価を開始します
+2025-05-03 12:17:35,821 - base_evaluator - INFO - evaluate: 2期先の分類モデル評価 - 正解率: 0.5205
+2025-05-03 12:17:35,821 - base_evaluator - INFO - evaluate: 2期先の分類モデルの評価を終了します
+2025-05-03 12:17:35,822 - base_evaluator - INFO - evaluate: 3期先の分類モデルの評価を開始します
+2025-05-03 12:17:35,845 - base_evaluator - INFO - evaluate: 3期先の分類モデル評価 - 正解率: 0.5230
+2025-05-03 12:17:35,845 - base_evaluator - INFO - evaluate: 3期先の分類モデルの評価を終了します
+2025-05-03 12:17:35,846 - base_evaluator - INFO - evaluate_models: 二値分類モデルの評価を開始します
+2025-05-03 12:17:35,846 - base_evaluator - INFO - evaluate: 1期先の二値分類モデルの評価を開始します
+2025-05-03 12:17:35,868 - base_evaluator - INFO - evaluate: 1期先の二値分類モデル評価 - 正解率: 0.5167, ROC AUC: 0.5283
+2025-05-03 12:17:35,868 - base_evaluator - INFO - evaluate: 1期先の二値分類モデルの評価を終了します
+2025-05-03 12:17:35,868 - base_evaluator - INFO - evaluate: 2期先の二値分類モデルの評価を開始します
+2025-05-03 12:17:35,890 - base_evaluator - INFO - evaluate: 2期先の二値分類モデル評価 - 正解率: 0.5217, ROC AUC: 0.5318
+2025-05-03 12:17:35,890 - base_evaluator - INFO - evaluate: 2期先の二値分類モデルの評価を終了します
+2025-05-03 12:17:35,890 - base_evaluator - INFO - evaluate: 3期先の二値分類モデルの評価を開始します
+2025-05-03 12:17:35,913 - base_evaluator - INFO - evaluate: 3期先の二値分類モデル評価 - 正解率: 0.5206, ROC AUC: 0.5312
+2025-05-03 12:17:35,913 - base_evaluator - INFO - evaluate: 3期先の二値分類モデルの評価を終了します
+2025-05-03 12:17:35,914 - base_evaluator - INFO - evaluate_models: 閾値ベースの二値分類モデルの評価を開始します
+2025-05-03 12:17:35,914 - base_evaluator - INFO - 閾値ベース二値分類モデル評価に専用特徴量セット X_threshold_binary_1 を使用します (27271 行)
+2025-05-03 12:17:35,914 - base_evaluator - INFO - evaluate: 1期先の閾値ベース二値分類モデルを評価します
+2025-05-03 12:17:35,914 - base_evaluator - INFO - X_testの形状: (27271, 55), 特徴量数: 55
+2025-05-03 12:17:35,914 - base_evaluator - INFO - モデルが期待する特徴量数: 42
+2025-05-03 12:17:35,914 - base_evaluator - INFO - テスト特徴量を調整します: (27271, 55) → (27271, 42)
+2025-05-03 12:17:35,938 - base_evaluator - INFO - evaluate: 1期先の閾値ベース二値分類モデル - 正解率: 0.5182, F1: 0.5286
+2025-05-03 12:17:35,938 - base_evaluator - INFO - evaluate: クラス分布: {0.0: 13701, 1.0: 13570}
+2025-05-03 12:17:35,939 - base_evaluator - INFO - 閾値ベース二値分類モデル評価に専用特徴量セット X_threshold_binary_2 を使用します (27271 行)
+2025-05-03 12:17:35,939 - base_evaluator - INFO - evaluate: 2期先の閾値ベース二値分類モデルを評価します
+2025-05-03 12:17:35,939 - base_evaluator - INFO - X_testの形状: (27271, 55), 特徴量数: 55
+2025-05-03 12:17:35,939 - base_evaluator - INFO - モデルが期待する特徴量数: 42
+2025-05-03 12:17:35,939 - base_evaluator - INFO - テスト特徴量を調整します: (27271, 55) → (27271, 42)
+2025-05-03 12:17:35,963 - base_evaluator - INFO - evaluate: 2期先の閾値ベース二値分類モデル - 正解率: 0.5199, F1: 0.5308
+2025-05-03 12:17:35,963 - base_evaluator - INFO - evaluate: クラス分布: {1.0: 13669, 0.0: 13602}
+2025-05-03 12:17:35,963 - base_evaluator - INFO - 閾値ベース二値分類モデル評価に専用特徴量セット X_threshold_binary_3 を使用します (27271 行)
+2025-05-03 12:17:35,963 - base_evaluator - INFO - evaluate: 3期先の閾値ベース二値分類モデルを評価します
+2025-05-03 12:17:35,963 - base_evaluator - INFO - X_testの形状: (27271, 55), 特徴量数: 55
+2025-05-03 12:17:35,963 - base_evaluator - INFO - モデルが期待する特徴量数: 42
+2025-05-03 12:17:35,963 - base_evaluator - INFO - テスト特徴量を調整します: (27271, 55) → (27271, 42)
+2025-05-03 12:17:35,987 - base_evaluator - INFO - evaluate: 3期先の閾値ベース二値分類モデル - 正解率: 0.5200, F1: 0.5463
+2025-05-03 12:17:35,987 - base_evaluator - INFO - evaluate: クラス分布: {1.0: 13691, 0.0: 13580}
+2025-05-03 12:17:35,988 - base_evaluator - INFO - evaluate_models: モデルの評価を終了します
+2025-05-03 12:17:35,988 - base_evaluator - INFO - generate_evaluation_report: 評価レポートの生成を開始します
+2025-05-03 12:17:35,988 - report_generator - INFO - generate_evaluation_report: 評価レポートの生成を開始します
+2025-05-03 12:17:35,988 - btcusd_predictor - ERROR - モデル評価中にエラーが発生しました: 'precision'
+2025-05-03 12:17:35,995 - btcusd_predictor - ERROR - モデル評価に失敗しました。パイプラインを中断します。
+2025-05-03 12:17:35,998 - btcusd_predictor - ERROR - パイプラインの実行に失敗しました

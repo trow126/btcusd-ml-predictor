@@ -102,31 +102,70 @@ class ThresholdBinaryClassificationEvaluator(BaseEvaluator):
             # 閾値で分類（デフォルトは0.5）
             y_pred = (y_pred_proba > 0.5).astype(int)
 
-            # 評価指標の計算
-            accuracy = accuracy_score(y_test, y_pred)
-            precision = precision_score(y_test, y_pred, average='binary', zero_division=0)
-            recall = recall_score(y_test, y_pred, average='binary', zero_division=0)
-            f1 = f1_score(y_test, y_pred, average='binary', zero_division=0)
+            # 評価指標の計算 - 追加のエラーハンドリング
+            try:
+                accuracy = accuracy_score(y_test, y_pred)
+            except Exception as e:
+                self.logger.error(f"精度計算中にエラー: {str(e)}")
+                accuracy = 0.0
 
-            # 混同行列
-            cm = confusion_matrix(y_test, y_pred)
+            # precisionとrecall・混同行列の計算のエラーハンドリング強化
+            try:
+                # クラスバランスを確認して precision_score の計算方法を調整
+                unique_classes = np.unique(y_test)
+                
+                if len(unique_classes) < 2:
+                    self.logger.warning(f"クラスが単一または存在しません: {unique_classes}")
+                    precision = 0.0
+                    recall = 0.0
+                    f1 = 0.0
+                    cm = np.zeros((2, 2))
+                else:
+                    precision = precision_score(y_test, y_pred, average='binary', zero_division=0)
+                    recall = recall_score(y_test, y_pred, average='binary', zero_division=0)
+                    f1 = f1_score(y_test, y_pred, average='binary', zero_division=0)
+                    # 混同行列
+                    cm = confusion_matrix(y_test, y_pred)
+                    
+                    # 必要に応じて混同行列の形状を調整
+                    if cm.shape != (2, 2):
+                        self.logger.warning(f"混同行列の形状が予期しないものです: {cm.shape}")
+                        # 2x2行列に変換（足りない部分は0で埋める）
+                        new_cm = np.zeros((2, 2))
+                        rows, cols = min(cm.shape[0], 2), min(cm.shape[1], 2)
+                        new_cm[:rows, :cols] = cm[:rows, :cols]
+                        cm = new_cm
+                    
+            except Exception as metric_error:
+                self.logger.error(f"評価指標計算中にエラー: {str(metric_error)}")
+                import traceback
+                self.logger.error(f"トレースバック: {traceback.format_exc()}")
+                # エラー時はデフォルト値を設定
+                precision = 0.0
+                recall = 0.0
+                f1 = 0.0
+                cm = np.zeros((2, 2))
 
             # 各クラスの割合を計算
-            class_counts = pd.Series(y_test).value_counts().to_dict()
+            try:
+                class_counts = pd.Series(y_test).value_counts().to_dict()
+            except Exception as e:
+                self.logger.error(f"クラス数計算中にエラー: {str(e)}")
+                class_counts = {}
 
             # フィルタリング率（NaNの割合）
             filtered_ratio = 0.0
             if hasattr(self, 'orig_test_size') and self.orig_test_size > 0:
                 filtered_ratio = 1.0 - (len(y_test) / self.orig_test_size)
 
-            # 評価結果
+            # 評価結果 - すべてfloat型に変換して返す
             result = {
                 "accuracy": float(accuracy),
                 "precision": float(precision),
                 "recall": float(recall),
                 "f1_score": float(f1),
                 "confusion_matrix": cm.tolist(),
-                "filtered_ratio": filtered_ratio,
+                "filtered_ratio": float(filtered_ratio),
                 "data_size": class_counts
             }
 

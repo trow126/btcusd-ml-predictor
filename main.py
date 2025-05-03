@@ -347,17 +347,64 @@ def evaluate_models(config, features_df, logger):
             logger.error("評価用テストデータの準備に失敗しました")
             return None
 
-        # モデル評価の実行
-        evaluation_results = model_evaluator.evaluate_models(X_test_dict, y_test)
+        # モデル評価の実行（エラーハンドリング強化）
+        try:
+            evaluation_results = model_evaluator.evaluate_models(X_test_dict, y_test)
+        except Exception as eval_error:
+            logger.error(f"モデル評価の実行中にエラーが発生しました: {str(eval_error)}")
+            import traceback
+            logger.error(f"トレースバック: {traceback.format_exc()}")
+            # 空の結果を返して続行できるようにする
+            evaluation_results = {
+                "regression": {},
+                "classification": {},
+                "binary_classification": {},
+                "threshold_binary_classification": {},
+                "error": "evaluation_execution_error",
+                "message": str(eval_error)
+            }
 
-        # 評価レポートの生成と保存
-        evaluation_report = model_evaluator.generate_evaluation_report(evaluation_results)
-        model_evaluator.save_evaluation_report(evaluation_report)
+        # 評価レポートの生成と保存（エラーハンドリング強化）
+        try:
+            evaluation_report = model_evaluator.generate_evaluation_report(evaluation_results)
+            model_evaluator.save_evaluation_report(evaluation_report)
+        except Exception as report_error:
+            logger.error(f"評価レポートの生成または保存中にエラーが発生しました: {str(report_error)}")
+            import traceback
+            logger.error(f"トレースバック: {traceback.format_exc()}")
+            
+            # 最低限のレポートを作成
+            import datetime
+            evaluation_report = {
+                "error": "report_generation_error",
+                "message": str(report_error),
+                "timestamp": str(datetime.datetime.now()),
+                "regression": {},
+                "classification": {},
+                "binary_classification": {},
+                "threshold_binary_classification": {}
+            }
+            
+            # 最低限のレポートを保存
+            try:
+                import json
+                from pathlib import Path
+                output_dir = Path(config.get("model_evaluator", {}).get("output_dir", "evaluation"))
+                output_dir.mkdir(parents=True, exist_ok=True)
+                
+                error_report_path = output_dir / "error_evaluation_report.json"
+                with open(error_report_path, "w") as f:
+                    json.dump(evaluation_report, f, indent=2)
+                logger.info(f"エラーレポートを {error_report_path} に保存しました")
+            except Exception as save_error:
+                logger.error(f"エラーレポートの保存中にさらにエラーが発生: {str(save_error)}")
 
         logger.info("モデル評価とレポート保存が完了しました")
         return evaluation_report
     except Exception as e:
         logger.error(f"モデル評価中にエラーが発生しました: {str(e)}")
+        import traceback
+        logger.error(f"トレースバック: {traceback.format_exc()}")
         return None
 
 # 5. 高閾値シグナルモデルのトレーニングステップ
