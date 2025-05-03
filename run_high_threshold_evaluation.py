@@ -14,8 +14,9 @@ import datetime as dt
 
 from model_builder.evaluators.high_threshold_signal_evaluator import HighThresholdSignalEvaluator
 from model_builder.utils.data.data_loader import load_data
-from model_builder.utils.data.feature_selector import prepare_features
+from model_builder.utils.data.feature_selector import prepare_features, select_features
 from model_builder.utils.data.data_splitter import prepare_test_data
+from model_builder.utils.config_loader import load_config
 
 # ロガーの設定
 def setup_logger(log_file="high_threshold_evaluation.log", level=logging.INFO):
@@ -65,17 +66,17 @@ def evaluate_high_threshold_models(
         directions = ["long", "short"]
     if thresholds is None:
         thresholds = [0.001, 0.002, 0.003, 0.005]
-    
+
     # ロガーの設定
     log_level = logging.DEBUG if debug else logging.INFO
     logger = setup_logger(level=log_level)
-    
+
     logger.info(f"高閾値シグナルモデルの評価を開始します")
     logger.info(f"期間: {periods}, 方向: {directions}, 閾値: {thresholds}")
-    
+
     # 出力ディレクトリの作成
     Path(output_dir).mkdir(parents=True, exist_ok=True)
-    
+
     # データ読み込み
     logger.info(f"データの読み込み: {data_path}")
     try:
@@ -85,14 +86,14 @@ def evaluate_high_threshold_models(
     except Exception as e:
         logger.error(f"データの読み込みに失敗しました: {str(e)}")
         return None
-    
+
     if df.empty:
         logger.error("データが空です")
         return None
-        
+
     # データの基本情報を表示
     logger.info(f"データ情報: 行数={len(df)}, 列数={len(df.columns)}")
-    
+
     # 高閾値ターゲット変数の確認
     high_threshold_cols = [col for col in df.columns if 'high_threshold' in col]
     if not high_threshold_cols:
@@ -108,7 +109,7 @@ def evaluate_high_threshold_models(
             logger.info(f"  {i+1}. {col}")
         if len(high_threshold_cols) > 10:
             logger.info(f"  ...その他 {len(high_threshold_cols)-10} 個")
-            
+
         # クラス分布の確認（最初の数個だけ）
         for col in high_threshold_cols[:3]:
             try:
@@ -117,40 +118,74 @@ def evaluate_high_threshold_models(
             except Exception as e:
                 logger.warning(f"{col} のクラス分布確認中にエラー: {e}")
                 continue
-    
+
     # テストデータの準備
     logger.info(f"テストデータの準備 (test_size={test_size})")
     X_test_dict, y_test = prepare_test_data(df, test_size, periods)
-    
+
     if "X" not in X_test_dict or X_test_dict["X"].empty:
         logger.error("テストデータの準備に失敗しました")
         return None
-    
+
     # 高閾値シグナル変数の確認
     high_threshold_targets = {}
     for key in y_test.keys():
         if "high_threshold" in key:
             high_threshold_targets[key] = y_test[key]
-            
+
     logger.info(f"利用可能な高閾値シグナル変数: {len(high_threshold_targets)}個")
-    
+
     # 評価器の初期化
     evaluator_config = {
         "model_dir": model_dir,
         "output_dir": output_dir
     }
     evaluator = HighThresholdSignalEvaluator(evaluator_config)
-    
+
+    # モデル設定を読み込み、特徴量グループを取得
+    try:
+        model_config = load_config("config/model_config.json")
+        feature_groups = model_config.get("model_trainer", {}).get("feature_groups", {})
+        if not feature_groups:
+             logger.warning("モデル設定から特徴量グループが読み込めませんでした。デフォルトを使用します。")
+             # デフォルトの特徴量グループ（config/model_config.jsonのmodel_trainerセクションに合わせる）
+             feature_groups = {
+                "price": True,
+                "volume": True,
+                "technical": True
+             }
+        logger.info(f"学習時の特徴量グループ設定: {feature_groups}")
+    except Exception as e:
+        logger.error(f"モデル設定の読み込みに失敗しました: {str(e)}")
+        # エラーが発生した場合もデフォルトを使用
+        feature_groups = {
+           "price": True,
+           "volume": True,
+           "technical": True
+        }
+        logger.info(f"モデル設定読み込みエラーのためデフォルトの特徴量グループ設定を使用: {feature_groups}")
+
+
+    # テストデータに学習時と同じ特徴量選択を適用
+    if "X" in X_test_dict and not X_test_dict["X"].empty:
+        logger.info("テストデータに学習時と同じ特徴量選択を適用します")
+        selected_feature_cols = select_features(X_test_dict["X"], feature_groups)
+        X_test_processed = X_test_dict["X"][selected_feature_cols]
+        logger.info(f"特徴量選択後のテストデータ特徴量数: {len(selected_feature_cols)}")
+    else:
+        logger.error("テストデータの特徴量が見つからないか空です")
+        return None # 処理を中断
+
     # 全モデルの評価
     logger.info("全モデルの評価を開始します")
     results = evaluator.evaluate_all_models(
         periods=periods,
         directions=directions,
         thresholds=thresholds,
-        X_test=X_test_dict["X"],
+        X_test=X_test_processed, # 特徴量選択後のデータを渡す
         y_dict=y_test
     )
-    
+
     # 評価結果の要約
     summary = {
         "model_count": 0,
@@ -158,34 +193,34 @@ def evaluate_high_threshold_models(
         "error_count": 0,
         "best_models": []
     }
-    
+
     # 最良モデルを各閾値・方向ごとに特定
     if isinstance(results, dict):
         for threshold_key, threshold_data in results.items():
             if not isinstance(threshold_data, dict):
                 logger.warning(f"閾値 {threshold_key} の結果が辞書形式ではありません: {type(threshold_data)}")
                 continue
-                
+
             for direction_key, direction_data in threshold_data.items():
                 if not isinstance(direction_data, dict):
                     logger.warning(f"方向 {direction_key} の結果が辞書形式ではありません: {type(direction_data)}")
                     continue
-                    
+
                 for period_key, period_data in direction_data.items():
                     summary["model_count"] += 1
-                    
+
                     if isinstance(period_data, dict) and "error" in period_data:
                         summary["error_count"] += 1
                         continue
-                        
+
                     summary["success_count"] += 1
-                    
+
                     # 最良モデルの候補に追加（適合率ベース）
                     if isinstance(period_data, dict) and "precision" in period_data and period_data["precision"] > 0.4: # 閾値を0.5から0.4に下げる
                         # 確信度閾値0.7での指標
                         if "confidence_metrics" in period_data:
                             conf_metrics = period_data.get("confidence_metrics", {}).get(0.7, {})
-                            
+
                             if isinstance(conf_metrics, dict) and "precision" in conf_metrics and conf_metrics["precision"] > 0.6 and conf_metrics["signal_rate"] > 0.005: # 閾値を緩和
                                 best_model = {
                                     "threshold": threshold_key,
@@ -197,15 +232,15 @@ def evaluate_high_threshold_models(
                                 }
                                 summary["best_models"].append(best_model)
     else:
-        logger.error(f"評価結果が辞書形式ではありません: {type(results)}")    
-    
+        logger.error(f"評価結果が辞書形式ではありません: {type(results)}")
+
     # 効率順にソート
     if summary["best_models"]:
         summary["best_models"].sort(key=lambda x: x.get("efficiency", 0), reverse=True)
-    
+
     # 結果のログ出力
     logger.info(f"評価完了: 合計 {summary['model_count']} モデル, 成功: {summary['success_count']}, エラー: {summary['error_count']}")
-    
+
     if summary["best_models"]:
         logger.info("最良モデル（上位5件）:")
         for i, model in enumerate(summary["best_models"][:5]):
@@ -213,13 +248,13 @@ def evaluate_high_threshold_models(
             logger.info(f"     適合率: {model['precision']:.4f}, シグナル率: {model['signal_rate']:.4f}, 効率: {model['efficiency']:.4f}")
     else:
         logger.info("基準を満たす優良モデルは見つかりませんでした")
-    
+
     # 結果を保存
     if save_results:
         # 評価結果
         timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
         results_file = Path(output_dir) / f"high_threshold_evaluation_{timestamp}.json"
-        
+
         # JSONに変換できるように調整
         if isinstance(results, dict):
             json_results = {}
@@ -253,19 +288,19 @@ def evaluate_high_threshold_models(
                             else:
                                 clean_data[k] = v
                         json_results[threshold_key][direction_key][period_key] = clean_data
-            
+
             with open(results_file, "w", encoding="utf-8") as f:
                 json.dump(json_results, f, indent=2)
             logger.info(f"評価結果を {results_file} に保存しました")
         else:
             logger.error("評価結果が辞書形式ではないため、保存をスキップします")
-        
+
         # サマリー
         summary_file = Path(output_dir) / f"high_threshold_summary_{timestamp}.json"
         with open(summary_file, "w", encoding="utf-8") as f:
             json.dump(summary, f, indent=2)
         logger.info(f"評価サマリーを {summary_file} に保存しました")
-    
+
     logger.info("高閾値シグナルモデルの評価が完了しました")
     return results
 
@@ -280,9 +315,9 @@ if __name__ == "__main__":
     parser.add_argument("--test-size", type=float, default=0.2, help="テストデータの割合")
     parser.add_argument("--no-save", action="store_true", help="結果を保存しない")
     parser.add_argument("--debug", action="store_true", help="デバッグモードを有効化")
-    
+
     args = parser.parse_args()
-    
+
     evaluate_high_threshold_models(
         data_path=args.data_path,
         model_dir=args.model_dir,

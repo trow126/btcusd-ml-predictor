@@ -124,6 +124,21 @@ def prepare_test_data(df: pd.DataFrame, test_size: float, target_periods: list) 
             logger.info(f"  ...その他 {len(high_threshold_targets)-5}個")
     else:
         logger.warning("prepare_test_data: 高閾値シグナル変数が見つかりません")
+        # 高閾値シグナル変数が見つからない場合、必要なダミー変数を作成する
+        # これは評価プロセスが続行できるようにするための仕組み
+        try:
+            for period in target_periods:
+                for threshold in [1, 2, 3, 5]:  # 0.1%, 0.2%, 0.3%, 0.5%
+                    threshold_str = str(threshold)
+                    for direction in ["long", "short"]:
+                        # ダミー変数名の生成
+                        dummy_target = f"target_high_threshold_{threshold_str}p_{direction}_{period}"
+                        # ダミー値の生成 - すべて0に設定
+                        y_test[dummy_target] = pd.Series(0, index=X_test.index)
+                        logger.info(f"prepare_test_data: ダミー高閾値シグナル変数 {dummy_target} を追加 (すべて0)")
+            logger.warning("prepare_test_data: ダミー高閾値シグナル変数を生成しました。評価は正確ではありません。")
+        except Exception as e:
+            logger.error(f"prepare_test_data: ダミー高閾値シグナル変数の生成中にエラー: {str(e)}")
 
     logger.info(f"prepare_test_data: テストデータ: {len(X_test)}行, 特徴量: {len(feature_cols)}個")
     logger.info(f"prepare_test_data: 特徴量セット: {list(X_dict.keys())}")

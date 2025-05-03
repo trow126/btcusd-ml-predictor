@@ -56,14 +56,28 @@ def fix_signals():
             candidates = [
                 f"target_price_change_pct_{period}",
                 f"target_price_change_{period}",
-                f"target_change_{period}"
+                f"target_change_{period}",
+                f"target_price_direction_{period}",  # 方向変数も確認
+                f"target_pct_{period}"             # 短縮形かもしれない
             ]
             
+            # 候補が見つからない場合は、名前の一部が含まれる列を探す
+            found = False
             for col in candidates:
                 if col in df.columns:
                     valid_target_cols.append((period, col))
                     logger.info(f"期間{period}の有効なターゲット列: {col}")
+                    found = True
                     break
+                    
+            # 候補が見つからない場合は、全ての列からperiodを含むものを探す
+            if not found:
+                for col in df.columns:
+                    if col.startswith("target_") and f"_{period}" in col and ("change" in col or "pct" in col):
+                        valid_target_cols.append((period, col))
+                        logger.info(f"期間{period}の代替ターゲット列: {col}")
+                        found = True
+                        break
         
         if not valid_target_cols:
             logger.error("有効なターゲット列が見つかりません")
